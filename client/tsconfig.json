@@ -1,0 +1,14 @@
+{
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"lib": [
+			"DOM",
+			"ES2020",
+		],
+		"paths": {
+			"#c/*": ["../common/*"],
+			"#p/*": ["./*"],
+		},
+	},
+}

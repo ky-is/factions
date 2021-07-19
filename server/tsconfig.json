@@ -1,0 +1,16 @@
+{
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "../~$dist/server",
+		"lib": [
+			"es2020",
+		],
+		"paths": {
+			"#c/*": ["../common/*"],
+			"#s/*": ["./*"],
+		},
+	},
+	"include": [
+		"./**/*.ts"
+	],
+}

@@ -1,0 +1,47 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
+
+html, body, main, #app {
+	@apply h-full;
+}
+
+.router-link-active.router-link-exact-active {
+	@apply cursor-default;
+}
+
+.smallcaps {
+	font-variant: small-caps;
+}
+
+input {
+	font-size: 16px;
+}
+
+h2 {
+	@apply text-3xl;
+}
+h2.smallcaps {
+	@apply text-2xl;
+}
+h3 {
+	@apply text-2xl;
+}
+
+.comma-separated:not(:last-child)::after {
+	content: ", ";
+}
+
+.text-c-brand {
+	@apply text-purple-700;
+}
+
+.text-c-faint {
+	@apply text-gray-500;
+}
+
+.bg-c-brand {
+	@apply bg-purple-500;
+}
