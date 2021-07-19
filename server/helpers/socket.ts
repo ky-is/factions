@@ -16,8 +16,8 @@ export function createSocket(fastify: FastifyInstance, clientURL: string | undef
 		},
 	})
 	io.use((socket, next) => {
-		const { sid } = socket.handshake.auth
-		if (!sid) {
+		const { sessionID } = socket.handshake.auth
+		if (!sessionID) {
 			return next(new APIError('Unauthorized.', true))
 		}
 		next()

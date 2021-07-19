@@ -15,7 +15,7 @@ fastify
 	.setErrorHandler((error, request, reply) => {
 		if (error instanceof APIError) {
 			reply.statusCode = 400
-			reply.send({ message: error.message, cancel: error.cancel || undefined })
+			reply.send({ message: error.message, cancel: error.cancel })
 		} else {
 			throw error
 		}

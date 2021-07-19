@@ -1,7 +1,7 @@
 import path from 'path'
 import type { FastifyInstance } from 'fastify'
 
-import { userForEmail, createUser, authUser } from '#s/models/user.js'
+import { userForEmail, createUser, authUser, refreshPasscode } from '#s/models/user.js'
 
 import { parseEmail, parsePasscode } from '#s/helpers/validate.js'
 
@@ -21,7 +21,10 @@ export function useUserRoutes(server: FastifyInstance) {
 		handler: async (request, reply) => {
 			const email = parseEmail(request.params)
 			const user = await userForEmail(email) ?? null
-			return { user }
+			if (user) {
+				await refreshPasscode(user)
+			}
+			return { email, exists: !!user }
 		},
 	})
 
@@ -66,8 +69,8 @@ export function useUserRoutes(server: FastifyInstance) {
 		handler: async (request, reply) => {
 			const email = parseEmail(request.params)
 			const passcode = parsePasscode(request.body)
-			const user = await authUser(email, passcode)
-			return { user }
+			const userAndSesssion = await authUser(email, passcode)
+			return userAndSesssion
 		},
 	})
 }

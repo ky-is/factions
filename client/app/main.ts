@@ -13,5 +13,10 @@ const router = createRouter({
 })
 
 createApp(App)
+	.directive('focus', {
+		mounted (el) {
+			el.focus()
+		}
+	})
 	.use(router)
 	.mount('#app')

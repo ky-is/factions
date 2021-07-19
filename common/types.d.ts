@@ -1,13 +1,18 @@
-export interface UserSessionData {
+export interface UserData {
 	id: string
-	sid: string
 	email: string
 	name: string
+	passcode_at?: number
+}
+
+export interface SessionData {
+	id: string
 }
 
 export interface UserPasscodeData {
 	passcode: string
-	passcode_attempts: number
+	passcode_tries: number
+	passcode_at: number | null
 }
 
 export interface SessionData {

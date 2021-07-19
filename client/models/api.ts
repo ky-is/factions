@@ -1,6 +1,6 @@
 import { state, updateUsers } from '#p/models/store'
 
-import type { UserSessionData, SessionData } from '#c/types'
+import type { UserData, SessionData } from '#c/types'
 
 import { io } from 'socket.io-client'
 
@@ -39,14 +39,27 @@ async function ajax<Response>(endpointComponents: [string, string?, string?], bo
 			return json as Response
 		})
 		.catch(error => {
-			if (error.cancel) {
-				console.log('Cancellation error')
+			if ('cancel' in error) {
+				console.log(error.message, error.cancel)
+				throw undefined
 			}
-			console.log(error.message)
+			console.log(error)
+			throw error
 		})
 }
 
 export function emailStatus(email: string) {
-	type UserSessionResponse = { user: UserSessionData, session: SessionData }
+	type UserSessionResponse = { email: string, exists: boolean }
 	return ajax<UserSessionResponse>([ 'user', 'email', email ])
+}
+
+type SigninResponse = { user: UserData, session: SessionData }
+
+export function registerEmail(email: string, name: string) {
+	return ajax<SigninResponse>([ 'user', 'register', email ], { name })
+}
+
+export function signinPasscode(email: string, passcode: string) {
+	type SigninPasscodeResponse = { email: string, exists: boolean }
+	return ajax<SigninResponse>([ 'user', 'signin', email ], { passcode })
 }

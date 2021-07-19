@@ -43,6 +43,7 @@
 		"~$dist"
 	],
 	"imports": {
+		"#c/*": "./~$dist/common/*",
 		"#s/*": "./~$dist/server/*"
 	},
 	"postcss": {
