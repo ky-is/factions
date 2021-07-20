@@ -1,6 +1,3 @@
-import type { Socket } from 'socket.io'
-import type { Game } from '#s/game/Game'
-
 export interface UserData {
 	id: string
 	email: string

@@ -10,12 +10,12 @@
 
 <script setup lang="ts">
 import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
 
 import SignIn from '#p/views/components/SignIn.vue'
 
 import { connect, socket } from '#p/models/api'
 import { useStore } from '#p/models/store'
-import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const { state, commit } = useStore()

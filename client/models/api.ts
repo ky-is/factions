@@ -1,8 +1,8 @@
+import { io } from 'socket.io-client'
+
 import { state, updateUsers, commit } from '#p/models/store'
 
 import type { UserData, SessionData } from '#c/types'
-
-import { io } from 'socket.io-client'
 
 export const socket = io('http://localhost:3101', { autoConnect: false })
 

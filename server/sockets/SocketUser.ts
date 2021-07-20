@@ -1,6 +1,7 @@
 import type { Socket, BroadcastOperator } from 'socket.io'
 
 import type { UserData } from '#c/types.js'
+
 import type { Game } from '#s/game/Game.js'
 import { useSocket } from '#s/helpers/socket.js'
 
