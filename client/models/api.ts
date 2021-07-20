@@ -1,12 +1,19 @@
-import { state, updateUsers } from '#p/models/store'
+import { state, updateUsers, commit } from '#p/models/store'
 
 import type { UserData, SessionData } from '#c/types'
 
 import { io } from 'socket.io-client'
 
-const socket = io('http://localhost:3101', { autoConnect: false })
+export const socket = io('http://localhost:3101', { autoConnect: false })
 
-socket.on("connect_error", error => {
+socket.on('connect', () => {
+	commit.connected(true)
+})
+socket.on('disconnect', (reason) => {
+	console.log('disconnect', reason)
+	commit.connected(false)
+})
+socket.on('connect_error', error => {
 	console.log(error)
 })
 

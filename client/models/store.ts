@@ -1,18 +1,19 @@
 import { computed, reactive, readonly } from 'vue'
 
-import type { UserData, SessionData } from '#c/types'
+import type { GameData, UserData, SessionData } from '#c/types'
 
 import { emailStatus, registerEmail, signinPasscode } from '#p/models/api'
 import storage from '#p/models/storage'
 
 export const state = reactive({
-	synced: false,
+	connected: false,
 	user: {
 		email: storage.get('user.email'),
 		id: storage.get('user.id'),
 		name: storage.get('user.name'),
 		sid: storage.get('user.sid'),
 	},
+	game: null as GameData | null,
 	users: [] as UserData[],
 })
 
@@ -42,47 +43,57 @@ function processSignin({ user, session }: { user: UserData, session: SessionData
 	storage.set('user.sid', session.id)
 }
 
+export const commit = {
+	connected(connected: boolean) {
+		state.connected = connected
+	},
+	cancelSignin() {
+		state.user.email = ''
+		storage.remove('user.email')
+	},
+
+	async emailStatus(email: string) {
+		try {
+			const response = await emailStatus(email)
+			state.user.email = response.email
+			storage.set('user.email', response.email)
+			return response.exists
+		} catch (error) {
+			if (error) { console.log(error) }
+			return false
+		}
+	},
+
+	async registerEmail(email: string, name: string) {
+		try {
+			const response = await registerEmail(email, name)
+			console.log(response)
+			processSignin(response)
+		} catch (error) {
+			if (error) { console.log(error) }
+		}
+	},
+
+	async signinPasscode(email: string, passcode: string) {
+		try {
+			const response = await signinPasscode(email, passcode)
+			console.log(response)
+			processSignin(response)
+		} catch (error) {
+			if (error) { console.log(error) }
+		}
+	},
+
+	// Game
+
+	joinGame(game: GameData | null) {
+		state.game = game
+	},
+}
+
 const store = {
 	state: process.env.NODE_ENV === 'production' ? state : readonly(state),
-
-	commit: {
-		cancelSignin() {
-			state.user.email = ''
-			storage.remove('user.email')
-		},
-
-		async emailStatus(email: string) {
-			try {
-				const response = await emailStatus(email)
-				state.user.email = response.email
-				storage.set('user.email', response.email)
-				return response.exists
-			} catch (error) {
-				if (error) { console.log(error) }
-				return false
-			}
-		},
-
-		async registerEmail(email: string, name: string) {
-			try {
-				const response = await registerEmail(email, name)
-				console.log(response)
-				processSignin(response)
-			} catch (error) {
-				if (error) { console.log(error) }
-			}
-		},
-
-		async signinPasscode(email: string, passcode: string) {
-			try {
-				const response = await signinPasscode(email, passcode)
-				console.log(response)
-				processSignin(response)
-			} catch (error) {
-				if (error) { console.log(error) }
-			}
-		},
-	},
+	commit,
 }
 
 export function useStore() {

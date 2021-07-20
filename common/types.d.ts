@@ -1,8 +1,28 @@
+import type { Socket } from 'socket.io'
+import type { Game } from '#s/game/Game'
+
 export interface UserData {
 	id: string
 	email: string
 	name: string
 	passcode_at?: number
+}
+
+export interface PlayerData {
+	id: string
+	name: string
+}
+
+export interface GameData {
+	id: string
+	size: number
+	host: string
+	title?: string
+	type?: string
+	mode?: string
+	players: PlayerData[]
+	started: boolean
+	finished: boolean
 }
 
 export interface SessionData {

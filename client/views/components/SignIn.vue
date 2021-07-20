@@ -2,22 +2,22 @@
 	<form class="h-full text-center space-y-2  flex flex-col justify-center" :disabled="isLoading" @submit.prevent="onSubmit">
 		<template v-if="isCheckingEmail">
 			<h2>Enter your email:</h2>
-			<input v-model="inputEmail" v-focus type="email" class="signin-input" placeholder="example@mail.com">
-			<button type="submit" class="signin-button-primary">Submit</button>
+			<input v-model="inputEmail" v-focus type="email" class="input-primary" placeholder="example@mail.com">
+			<button type="submit" class="button-primary">Submit</button>
 		</template>
 		<template v-else>
 			<h2>{{ isNewAccount ? 'Welcome!' : `👋 ${inputEmail}!` }}</h2>
 			<template v-if="isNewAccount">
 				<h3>Create an account to start playing...</h3>
-				<input v-model="inputEmail" type="text" class="signin-input" disabled>
-				<input v-model="inputName" v-focus type="text" class="signin-input" placeholder="Player name">
+				<input v-model="inputEmail" type="text" class="input-primary" disabled>
+				<input v-model="inputName" v-focus type="text" class="input-primary" placeholder="Player name">
 			</template>
 			<template v-else>
-				<input v-model="inputPasscode" v-focus type="number" class="signin-input" placeholder="1234">
+				<input v-model="inputPasscode" v-focus type="number" class="input-primary" placeholder="1234">
 			</template>
 			<div class="space-x-2">
-				<button type="submit" class="signin-button-primary">Submit</button>
-				<button type="button" class="signin-button-secondary" @click="onCancel">Cancel</button>
+				<button type="submit" class="button-primary">Submit</button>
+				<button type="button" class="button-secondary" @click="onCancel">Cancel</button>
 			</div>
 		</template>
 	</form>
@@ -59,17 +59,5 @@ async function onSubmit() {
 </script>
 
 <style lang="postcss">
-.signin-input {
-	@apply mx-auto w-72 border-gray-300 rounded-md text-center;
-}
-.signin-input:disabled {
-	@apply text-gray-400 border-gray-200;
-}
 
-.signin-button-primary {
-	@apply inline-block mx-auto w-32 h-11 bg-gray-200 rounded-full;
-}
-.signin-button-secondary {
-	@apply inline-block mx-auto w-32 h-11 border-2 border-gray-200 rounded-full;
-}
 </style>

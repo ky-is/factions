@@ -1,7 +1,12 @@
 import { Server } from 'socket.io'
 import type { FastifyInstance } from 'fastify'
 
+import { registerLobby } from '#s/sockets/lobby.js'
+import { registerGame } from '#s/sockets/game.js'
+import { registerUser } from '#s/sockets/user.js'
+
 import { APIError } from '#s/helpers/errors.js'
+import { getUserForSession } from '#s/models/user.js'
 
 let io: Server
 
@@ -15,15 +20,21 @@ export function createSocket(fastify: FastifyInstance, clientURL: string | undef
 			origin: clientURL,
 		},
 	})
-	io.use((socket, next) => {
+	io.use(async (socket, next) => {
 		const { sessionID } = socket.handshake.auth
 		if (!sessionID) {
 			return next(new APIError('Unauthorized.', true))
 		}
+		const user = await getUserForSession(sessionID)
+		if (!user) {
+			return next(new APIError('Invalid session, please sign in again.', true))
+		}
+		registerUser(socket, user)
 		next()
 	})
 	io.on('connection', (socket) => {
-		socket.emit('hello', 'world')
+		registerLobby(socket)
+		registerGame(socket)
 	})
 }
 
