@@ -1,4 +1,6 @@
 import { Server } from 'socket.io'
+import { Socket } from 'socket.io'
+import type { BroadcastOperator } from 'socket.io'
 import type { FastifyInstance } from 'fastify'
 
 import { registerLobby } from '#s/sockets/lobby.js'
@@ -39,6 +41,18 @@ export function createIO(fastify: FastifyInstance, clientURL: string | undefined
 	})
 }
 
-export function useIO() {
-	return io
+export function useIO(to: string) {
+	return io.to(to)
+}
+
+export type EmitTarget = string | BroadcastOperator<any> | Socket
+
+export function emit(target: EmitTarget, event: string, data: unknown) {
+	if (target instanceof Socket) {
+		target.emit(event, data)
+	} else if (typeof target === 'string') {
+		useIO(target).emit(event, data)
+	} else {
+		target.emit(event, data)
+	}
 }

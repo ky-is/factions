@@ -1,20 +1,24 @@
-import type { Socket } from 'socket.io'
-
 import type { GameData } from '#c/types.js'
 
-import { useIO } from '#s/helpers/io.js'
+import { emit } from '#s/helpers/io.js'
+import type { EmitTarget } from '#s/helpers/io.js'
 import type { SocketUser } from '#s/sockets/SocketUser.js'
 
 let gameNumber = 0
 
 const games: Game[] = [] //eslint-disable-line no-use-before-define
 
-export function getGamesData() {
-	return games.map(game => game.lobbyData())
+export function getGame(id: string) {
+	return games.find(game => game.id === id)
+}
+
+export function emitLobby(target?: EmitTarget) {
+	emit(target ?? 'lobby', 'lobby-games', games.map(game => game.lobbyData()))
 }
 
 export class Game {
 	id: string
+	title: string
 	size: number
 	host: string
 	type: string
@@ -26,12 +30,17 @@ export class Game {
 	constructor(type: string, size: number, host: SocketUser) {
 		gameNumber += 1
 		this.id = `g-${gameNumber}` //TODO uuid
+		this.title = `${type} / ${host.name}`
 		this.size = size
 		this.host = host.id
 		this.type = type
-		console.log('Create game', this.id)
 		this.join(host)
 		games.push(this)
+		emitLobby()
+	}
+
+	emitLobbyStatus(target?: EmitTarget) {
+		emit(target ?? this.id, 'lobby-status', this.lobbyData())
 	}
 
 	join(user: SocketUser) {
@@ -42,11 +51,7 @@ export class Game {
 		this.players.push(user)
 		user.game = this
 		user.join(this.id)
-		useIO().to(this.id).emit('lobby-status', this.lobbyData())
-	}
-
-	updateLobby() {
-		useIO().to('lobby').emit('lobby-games', getGamesData())
+		this.emitLobbyStatus()
 	}
 
 	leave(user: SocketUser) {
@@ -56,22 +61,22 @@ export class Game {
 			user.game = null
 			this.players = this.players.filter(player => player !== user)
 			user.leave(this.id)
-			useIO().to(this.id).emit('lobby-status', this.lobbyData())
-			this.updateLobby()
+			this.emitLobbyStatus()
 
 			if (!this.players.length) {
-				games.filter(game => game === this)
+				console.log('destroy game', this.id)
+				games.splice(games.indexOf(this), 1)
+			} else {
+				console.log('leave game', user.name, this.id)
 			}
+			emitLobby()
 		}
-	}
-
-	emitJoin(socket: Socket) {
-		socket.emit('lobby-status', this.lobbyData())
 	}
 
 	lobbyData(): GameData {
 		return {
 			id: this.id,
+			title: this.title,
 			type: this.type,
 			size: this.size,
 			host: this.host,

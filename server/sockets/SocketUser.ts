@@ -15,7 +15,7 @@ export class SocketUser {
 	constructor(userData: UserData) {
 		this.id = userData.id
 		this.name = userData.name
-		this.to = useIO().to(this.id)
+		this.to = useIO(this.id)
 	}
 
 	join(room: string) {

@@ -1,8 +1,8 @@
 <template>
 	<h2>Lobby</h2>
-	<template v-if="game">
-		<h3>{{ game.type }}</h3>
-		<div v-for="player in game.players" :key="player.id">
+	<template v-if="currentGame">
+		<h3>{{ currentGame.title }}</h3>
+		<div v-for="player in currentGame.players" :key="player.id">
 			{{ player.name }}
 		</div>
 		<button class="button-primary" :disabled="isHost && isFull" @click="onStart">Start</button>
@@ -10,7 +10,11 @@
 	</template>
 	<template v-else>
 		<div v-for="lobbyGame in lobbyGames" :key="lobbyGame.id">
-			{{ game }}
+			<h3>{{ lobbyGame.title }}</h3>
+			<span v-for="player in lobbyGame.players" :key="player.id" class="player-name">
+				{{ player.name }}
+			</span>
+			<button class="button-primary" :disabled="isFull" @click="onJoin(lobbyGame)">Join</button>
 		</div>
 		<button class="button-primary" @click="onCreate">Create game</button>
 	</template>
@@ -36,12 +40,12 @@ const props = defineProps<{
 	id?: string
 }>()
 
-const game = computed(() => state.game)
+const currentGame = computed(() => state.game)
 
 const lobbyGames = ref<GameData[]>([])
 
 onMounted(() => {
-	socket.emit('lobby-join', props.id && !game.value ? props.id : true)
+	socket.emit('lobby-join', props.id && !currentGame.value ? props.id : true)
 	socket.on('lobby-games', (games) => {
 		lobbyGames.value = games
 	})
@@ -55,6 +59,10 @@ function onCreate() {
 	socket.emit('lobby-create')
 }
 
+function onJoin(game: GameData) {
+	socket.emit('lobby-join', game.id)
+}
+
 function onStart() {
 	socket.emit('lobby-start')
 }
@@ -63,3 +71,9 @@ function onLeave() {
 	commit.leaveGameLobby(router)
 }
 </script>
+
+<style scoped lang="postcss">
+.player-name ~ .player-name::before {
+  content: ', ';
+}
+</style>

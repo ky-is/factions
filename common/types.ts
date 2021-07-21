@@ -12,9 +12,9 @@ export interface PlayerData {
 
 export interface GameData {
 	id: string
+	title: string
 	type: string
 	mode?: string
-	title?: string
 	size: number
 	host: string
 	players: PlayerData[]
