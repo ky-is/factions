@@ -41,7 +41,6 @@ watchEffect(() => {
 		router.push({ name: 'Game', params: {id: game.id} })
 	} else {
 		const route = router.currentRoute.value
-		console.log('CG', route)
 		router.push({ name: 'Lobby', params: {id: game.id} })
 	}
 })
@@ -49,7 +48,7 @@ watchEffect(() => {
 // Leave lobby on navigation
 router.beforeEach((to, from) => {
 	if (from.name === 'Lobby' && state.game && from.params.id === state.game.id) {
-		commit.leaveGameLobby()
+		commit.leaveGameLobby(router)
 	}
 })
 

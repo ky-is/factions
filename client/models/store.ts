@@ -1,4 +1,5 @@
 import { computed, reactive, readonly } from 'vue'
+import type { Router, RouteLocationNormalized } from 'vue-router'
 
 import type { GameData, UserData, SessionData } from '#c/types'
 
@@ -7,6 +8,7 @@ import storage from '#p/models/storage'
 
 export const state = reactive({
 	connected: false,
+	previousRoute: null as RouteLocationNormalized | null,
 	user: {
 		email: storage.get('user.email'),
 		id: storage.get('user.id'),
@@ -90,9 +92,14 @@ export const commit = {
 		state.game = game
 	},
 
-	leaveGameLobby() {
+	leaveGameLobby(router: Router) {
 		socket.emit('lobby-join', true)
 		state.game = null
+		if (state.previousRoute?.name === 'Lobby' && !state.previousRoute.params.id) {
+			router.back()
+		} else {
+			router.replace({ name: 'Lobby' })
+		}
 	},
 }
 

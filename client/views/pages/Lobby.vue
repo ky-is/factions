@@ -18,12 +18,15 @@
 
 <script setup lang="ts">
 import { defineProps, ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import type { GameData } from '#c/types'
 import { isGameFull, isGameHost } from '#c/game'
 
 import { socket } from '#p/models/api'
 import { commit, useStore } from '#p/models/store'
+
+const router = useRouter()
 
 const { state } = useStore()
 const isHost = computed(() => isGameHost(state.game as GameData, state.user))
@@ -57,6 +60,6 @@ function onStart() {
 }
 
 function onLeave() {
-	commit.leaveGameLobby()
+	commit.leaveGameLobby(router)
 }
 </script>
