@@ -3,7 +3,7 @@ import type { Socket, BroadcastOperator } from 'socket.io'
 import type { UserData } from '#c/types.js'
 
 import type { Game } from '#s/game/Game.js'
-import { useSocket } from '#s/helpers/socket.js'
+import { useIO } from '#s/helpers/io.js'
 
 export class SocketUser {
 	id: string
@@ -15,7 +15,7 @@ export class SocketUser {
 	constructor(userData: UserData) {
 		this.id = userData.id
 		this.name = userData.name
-		this.to = useSocket().to(this.id)
+		this.to = useIO().to(this.id)
 	}
 
 	join(room: string) {

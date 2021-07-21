@@ -3,7 +3,7 @@ import Fastify from 'fastify'
 import { useUserRoutes } from '#s/controllers/users.js'
 
 import { APIError } from '#s/helpers/errors.js'
-import { createSocket } from '#s/helpers/socket.js'
+import { createIO } from '#s/helpers/io.js'
 
 const clientURL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3100'
 
@@ -28,7 +28,7 @@ fastify
 		useUserRoutes(fastify)
 	})
 
-createSocket(fastify, clientURL)
+createIO(fastify, clientURL)
 
 fastify.listen(3101, (error, address) => {
 	if (error) {

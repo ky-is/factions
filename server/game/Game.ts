@@ -2,7 +2,7 @@ import type { Socket } from 'socket.io'
 
 import type { GameData } from '#c/types.js'
 
-import { useSocket } from '#s/helpers/socket.js'
+import { useIO } from '#s/helpers/io.js'
 import type { SocketUser } from '#s/sockets/SocketUser.js'
 
 let gameNumber = 0
@@ -42,11 +42,11 @@ export class Game {
 		this.players.push(user)
 		user.game = this
 		user.join(this.id)
-		useSocket().to(this.id).emit('lobby-status', this.lobbyData())
+		useIO().to(this.id).emit('lobby-status', this.lobbyData())
 	}
 
 	updateLobby() {
-		useSocket().to('lobby').emit('lobby-games', getGamesData())
+		useIO().to('lobby').emit('lobby-games', getGamesData())
 	}
 
 	leave(user: SocketUser) {
@@ -56,7 +56,7 @@ export class Game {
 			user.game = null
 			this.players = this.players.filter(player => player !== user)
 			user.leave(this.id)
-			useSocket().to(this.id).emit('lobby-status', this.lobbyData())
+			useIO().to(this.id).emit('lobby-status', this.lobbyData())
 			this.updateLobby()
 
 			if (!this.players.length) {

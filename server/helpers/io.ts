@@ -10,7 +10,7 @@ import { getUserForSession } from '#s/models/user.js'
 
 let io: Server
 
-export function createSocket(fastify: FastifyInstance, clientURL: string | undefined) {
+export function createIO(fastify: FastifyInstance, clientURL: string | undefined) {
 	fastify.addHook('onClose', (fastify, done) => {
 		io.close()
 		done()
@@ -39,6 +39,6 @@ export function createSocket(fastify: FastifyInstance, clientURL: string | undef
 	})
 }
 
-export function useSocket() {
+export function useIO() {
 	return io
 }
