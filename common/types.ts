@@ -12,11 +12,11 @@ export interface PlayerData {
 
 export interface GameData {
 	id: string
+	type: string
+	mode?: string
+	title?: string
 	size: number
 	host: string
-	title?: string
-	type?: string
-	mode?: string
 	players: PlayerData[]
 	started: boolean
 	finished: boolean

@@ -2,7 +2,7 @@ import { computed, reactive, readonly } from 'vue'
 
 import type { GameData, UserData, SessionData } from '#c/types'
 
-import { emailStatus, registerEmail, signinPasscode } from '#p/models/api'
+import { emailStatus, registerEmail, signinPasscode, socket } from '#p/models/api'
 import storage from '#p/models/storage'
 
 export const state = reactive({
@@ -88,6 +88,11 @@ export const commit = {
 
 	joinGame(game: GameData | null) {
 		state.game = game
+	},
+
+	leaveGameLobby() {
+		socket.emit('lobby-join', true)
+		state.game = null
 	},
 }
 

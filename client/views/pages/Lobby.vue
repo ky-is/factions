@@ -1,11 +1,12 @@
 <template>
 	<h2>Lobby</h2>
 	<template v-if="game">
-		<h3>{{ game.id }}</h3>
+		<h3>{{ game.type }}</h3>
 		<div v-for="player in game.players" :key="player.id">
 			{{ player.name }}
 		</div>
 		<button class="button-primary" :disabled="isHost && isFull" @click="onStart">Start</button>
+		<button class="button-secondary" @click="onLeave">Leave</button>
 	</template>
 	<template v-else>
 		<div v-for="lobbyGame in lobbyGames" :key="lobbyGame.id">
@@ -22,14 +23,14 @@ import type { GameData } from '#c/types'
 import { isGameFull, isGameHost } from '#c/game'
 
 import { socket } from '#p/models/api'
-import { useStore } from '#p/models/store'
+import { commit, useStore } from '#p/models/store'
 
 const { state } = useStore()
 const isHost = computed(() => isGameHost(state.game as GameData, state.user))
 const isFull = computed(() => isGameFull(state.game as GameData))
 
 const props = defineProps<{
-	id: string
+	id?: string
 }>()
 
 const game = computed(() => state.game)
@@ -53,5 +54,9 @@ function onCreate() {
 
 function onStart() {
 	socket.emit('lobby-start')
+}
+
+function onLeave() {
+	commit.leaveGameLobby()
 }
 </script>

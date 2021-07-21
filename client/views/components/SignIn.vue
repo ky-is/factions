@@ -57,7 +57,3 @@ async function onSubmit() {
 	isLoading.value = false
 }
 </script>
-
-<style lang="postcss">
-
-</style>

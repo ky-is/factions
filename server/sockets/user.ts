@@ -12,10 +12,21 @@ function newSocketUser(userData: UserData) {
 	return socketUser
 }
 
-export function registerUser(socket: Socket, userData: UserData) {
+export function authorizeUser(socket: Socket, userData: UserData) {
 	const userID = userData.id
 	const socketUser = socketUsers.get(userID) ?? newSocketUser(userData)
 	socketUser.sockets.add(socket)
 	socket.join(userID)
 	socket.data.user = socketUser
+}
+
+export function registerUser(socket: Socket) {
+	socket.on('disconnect', () => {
+		const user = socket.data.user as SocketUser
+		user.leaveGame()
+		user.sockets.delete(socket)
+		if (!user.sockets.size) {
+			socketUsers.delete(user.id)
+		}
+	})
 }

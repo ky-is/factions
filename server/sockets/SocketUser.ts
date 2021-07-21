@@ -23,4 +23,18 @@ export class SocketUser {
 			socket.join(room)
 		})
 	}
+
+	leave(room: string) {
+		this.sockets.forEach(socket => {
+			socket.leave(room)
+		})
+	}
+
+	leaveGame() {
+		if (!this.game) {
+			return
+		}
+		this.game.leave(this)
+		// this.to.emit('lobby-left')
+	}
 }

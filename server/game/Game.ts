@@ -7,6 +7,12 @@ import type { SocketUser } from '#s/sockets/SocketUser.js'
 
 let gameNumber = 0
 
+const games: Game[] = [] //eslint-disable-line no-use-before-define
+
+export function getGamesData() {
+	return games.map(game => game.lobbyData())
+}
+
 export class Game {
 	id: string
 	size: number
@@ -25,6 +31,7 @@ export class Game {
 		this.type = type
 		console.log('Create game', this.id)
 		this.join(host)
+		games.push(this)
 	}
 
 	join(user: SocketUser) {
@@ -35,21 +42,42 @@ export class Game {
 		this.players.push(user)
 		user.game = this
 		user.join(this.id)
-		useSocket().to(this.id).emit('lobby-joined', this.lobbyData())
+		useSocket().to(this.id).emit('lobby-status', this.lobbyData())
+	}
+
+	updateLobby() {
+		useSocket().to('lobby').emit('lobby-games', getGamesData())
+	}
+
+	leave(user: SocketUser) {
+		if (this.started) {
+			//TODO
+		} else {
+			user.game = null
+			this.players = this.players.filter(player => player !== user)
+			user.leave(this.id)
+			useSocket().to(this.id).emit('lobby-status', this.lobbyData())
+			this.updateLobby()
+
+			if (!this.players.length) {
+				games.filter(game => game === this)
+			}
+		}
 	}
 
 	emitJoin(socket: Socket) {
-		socket.emit('lobby-joined', this.lobbyData())
+		socket.emit('lobby-status', this.lobbyData())
 	}
 
 	lobbyData(): GameData {
 		return {
 			id: this.id,
+			type: this.type,
 			size: this.size,
 			host: this.host,
 			started: this.started,
 			finished: this.finished,
-			players: this.players.map(player => ({ id: player.id, name: player.name })),
+			players: this.players.map(player => ({ id: player.id, name: player.name, connected: !!player.sockets.size })),
 		}
 	}
 }

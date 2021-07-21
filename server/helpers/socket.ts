@@ -3,7 +3,7 @@ import type { FastifyInstance } from 'fastify'
 
 import { registerLobby } from '#s/sockets/lobby.js'
 import { registerGame } from '#s/sockets/game.js'
-import { registerUser } from '#s/sockets/user.js'
+import { authorizeUser, registerUser } from '#s/sockets/user.js'
 
 import { APIError } from '#s/helpers/errors.js'
 import { getUserForSession } from '#s/models/user.js'
@@ -29,10 +29,11 @@ export function createSocket(fastify: FastifyInstance, clientURL: string | undef
 		if (!user) {
 			return next(new APIError('Invalid session, please sign in again.', true))
 		}
-		registerUser(socket, user)
+		authorizeUser(socket, user)
 		next()
 	})
 	io.on('connection', (socket) => {
+		registerUser(socket)
 		registerLobby(socket)
 		registerGame(socket)
 	})

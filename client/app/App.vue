@@ -1,7 +1,7 @@
 <template>
 	<main class="select-none">
 		<SignIn v-if="!sessionID" />
-		<div v-else-if="!connected && !currentGame ">
+		<div v-else-if="!isConnected && !currentGame ">
 			Loading...
 		</div>
 		<RouterView v-else />
@@ -20,30 +20,46 @@ import { useStore } from '#p/models/store'
 const router = useRouter()
 const { state, commit } = useStore()
 
-const currentGame = computed(() => state.game)
-const connected = computed(() => state.connected)
+const isConnected = computed(() => state.connected)
+
+// Connect after signin
 const sessionID = computed(() => state.user.sid)
 watchEffect(() => {
 	if (sessionID.value) {
 		connect(sessionID.value)
 	}
 })
+
+// Auto-enter joined game
+const currentGame = computed(() => state.game)
 watchEffect(() => {
-	if (currentGame.value) {
-		if (currentGame.value.started) {
-			router.push({ name: 'Game', params: {id: currentGame.value.id} })
-		} else {
-			router.push({ name: 'Lobby', params: {id: currentGame.value.id} })
-		}
+	const game = currentGame.value
+	if (!game) {
+		return
+	}
+	if (game.started) {
+		router.push({ name: 'Game', params: {id: game.id} })
+	} else {
+		const route = router.currentRoute.value
+		console.log('CG', route)
+		router.push({ name: 'Lobby', params: {id: game.id} })
 	}
 })
 
+// Leave lobby on navigation
+router.beforeEach((to, from) => {
+	if (from.name === 'Lobby' && state.game && from.params.id === state.game.id) {
+		commit.leaveGameLobby()
+	}
+})
+
+// Listen to lobby
 onMounted(() => {
-	socket.on('lobby-joined', (game) => {
+	socket.on('lobby-status', (game) => {
 		commit.joinGame(game)
 	})
 })
 onBeforeUnmount(() => {
-	socket.off('lobby-joined')
+	socket.off('lobby-status')
 })
 </script>
