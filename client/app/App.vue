@@ -1,5 +1,5 @@
 <template>
-	<main class="select-none">
+	<main class="select-none" :class="{ container: router.currentRoute.value.name !== 'Game' }">
 		<SignIn v-if="!sessionID" />
 		<div v-else-if="!isConnected && !currentGame ">
 			Loading...

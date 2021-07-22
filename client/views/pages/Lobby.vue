@@ -2,6 +2,7 @@
 	<h2>Lobby</h2>
 	<template v-if="currentGame">
 		<h3>{{ currentGame.title }}</h3>
+		<div>{{ currentGame.players.length }} / {{ currentGame.size }}</div>
 		<div v-for="player in currentGame.players" :key="player.id">
 			{{ player.name }}
 		</div>
@@ -11,6 +12,7 @@
 	<template v-else>
 		<div v-for="lobbyGame in lobbyGames" :key="lobbyGame.id">
 			<h3>{{ lobbyGame.title }}</h3>
+			<div>{{ lobbyGame.players.length }} / {{ lobbyGame.size }}</div>
 			<span v-for="player in lobbyGame.players" :key="player.id" class="player-name">
 				{{ player.name }}
 			</span>
@@ -74,6 +76,6 @@ function onLeave() {
 
 <style scoped lang="postcss">
 .player-name ~ .player-name::before {
-  content: ', ';
+	content: ', ';
 }
 </style>

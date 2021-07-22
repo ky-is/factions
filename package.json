@@ -5,8 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"client:dev": "vite client",
-		"client:build": "vite build client",
 		"server:run": "tsc --project server/tsconfig.json && node './~$dist/server/index.js'",
+		"client:build": "vite build client",
 		"server:build": "tsc --project server/tsconfig.json"
 	},
 	"dependencies": {
