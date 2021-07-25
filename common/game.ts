@@ -1,4 +1,4 @@
-import type { GameData } from '#c/types.js'
+import type { GameData } from '#c/types/data.js'
 
 export function isGameFull(gameData: GameData | null) {
 	return gameData ? gameData.players.length === gameData.size : false

@@ -1,7 +1,7 @@
 import { computed, reactive, readonly } from 'vue'
 import type { Router, RouteLocationNormalized } from 'vue-router'
 
-import type { GameData, UserData, SessionData } from '#c/types'
+import type { GameData, UserData, SessionData } from '#c/types/data'
 
 import { emailStatus, registerEmail, signinPasscode, socket } from '#p/models/api'
 import storage from '#p/models/storage'

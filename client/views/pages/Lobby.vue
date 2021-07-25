@@ -26,7 +26,7 @@
 import { defineProps, ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { GameData } from '#c/types'
+import type { GameData } from '#c/types/data'
 import { isGameFull, isGameHost } from '#c/game'
 
 import { socket } from '#p/models/api'
