@@ -1,6 +1,6 @@
 import type { Socket } from 'socket.io'
 
-import type { UserData } from '#c/types.js'
+import type { UserData } from '#c/types/data.js'
 
 import { SocketUser } from '#s/sockets/SocketUser.js'
 

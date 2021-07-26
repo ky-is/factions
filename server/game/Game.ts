@@ -1,4 +1,4 @@
-import type { GameData } from '#c/types.js'
+import type { GameData } from '#c/types/data.js'
 
 import { emit } from '#s/helpers/io.js'
 import type { EmitTarget } from '#s/helpers/io.js'

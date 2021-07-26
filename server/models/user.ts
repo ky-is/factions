@@ -1,4 +1,4 @@
-import type { UserPasscodeData, UserData, SessionData } from '#c/types.js'
+import type { UserPasscodeData, UserData, SessionData } from '#c/types/data.js'
 import { now, randomRange, SECONDS_IN_DAY, SECONDS_IN_MINUTE } from '#c/utils.js'
 
 import { APIError } from '#s/helpers/errors.js'

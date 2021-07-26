@@ -1,6 +1,6 @@
 import type { Socket, BroadcastOperator } from 'socket.io'
 
-import type { UserData } from '#c/types.js'
+import type { UserData } from '#c/types/data.js'
 
 import type { Game } from '#s/game/Game.js'
 import { useIO } from '#s/helpers/io.js'
