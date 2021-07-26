@@ -1,5 +1,7 @@
 import path from 'path'
 
+import PluginTSJSImport from './vitePluginTSJSImport'
+
 import { defineConfig } from 'vite'
 import PluginVue from '@vitejs/plugin-vue'
 
@@ -27,6 +29,7 @@ export default defineConfig({
 		__VUE_OPTIONS_API__: false,
 	},
 	plugins: [
+		PluginTSJSImport(),
 		PluginVue(),
 	],
 })
