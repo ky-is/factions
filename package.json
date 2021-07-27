@@ -6,7 +6,7 @@
 	"scripts": {
 		"client:dev": "vite client",
 		"server:run": "tsc --project server/tsconfig.json && node './~$dist/server/index.js'",
-		"client:build": "vite build client",
+		"client:build": "vite build client --emptyOutDir",
 		"server:build": "tsc --project server/tsconfig.json"
 	},
 	"dependencies": {
@@ -22,7 +22,7 @@
 		"@types/node": "^16.4.3",
 		"@typescript-eslint/eslint-plugin": "^4.28.5",
 		"@typescript-eslint/parser": "^4.28.5",
-		"@vitejs/plugin-vue": "^1.2.5",
+		"@vitejs/plugin-vue": "^1.3.0",
 		"@vue/compiler-sfc": "^3.1.5",
 		"@vue/eslint-config-typescript": "^7.0.0",
 		"autoprefixer": "^10.3.1",
@@ -32,7 +32,7 @@
 		"socket.io-client": "^4.1.3",
 		"tailwindcss": "^2.2.7",
 		"typescript": "^4.3.5",
-		"vite": "^2.4.3",
+		"vite": "^2.4.4",
 		"vue": "^3.1.5",
 		"vue-router": "^4.0.10"
 	},

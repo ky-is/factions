@@ -21,6 +21,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
+			'socket.io-client': 'socket.io-client/dist/socket.io.js',
 			'#c/': path.join(path.resolve(), 'common', path.sep),
 			'#p/': path.join(path.resolve(), 'client', path.sep),
 		},
