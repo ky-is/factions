@@ -13,8 +13,8 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import { ActionActivation } from '#c/types/cards.js'
-import type { CardAction } from '#c/types/cards.js'
+import { ActionActivation } from '#c/types/cards'
+import type { CardAction } from '#c/types/cards'
 
 import FactionVue from '#p/views/components/Game/CardFaction.vue'
 import ActionPredicateVue from '#p/views/components/Game/CardActionPredicate.vue'

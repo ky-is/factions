@@ -1,5 +1,5 @@
-import type { CardData } from '#c/types/cards.js'
-import { ActionActivation, CardType } from '#c/types/cards.js'
+import type { CardData } from '#c/types/cards'
+import { ActionActivation, CardType } from '#c/types/cards'
 
 const miner: CardData = {
 	name: 'Miner',

@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { defineProps, reactive } from 'vue'
 
 import type { CardData } from '#c/types/cards'
 import { getPulsarsFor } from '#c/cards'

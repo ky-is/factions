@@ -16,7 +16,7 @@ import type { CardData } from '#c/types/cards'
 const cards = ref<CardData[] | null>(null)
 
 function onDragOver(event: DragEvent) {
-	event.dataTransfer!.dropEffect = 'link';
+	event.dataTransfer!.dropEffect = 'link'
 }
 async function onDrop(event: DragEvent) {
 	if (!event.dataTransfer) {

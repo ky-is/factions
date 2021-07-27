@@ -302,7 +302,7 @@ function recursivePredicates(raw: string, precidences: PredicatePrecidence[], pr
 	if (split.length > 1) {
 		const processFn = precidence[2]
 		if (processFn) {
-			// console.log(raw, [...split]); //SAMPLE
+			// console.log(raw, [...split]) //SAMPLE
 			[ split, conditional ] = processFn(split)
 		}
 		split = split.filter(segment => !!segment)
@@ -387,7 +387,7 @@ const predicatePrecidences: PredicatePrecidence[] = [
 	[PredicateConjunction.OPTIONAL_END, 'you may ', processOptional],
 ]
 
-function processAction(cardName: string, factions: CardFaction[], activation: ActionActivation | null, words: string[]): CardAction {
+function processAction(cardName: string, factions: CardFaction[], activation: ActionActivation | undefined, words: string[]): CardAction {
 	if (factions) {
 		words.splice(0, words.indexOf(ALLY_MARKER) + 1)
 	}
@@ -518,7 +518,11 @@ export function loadCards(raw: string): CardData[] {
 		if (segments.length > 1) {
 			actions = segments.map(segment => {
 				const words = segment.trim().split(' ')
-				const activation = words.includes(SCRAP_MARKER) ? ActionActivation.ON_SCRAP : (words.includes(PASSIVE_MARKER) ? ActionActivation.PASSIVE : null)
+				const activation = words.includes(SCRAP_MARKER)
+					? ActionActivation.ON_SCRAP
+					: words.includes(PASSIVE_MARKER)
+						? ActionActivation.PASSIVE
+						: undefined
 				const factionsSplit = segment.split(ALLY_MARKER)
 				let actionFactions: CardFaction[] = []
 				if (factionsSplit.length === 2) {
@@ -532,7 +536,7 @@ export function loadCards(raw: string): CardData[] {
 			let currentWords = []
 			let withFactions = false
 			let onScrap = false
-			let activation: ActionActivation | undefined
+			let currentActivation: ActionActivation | undefined
 			for (let index = 0; index <= words.length; index += 1) {
 				const word = words[index]
 				let newSegment = !word
@@ -544,20 +548,21 @@ export function loadCards(raw: string): CardData[] {
 					}
 				}
 				if (newSegment && currentWords.length) {
-					const action = processAction(name, withFactions ? factions : [], activation ?? null, currentWords)
+					const action = processAction(name, withFactions ? factions : [], currentActivation, currentWords)
 					if (action) {
 						actions.push(action)
 					}
 					currentWords = []
 					withFactions = false
 					onScrap = false
+					currentActivation = undefined
 				}
 				if (word === ALLY_MARKER) {
 					withFactions = true
 				} else if (word === SCRAP_MARKER) {
-					activation = ActionActivation.ON_SCRAP
+					currentActivation = ActionActivation.ON_SCRAP
 				} else if (word === PASSIVE_MARKER) {
-					activation = ActionActivation.PASSIVE
+					currentActivation = ActionActivation.PASSIVE
 				}
 			}
 		}

@@ -1,5 +1,4 @@
 import { io } from 'socket.io-client'
-
 import { state, updateUsers, commit } from '#p/models/store'
 
 import type { UserData, SessionData } from '#c/types/data'
@@ -67,6 +66,5 @@ export function registerEmail(email: string, name: string) {
 }
 
 export function signinPasscode(email: string, passcode: string) {
-	type SigninPasscodeResponse = { email: string, exists: boolean }
 	return ajax<SigninResponse>([ 'user', 'signin', email ], { passcode })
 }

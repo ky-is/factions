@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import type { ActionPredicate } from '#c/types/cards.js'
+import type { ActionPredicate } from '#c/types/cards'
 
 import ActionSegmentContentVue from '#p/views/components/Game/CardActionPredicateContent.vue'
 

@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import type { ActionSegment } from '#c/types/cards.js'
+import type { ActionSegment } from '#c/types/cards'
 
 const props = defineProps<{
 	segment: ActionSegment

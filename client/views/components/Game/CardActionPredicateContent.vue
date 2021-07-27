@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, defineProps } from 'vue'
 
-import type { ActionPredicate } from '#c/types/cards.js'
+import type { ActionPredicate } from '#c/types/cards'
 
 import ActionSegmentVue from '#p/views/components/Game/CardActionSegment.vue'
 const ActionPredicateVue = defineAsyncComponent<any>(() => import('./CardActionPredicate.vue'))

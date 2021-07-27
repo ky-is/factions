@@ -93,7 +93,7 @@ export interface ActionSegment {
 
 export interface CardAction {
 	factions?: CardFaction[]
-	activation: ActionActivation | null
+	activation?: ActionActivation
 	predicate: ActionPredicate
 	raw?: string
 }
