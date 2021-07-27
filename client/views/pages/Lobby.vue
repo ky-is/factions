@@ -35,8 +35,8 @@ import { commit, useStore } from '#p/models/store'
 const router = useRouter()
 
 const { state } = useStore()
-const isHost = computed(() => isGameHost(state.game as GameData, state.user))
-const isFull = computed(() => isGameFull(state.game as GameData))
+const isHost = computed(() => isGameHost(state.game, state.user))
+const isFull = computed(() => isGameFull(state.game))
 
 const props = defineProps<{
 	id?: string

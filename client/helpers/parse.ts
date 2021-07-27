@@ -387,7 +387,7 @@ const predicatePrecidences: PredicatePrecidence[] = [
 	[PredicateConjunction.OPTIONAL_END, 'you may ', processOptional],
 ]
 
-function processAction(cardName: string, factions: CardFaction[], activation: ActionActivation | null, words: string[]): CardAction | undefined {
+function processAction(cardName: string, factions: CardFaction[], activation: ActionActivation | null, words: string[]): CardAction {
 	if (factions) {
 		words.splice(0, words.indexOf(ALLY_MARKER) + 1)
 	}
@@ -413,7 +413,7 @@ function processAction(cardName: string, factions: CardFaction[], activation: Ac
 	}
 }
 
-export function loadCards(raw: string) {
+export function loadCards(raw: string): CardData[] {
 	const rows = raw
 		.replace(/ /g, ' ') // eslint-disable-line no-irregular-whitespace
 		.trim()
@@ -422,45 +422,47 @@ export function loadCards(raw: string) {
 		.filter(row => !!row)
 	const columns = rows.shift()?.map(column => column.toLowerCase())
 	if (columns?.length !== 8) {
-		return console.error('TSV: Invalid columns.', columns)
+		console.error('TSV: Invalid columns.', columns)
+		return []
 	}
 	if (rows.length < 1) { //TODO
-		return console.error('TSV: Insufficient rows.')
+		console.error('TSV: Insufficient rows.')
+		return []
 	}
-	rows.map((row): CardData | undefined => {
+	return rows.flatMap((row): CardData[] => {
 		if (row[0] !== 'Core Set') { //TODO
-			return undefined
+			return []
 		}
 		const name = row[2]
 		const rawFaction = row[3]
 		if (!rawFaction) {
-			return undefined
+			return []
 		}
 		const encodedFaction = encoded(rawFaction)
 		const noFaction = encodedFaction === 'dW5hbGlnbmVk'
 		if (noFaction && (name === 'ZXhwbG9yZXI=' || name === 'dmlwZXI=' || name === 'c2NvdXQ=')) {
 			// console.log('Skip faction', row)
-			return undefined
+			return []
 		}
 		const factions = noFaction ? undefined : translate('faction', row, rawFaction, translateFactions)
 		const rawType = row[4]
 		if (!rawType) {
-			return undefined
+			return []
 		}
 		const encodedType = encoded(rawType)
 		if (!encodedType || encodedType === 'cnVsZXMgY2FyZA==' || encodedType === 'c2NvcmUgY2FyZA==') {
-			return undefined
+			return []
 		}
 		const skipType = todoTypes.includes(encodedType)
 		const type = skipType ? undefined : translate('type', row, rawType, translateTypes)[0]
 		if (!factions || !type) {
-			return undefined
+			return []
 		}
 		const rawDefense = row[7]
 		const defense = parseCardInt(row, row[7]?.[0])
 		const cost = parseCardInt(row, row[5])
 		if (defense === null || cost === null) {
-			return undefined
+			return []
 		}
 		let rawActions = row[6]
 			.replace(name, 'thiscard')
@@ -523,10 +525,7 @@ export function loadCards(raw: string) {
 					const list = factionsSplit[0].trim().split(' or ').join('/')
 					actionFactions = list.length ? translate('faction', factionsSplit, list, translateFactions) : factions
 				}
-				const action = processAction(name, actionFactions, activation, words)
-				if (action) {
-					actions.push(action)
-				}
+				return processAction(name, actionFactions, activation, words)
 			})
 		} else {
 			const words = rawActions.split(' ')
@@ -562,14 +561,16 @@ export function loadCards(raw: string) {
 				}
 			}
 		}
-		return {
+		const quantity = parseInt(row[1], 10)
+		const card: CardData = {
 			name,
 			factions,
 			type,
 			isShield: rawDefense ? encoded(rawDefense)!.endsWith('BvdXRwb3N0') : undefined,
 			defense,
 			cost,
-			actions: [],
+			actions,
 		}
+		return Array(quantity).fill(card)
 	})
 }

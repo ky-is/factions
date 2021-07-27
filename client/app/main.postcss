@@ -4,6 +4,34 @@
 
 @import "tailwindcss/utilities";
 
+.card-vertical, .card-horizontal {
+	@apply rounded-lg bg-gray-200;
+	width: 16vw;
+	margin: 0.75vw 0 0 0.75vw;
+}
+.card-vertical {
+	height: 22vw;
+}
+.card-horizontal {
+	height: 13vw;
+}
+.card-small {
+	width: 7vw;
+}
+.card-small.card-vertical {
+	height: 8vw;
+}
+.card-small.card-horizontal {
+	height: 6vw;
+}
+.card-stack {
+	@apply flex flex-col justify-center items-center;
+}
+
+.card-icon {
+	@apply flex-shrink-0  w-6 h-6 rounded-full text-white font-bold  flex justify-center items-center;
+}
+
 .input-primary {
 	@apply mx-auto w-72 border-gray-300 rounded-md text-center;
 }
