@@ -1,6 +1,7 @@
 <template>
-	<main class="select-none" :class="{ container: router.currentRoute.value.name !== 'Game' }">
-		<SignIn v-if="!sessionID" />
+	<main class="select-none" :class="{ container: route.name !== 'Game' && route.name !== 'Test' }">
+		<RouterView v-if="route.name === 'Test'" />
+		<SignIn v-else-if="!sessionID" />
 		<div v-else-if="!isConnected && !currentGame ">
 			Loading...
 		</div>
@@ -10,13 +11,14 @@
 
 <script setup lang="ts">
 import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import SignIn from '#p/views/components/SignIn.vue'
 
 import { connect, socket } from '#p/models/api'
 import { useStore } from '#p/models/store'
 
+const route = useRoute()
 const router = useRouter()
 const { state, commit } = useStore()
 
@@ -40,7 +42,6 @@ watchEffect(() => {
 	if (game.started) {
 		router.push({ name: 'Game', params: {id: game.id} })
 	} else {
-		const route = router.currentRoute.value
 		router.push({ name: 'Lobby', params: {id: game.id} })
 	}
 })

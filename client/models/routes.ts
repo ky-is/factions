@@ -4,6 +4,7 @@ import Account from '#p/views/pages/Account.vue'
 import Game from '#p/views/pages/Game.vue'
 import Home from '#p/views/pages/Home.vue'
 import Lobby from '#p/views/pages/Lobby.vue'
+import Test from '#p/views/pages/Test.vue'
 
 export default [
 	{
@@ -27,5 +28,11 @@ export default [
 		name: 'Account',
 		path: '/account',
 		component: Account,
+	},
+
+	{
+		name: 'Test',
+		path: '/test',
+		component: Test,
 	},
 ]
