@@ -123,7 +123,7 @@ function getForEachPredicate(raw:string) {
 			: ActionActivationPredicate.PLAYED
 }
 
-function parseActionSegment(raw: string) {
+function parseActionSegment(raw: string, fromOriginal: string) {
 	// console.log(cardName, raw) //SAMPLE
 	const original = raw
 	const result: ActionSegment = {}
@@ -179,35 +179,39 @@ function parseActionSegment(raw: string) {
 		}
 	}
 	{
-		const [ newRaw, unitDesc, activationDesc ] = test(raw, /copy another (ship|base|card) (you've played this turn) thiscard has that (ship|base|card)'s faction in addition to (blob|machine cult|star empire|trade federation)/)
+		const [ newRaw, unitDesc, activatioesc ] = test(raw, /copy another (ship|base|card) (you've played this turn)/)
 		if (newRaw !== undefined) {
 			raw = newRaw
-			result.copy = {
-				type: getDescType(unitDesc),
-				predicate: ActionActivationPredicate.PLAYED,
-				anywhere: false,
+			if (!result.copy) {
+				result.copy = {}
 			}
+			result.copy.type = getDescType(unitDesc)
+			result.copy.predicate = ActionActivationPredicate.PLAYED
 		}
 	}
 	{
-		const [ newRaw, typeDesc, amount, resourceDesc ] = test(raw, /all of your (ship|base)s get \+(\d+) (\S+)/)
+		const [ newRaw, unitDesc, factionDesc ] = test(raw, /thiscard has that (ship|base|card)'s faction in addition to (blob|machine cult|star empire|trade federation)/)
 		if (newRaw !== undefined) {
 			raw = newRaw
-			const resource = resourceDesc === 'damage'
+			result.copyFaction = true
+		}
+	}
+	{
+		const [ newRaw, typeDesc, amount, resourceDesc ] = test(raw, /all of your (ship|base)s get \+(\d+) (combat|economy|healing)/)
+		if (newRaw !== undefined) {
+			raw = newRaw
+			const resource = resourceDesc === 'combat'
 				? CardResource.DAMAGE
 				: resourceDesc === 'economy'
 					? CardResource.ECONOMY
 					: resourceDesc === 'healing' ? CardResource.HEALING : undefined
 			if (resource) {
 				raw = newRaw
-				if (!result.fleetBonuses) {
-					result.fleetBonuses = []
-				}
-				result.fleetBonuses!.push({
+				result.fleetBonus = {
 					types: [ getDescType(typeDesc)! ],
 					resource,
 					amount: getDescInt(amount),
-				})
+				}
 			}
 		}
 	}
@@ -252,7 +256,6 @@ function parseActionSegment(raw: string) {
 	const words = raw.split(' ')
 	let currentWord = words.shift()
 	while (currentWord) {
-
 		let amount: CardInt | null | undefined
 		let resource: CardResource | undefined
 		if (currentWord[0] === '+') {
@@ -262,7 +265,7 @@ function parseActionSegment(raw: string) {
 			}
 			const nextWord = words.shift()
 			if (!nextWord) {
-				console.error('Action: missing +specifier', amount, words)
+				console.error('Action: missing +specifier', amount, original, fromOriginal)
 				return undefined
 			}
 			resource = translate('resource', words, nextWord, translateResources)[0]
@@ -272,9 +275,9 @@ function parseActionSegment(raw: string) {
 			if (!result.resources) {
 				result.resources = {}
 			}
-			result.resources[resource] = amount
+			(result.resources as any)[resource] = amount
 		} else if (currentWord !== 'and') {
-			console.error('Unknown', currentWord, raw, '%', original)
+			console.error('Unknown', currentWord, '%', original, '%', fromOriginal)
 			break
 		}
 		currentWord = words.shift()
@@ -294,7 +297,7 @@ function unnest(predicate: ActionPredicate): ActionPredicate {
 	return predicate
 }
 
-function recursivePredicates(raw: string, precidences: PredicatePrecidence[], precidenceIndex?: number): ActionPredicate {
+function recursivePredicates(original: string, raw: string, precidences: PredicatePrecidence[], precidenceIndex?: number): ActionPredicate {
 	const index = precidenceIndex ?? 0
 	const precidence = precidences[index]
 	let split = raw
@@ -311,7 +314,7 @@ function recursivePredicates(raw: string, precidences: PredicatePrecidence[], pr
 
 	if (precidences[index + 1]) {
 		const children = split
-			.map(section => recursivePredicates(section, precidences, index + 1) as ActionPredicate)
+			.map(section => recursivePredicates(original, section, precidences, index + 1) as ActionPredicate)
 		const isOnlyChild = children.length === 1
 		return {
 			children,
@@ -319,7 +322,7 @@ function recursivePredicates(raw: string, precidences: PredicatePrecidence[], pr
 		}
 	}
 	const segments = split
-		.map((segment) => parseActionSegment(segment)!)
+		.map((segment) => parseActionSegment(segment, original)!)
 		.filter(segment => !!segment)
 	return {
 		segments,
@@ -335,20 +338,20 @@ function describePredicate(value: ActionPredicate): string {
 	return value.segments!.map(segment => Object.entries(segment).filter(e => !!e[1]).map(e => e.join(':')).toString()).join(',')
 }
 
-const processOptional: PredicatePrecidenceFn = (entries) => {
+const processConditional: PredicatePrecidenceFn = (entries) => {
 	entries[0] = entries[0].replace(/ and $/, '')
 	return [ entries, true ]
 }
 
 const processIf: PredicatePrecidenceFn = (entries) => {
-	let condition: ActionCondition | undefined
+	let conditional: ActionCondition | undefined
 	let raw = entries[1]
 	raw = raw.replace(/you've played/, 'played')
 	{
 		const [ newRaw, existDesc, amountDesc, moreLessDesc, factionDesc, unitDesc, conditionDesc ] = test(raw, /(have|played) (\d+)(\+?) (blob|machine cult|star empire|trade federation|)s? ?(ship|base|card)s? (in play|this turn)/)
 		if (newRaw !== undefined) {
 			raw = newRaw
-			condition = {
+			conditional = {
 				predicate: conditionDesc === 'in play' ? ActionActivationPredicate.IN_PLAY : ActionActivationPredicate.PLAYED,
 				source: CardSource.SELF,
 				amount: getDescInt(amountDesc),
@@ -362,7 +365,7 @@ const processIf: PredicatePrecidenceFn = (entries) => {
 		const [ newRaw, opponentDesc, hasDesc, amountDesc, moreLessDesc, factionDesc, unitDesc ] = test(raw, /(opponent|) ?(have|has|controls?) ?(\d+)(\+?) (blob|machine cult|star empire|trade federation|)s? ?(ship|base|card)s? (in play|)/)
 		if (newRaw !== undefined) {
 			raw = newRaw
-			condition = {
+			conditional = {
 				predicate: ActionActivationPredicate.IN_PLAY,
 				source: opponentDesc ? CardSource.OPPONENT : CardSource.SELF,
 				amount: getDescInt(amountDesc),
@@ -372,22 +375,22 @@ const processIf: PredicatePrecidenceFn = (entries) => {
 			}
 		}
 	}
-	if (!condition) {
-		console.error('Unknown if condition')
+	if (!conditional) {
+		console.error('Unknown if conditional')
 	}
 	entries[1] = raw
-	return [ entries, condition ]
+	return [ entries, conditional ]
 }
 
 const predicatePrecidences: PredicatePrecidence[] = [
-	[PredicateConjunction.CONDITIONAL_END, 'if ', processIf],
+	[PredicateConjunction.IF_END, 'if ', processIf],
 	[PredicateConjunction.AND, ' then '],
 	[PredicateConjunction.OR, ' or '],
 	[PredicateConjunction.EITHER, ' and/or '],
-	[PredicateConjunction.OPTIONAL_END, 'you may ', processOptional],
+	[PredicateConjunction.CONDITIONAL_END, 'you may ', processConditional],
 ]
 
-function processAction(cardName: string, factions: CardFaction[], activation: ActionActivation | undefined, words: string[]): CardAction {
+function processAction(original: string, cardName: string, factions: CardFaction[], activation: ActionActivation | undefined, words: string[]): CardAction {
 	if (factions) {
 		words.splice(0, words.indexOf(ALLY_MARKER) + 1)
 	}
@@ -403,7 +406,7 @@ function processAction(cardName: string, factions: CardFaction[], activation: Ac
 	const raw = words.join(' ')
 	// if connected: During the discard phase,
 	// if ignore: as if
-	const predicate = unnest(recursivePredicates(raw, predicatePrecidences))
+	const predicate = unnest(recursivePredicates(original, raw, predicatePrecidences))
 	// console.log(raw, '%', describePredicate(predicate)) //SAMPLE
 	return {
 		factions,
@@ -468,7 +471,7 @@ export function loadCards(raw: string): CardData[] {
 			.replace(name, 'thiscard')
 			.toLowerCase()
 			.replace(/contol/g, 'control')
-			.replace(/\.|,|;|"/g, '')
+			.replace(/,|;|"/g, '')
 			.replace('<i>or</i>', 'or')
 			.replace('<u>or</u>', 'or')
 			.replace(' (including this one)', '')
@@ -498,6 +501,8 @@ export function loadCards(raw: string): CardData[] {
 			.replace(/whenever you/g, PASSIVE_MARKER)
 			.replace(/if you do/g, 'then')
 			.replace(/if (an?|your?) /g, 'if ')
+			.trim()
+			.replace(/\.$/, '')
 		if (rawActions.endsWith('</i>')) {
 			const splitActions = rawActions.split('<i>')
 			splitActions.pop()
@@ -517,7 +522,7 @@ export function loadCards(raw: string): CardData[] {
 		const segments = rawActions.split('<hr>')
 		if (segments.length > 1) {
 			actions = segments.map(segment => {
-				const words = segment.trim().split(' ')
+				const words = segment.replace(/\./g, '').trim().split(' ')
 				const activation = words.includes(SCRAP_MARKER)
 					? ActionActivation.ON_SCRAP
 					: words.includes(PASSIVE_MARKER)
@@ -529,7 +534,7 @@ export function loadCards(raw: string): CardData[] {
 					const list = factionsSplit[0].trim().split(' or ').join('/')
 					actionFactions = list.length ? translate('faction', factionsSplit, list, translateFactions) : factions
 				}
-				return processAction(name, actionFactions, activation, words)
+				return processAction(rawActions, name, actionFactions, activation, words)
 			})
 		} else {
 			const words = rawActions.split(' ')
@@ -537,32 +542,43 @@ export function loadCards(raw: string): CardData[] {
 			let withFactions = false
 			let onScrap = false
 			let currentActivation: ActionActivation | undefined
+			let newSegment = false
 			for (let index = 0; index <= words.length; index += 1) {
 				const word = words[index]
-				let newSegment = !word
+				if (index === words.length) {
+					newSegment = true
+				}
 				if (word) {
 					if (word === ALLY_MARKER || word === SCRAP_MARKER || word === PASSIVE_MARKER) {
-						newSegment = true
+						if (currentWords.length) {
+							newSegment = true
+						}
 					} else {
-						currentWords.push(word)
+						currentWords.push(word.replace('.', ''))
+						if (word.endsWith('.')) {
+							newSegment = true
+						}
 					}
 				}
-				if (newSegment && currentWords.length) {
-					const action = processAction(name, withFactions ? factions : [], currentActivation, currentWords)
+				if (newSegment) {
+					const action = processAction(rawActions, name, withFactions ? factions : [], currentActivation, currentWords)
 					if (action) {
 						actions.push(action)
 					}
+					newSegment = false
 					currentWords = []
 					withFactions = false
 					onScrap = false
 					currentActivation = undefined
 				}
-				if (word === ALLY_MARKER) {
-					withFactions = true
-				} else if (word === SCRAP_MARKER) {
-					currentActivation = ActionActivation.ON_SCRAP
-				} else if (word === PASSIVE_MARKER) {
-					currentActivation = ActionActivation.PASSIVE
+				if (word) {
+					if (word === ALLY_MARKER) {
+						withFactions = true
+					} else if (word === SCRAP_MARKER) {
+						currentActivation = ActionActivation.ON_SCRAP
+					} else if (word === PASSIVE_MARKER) {
+						currentActivation = ActionActivation.PASSIVE
+					}
 				}
 			}
 		}

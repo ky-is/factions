@@ -12,13 +12,14 @@
 		<CardActionSegmentMultiplier :multiplier="segment.multiplier" />
 	</template>
 	<template v-if="segment.copy">
-		TODO copy
+		copy a {{ segment.copy.type }} you {{ segment.copy.predicate === ActionActivationPredicate.PLAYED ? 'played this turn' : 'have in play' }}
+		{{ segment.copyFaction ? 'this card also gains its faction' : null }}
 	</template>
 	<template v-if="segment.acquire">
 		<CardActionSegmentAcquire :acquire="segment.acquire" />
 	</template>
-	<template v-if="segment.fleetBonuses">
-		TODO fleetBonuses
+	<template v-if="segment.fleetBonus">
+		all your {{ segment.fleetBonus.types.join(', ') }} gain {{ segment.fleetBonus.amount }} {{ segment.fleetBonus.resource }}
 	</template>
 	<template v-if="segment.destroyStations">
 		destroy {{ segment.destroyStations > 1 ? segment.destroyStations : 'a' }} station
@@ -37,6 +38,7 @@ import CardActionSegmentResource from '#p/views/components/Game/CardActionSegmen
 
 import { defineProps } from 'vue'
 
+import { ActionActivationPredicate } from '#c/types/cards'
 import type { ActionSegment } from '#c/types/cards'
 
 const props = defineProps<{

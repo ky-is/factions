@@ -19,7 +19,7 @@ export enum CardSource {
 }
 
 export enum CardResource {
-	DRAW = 'draw', ECONOMY = 'economy', DAMAGE = 'damage', HEALING = 'healing'
+	DRAW = 'draw', ECONOMY = 'gold', DAMAGE = 'damage', HEALING = 'healing'
 }
 
 export type CardInt = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20
@@ -30,7 +30,7 @@ export enum ActionActivation {
 }
 
 export enum PredicateConjunction {
-	AND = 'AND', OR = 'OR', EITHER = 'EITHER', CONDITIONAL_END = 'CONDITIONAL_END', OPTIONAL_END = 'OPTIONAL_END'
+	AND = 'AND', OR = 'OR', EITHER = 'EITHER', IF_END = 'IF_END', CONDITIONAL_END = 'CONDITIONAL_END'
 }
 
 interface ActionFleetBonus {
@@ -42,7 +42,7 @@ interface ActionFleetBonus {
 export const PREVIOUS_AMOUNT = -1
 
 export enum ActionActivationPredicate {
-	PLAYED, IN_PLAY, SCRAPPED_THIS_WAY, SCRAPPED_THIS_TURN
+	PLAYED, IN_PLAY, ANY_IN_PLAY, SCRAPPED_THIS_WAY, SCRAPPED_THIS_TURN
 }
 
 export interface ActionCondition {
@@ -91,14 +91,14 @@ export interface ActionSegment {
 	multiplier?: ActionCondition
 	destroyStations?: CardInt
 	copy?: {
-		type: CardType | null
-		predicate: ActionActivationPredicate
-		anywhere: boolean
+		type?: CardType | null
+		predicate?: ActionActivationPredicate
 	}
+	copyFaction?: boolean
 	discard?: ActionDiscard,
 	moveUnit?: ActionMoveUnit,
 	acquire?: ActionAcquire,
-	fleetBonuses?: ActionFleetBonus[]
+	fleetBonus?: ActionFleetBonus
 	alliances?: CardFaction[]
 }
 
