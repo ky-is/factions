@@ -1,12 +1,10 @@
 import path from 'path'
+// import { defineConfig } from 'vite'
 
+import PluginVue from '@vitejs/plugin-vue'
 import PluginTSJSImport from './vitePluginTSJSImport'
 
-import { defineConfig } from 'vite'
-import PluginVue from '@vitejs/plugin-vue'
-
-export default defineConfig({
-	root: 'client',
+export default {
 	build: {
 		outDir: '../~$dist/public',
 	},
@@ -33,4 +31,4 @@ export default defineConfig({
 		PluginTSJSImport(),
 		PluginVue(),
 	],
-})
+}

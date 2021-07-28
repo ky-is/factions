@@ -36,7 +36,7 @@ const router = useRouter()
 
 const { state } = useStore()
 const isHost = computed(() => isGameHost(state.game as GameData, state.user))
-const isFull = computed(() => isGameFull(state.game as GameData)
+const isFull = computed(() => isGameFull(state.game as GameData))
 
 const props = defineProps<{
 	id?: string
