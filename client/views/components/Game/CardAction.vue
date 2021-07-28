@@ -1,7 +1,7 @@
 <template>
 	<div class="flex">
 		<div v-if="activationIcon" class="card-icon">
-			activationIcon
+			{{ activationIcon }}
 		</div>
 		<div v-if="action.factions" class="flex">
 			<FactionVue v-for="faction in action.factions" :key="faction" :faction="faction" />

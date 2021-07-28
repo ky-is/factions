@@ -1,13 +1,17 @@
 export enum CardFaction {
-	PINK, GOLD, GREEN, BLUE
+	PINK = 'Pink', GOLD = 'Gold', GREEN = 'Green', BLUE = 'Blue'
 }
 
 export enum CardType {
-	BASIC, SHIP, STATION, SCOUT
+	BASIC, SHIP = 'ship', STATION = 'station', PULSAR = 'Pulsar'
 }
 
 export enum CardAcquisition {
 	NEXT_ACQUIRED, FROM_DISCARD
+}
+
+export enum CardDestination {
+	DECK_TOP, PLAY
 }
 
 export enum CardSource {
@@ -45,7 +49,7 @@ export interface ActionCondition {
 	predicate: ActionActivationPredicate
 	source: CardSource | null
 	amount: CardInt
-	amountDirection: CardAmountMoreLess
+	amountMoreLess: CardAmountMoreLess
 	type: CardType | null
 	typeFaction: CardFaction | null
 }
@@ -55,6 +59,26 @@ export interface ActionPredicate {
 	segments?: ActionSegment[] // eslint-disable-line no-use-before-define
 	conjunction?: PredicateConjunction
 	conditional?: ActionCondition | true
+}
+
+export interface ActionDiscard {
+	count: CardInt
+	orFewer: boolean
+	targets: CardSource[]
+	scraps: boolean
+}
+
+export interface ActionMoveUnit {
+	type: CardType | null
+	amount: CardInt
+	acquisition: CardAcquisition
+	destination: CardDestination
+}
+
+export interface ActionAcquire {
+	type: CardType | null
+	maxValue: CardInt | undefined
+	destination: CardSource
 }
 
 export interface ActionSegment {
@@ -71,22 +95,9 @@ export interface ActionSegment {
 		predicate: ActionActivationPredicate
 		anywhere: boolean
 	}
-	discard?: {
-		count: CardInt
-		orFewer: boolean
-		targets: CardSource[]
-		scraps: boolean
-	}
-	putOnDeck?: {
-		type: CardType | null
-		amount: CardInt
-		acquisition: CardAcquisition
-	},
-	acquire?: {
-		type: CardType | null
-		maxValue: CardInt | undefined
-		destination: CardSource
-	},
+	discard?: ActionDiscard,
+	moveUnit?: ActionMoveUnit,
+	acquire?: ActionAcquire,
 	fleetBonuses?: ActionFleetBonus[]
 	alliances?: CardFaction[]
 }

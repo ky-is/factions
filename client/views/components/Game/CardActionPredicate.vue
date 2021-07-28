@@ -1,5 +1,5 @@
 <template>
-	<div class="flex">
+	<div>
 		<ActionSegmentContentVue :predicate="predicate" />
 	</div>
 </template>

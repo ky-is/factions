@@ -1,5 +1,5 @@
+import { ActionActivation, CardResource, CardFaction, CardType, PredicateConjunction, CardSource, CardAcquisition, CardDestination, PREVIOUS_AMOUNT, ActionActivationPredicate } from '#c/types/cards'
 import type { CardAction, CardData, CardInt, ActionSegment, ActionPredicate, CardAmountMoreLess, ActionCondition } from '#c/types/cards'
-import { ActionActivation, CardResource, CardFaction, CardType, PredicateConjunction, CardSource, CardAcquisition, PREVIOUS_AMOUNT, ActionActivationPredicate } from '#c/types/cards'
 
 const translateFactions: Record<string, CardFaction> = {
 	'YmxvYg==': CardFaction.GREEN,
@@ -100,7 +100,7 @@ function getDescType(raw: string) {
 		: raw === 'base'
 			? CardType.STATION
 			: raw === 'explorer'
-				? CardType.SCOUT
+				? CardType.PULSAR
 				: null
 }
 function getDescFaction(raw: string) {
@@ -138,10 +138,10 @@ function parseActionSegment(raw: string) {
 		}
 	}
 	{
-		const [ newRaw ] = test(raw, /destroy target base/)
+		const [ newRaw, amountDesc ] = test(raw, /destroy (\d+|) ?target bases?/)
 		if (newRaw !== undefined) {
 			raw = newRaw
-			result.destroyStations = 1
+			result.destroyStations = amountDesc ? getDescInt(amountDesc) : 1
 		}
 	}
 	{
@@ -162,18 +162,19 @@ function parseActionSegment(raw: string) {
 		if (newRaw !== undefined) {
 			raw = newRaw
 			if (allies === 'all') {
-				result.alliances = [ CardFaction.BLUE, CardFaction.GOLD, CardFaction.GREEN]
+				result.alliances = [ CardFaction.GREEN, CardFaction.PINK, CardFaction.BLUE, CardFaction.GOLD ]
 			}
 		}
 	}
 	{
-		const [ newRaw, amountDesc, unitDesc, acquisitionDesc ] = test(raw, /put (the next|\d+) (ship|base|ships?\/base)s? (you acquire this turn|from your discard pile) on top of your deck/)
+		const [ newRaw, amountDesc, unitDesc, targetDesc, acquisitionDesc ] = test(raw, /put (the next|\d+) (ship|base|ships?\/base)s? (you|from your) (acquire this turn|discard pile) on top of your deck/)
 		if (newRaw !== undefined) {
 			raw = newRaw
-			result.putOnDeck = {
+			result.moveUnit = {
 				type: getDescType(unitDesc),
 				amount: getDescInt(amountDesc) ?? 1,
-				acquisition: acquisitionDesc === 'you acquire this turn' ? CardAcquisition.NEXT_ACQUIRED : CardAcquisition.FROM_DISCARD,
+				acquisition: acquisitionDesc === 'acquire this turn' ? CardAcquisition.NEXT_ACQUIRED : CardAcquisition.FROM_DISCARD,
+				destination: CardDestination.DECK_TOP,
 			}
 		}
 	}
@@ -242,7 +243,7 @@ function parseActionSegment(raw: string) {
 				predicate: getForEachPredicate(actionDesc),
 				source: CardSource.SELF,
 				amount: 1,
-				amountDirection: 0,
+				amountMoreLess: 0,
 				type: getDescType(typeDesc),
 				typeFaction: getDescFaction(factionDesc),
 			}
@@ -314,7 +315,6 @@ function recursivePredicates(raw: string, precidences: PredicatePrecidence[], pr
 		const isOnlyChild = children.length === 1
 		return {
 			children,
-			segments: undefined,
 			conjunction: isOnlyChild ? undefined : precidence[0],
 		}
 	}
@@ -352,7 +352,7 @@ const processIf: PredicatePrecidenceFn = (entries) => {
 				predicate: conditionDesc === 'in play' ? ActionActivationPredicate.IN_PLAY : ActionActivationPredicate.PLAYED,
 				source: CardSource.SELF,
 				amount: getDescInt(amountDesc),
-				amountDirection: getDescMoreLess(moreLessDesc),
+				amountMoreLess: getDescMoreLess(moreLessDesc),
 				type: getDescType(unitDesc),
 				typeFaction: getDescFaction(factionDesc),
 			}
@@ -366,7 +366,7 @@ const processIf: PredicatePrecidenceFn = (entries) => {
 				predicate: ActionActivationPredicate.IN_PLAY,
 				source: opponentDesc ? CardSource.OPPONENT : CardSource.SELF,
 				amount: getDescInt(amountDesc),
-				amountDirection: getDescMoreLess(moreLessDesc),
+				amountMoreLess: getDescMoreLess(moreLessDesc),
 				type: getDescType(unitDesc),
 				typeFaction: getDescFaction(factionDesc),
 			}
