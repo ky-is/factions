@@ -1,5 +1,5 @@
 <template>
-	<div class="resource-icon" :class="resource">
+	<div class="resource-icon" :class="resource" :title="`${quantity} ${resource}`">
 		<div class="background">{{ background }}</div>
 		<div class="quantity">{{ quantity }}</div>
 	</div>
@@ -25,7 +25,7 @@ const background = props.resource === CardResource.DRAW
 				: '??'
 </script>
 
-<style lang="postcss">
+<style scoped lang="postcss">
 .resource-icon {
 	@apply inline-block relative font-mono;
 	width: 2.3vw;
@@ -36,7 +36,7 @@ const background = props.resource === CardResource.DRAW
 	font-size: 175%;
 }
 .damage .background {
-	margin-left: -0.25vw;
+	margin-left: -0.2vw;
 }
 .quantity {
 	margin-top: 0.5vw;
@@ -47,14 +47,6 @@ const background = props.resource === CardResource.DRAW
 
 .quantity {
 	@apply absolute inset-0 text-center text-white font-black;
-	text-shadow:
-		-1px -1px 0 #000,
-     0   -1px 0 #000,
-     1px -1px 0 #000,
-     1px  0   0 #000,
-     1px  1px 0 #000,
-     0    1px 0 #000,
-    -1px  1px 0 #000,
-    -1px  0   0 #000;
+	text-shadow: -1px -1px 0 #000, 0 -1px 0 #000, 1px -1px 0 #000, 1px 0 0 #000, 1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000;
 }
 </style>

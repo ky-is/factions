@@ -4,6 +4,7 @@
 			<ActionPredicateVue :predicate="child" />
 			<template v-if="index < predicate.children.length - 1">
 				<template v-if="predicate.conjunction === PredicateConjunction.AND">then</template>
+				<template v-if="predicate.conjunction === PredicateConjunction.OR"> or </template>
 				<div v-else-if="predicate.conjunction !== PredicateConjunction.EITHER && predicate.conjunction !== undefined">{{ predicate.conjunction }}</div>
 			</template>
 		</template>

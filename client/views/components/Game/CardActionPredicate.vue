@@ -1,7 +1,5 @@
 <template>
-	<div>
-		<ActionSegmentContentVue :predicate="predicate" />
-	</div>
+	<ActionSegmentContentVue :predicate="predicate" />
 </template>
 
 <script setup lang="ts">
