@@ -1,5 +1,5 @@
 <template>
-	for each {{ multiplier.typeFaction }} {{ multiplier.type }} {{ sourceDesc }}
+	for each {{ multiplier.typeFaction }} {{ multiplier.type ?? 'card' }} {{ sourceDesc }}
 </template>
 
 <script setup lang="ts">

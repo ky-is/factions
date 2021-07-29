@@ -1,7 +1,9 @@
 <template>
-	<BoardVue v-if="cards" :cards="cards" />
-	<div v-else>
-		<input type="file" @dragover.prevent="onDragOver" @drop.prevent="onDrop" @change.prevent="onChange">
+	<div class="text-large">
+		<BoardVue v-if="cards" :cards="cards" />
+		<div v-else>
+			<input type="file" @dragover.prevent="onDragOver" @drop.prevent="onDrop" @change.prevent="onChange">
+		</div>
 	</div>
 </template>
 

@@ -1,5 +1,7 @@
 <template>
-	<BoardVue :cards="[]" />
+	<div class="text-large">
+		<BoardVue :cards="[]" />
+	</div>
 </template>
 
 <script setup lang="ts">

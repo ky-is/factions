@@ -1,5 +1,5 @@
 <template>
-	<div class="card-icon  text-large" :class="[ backgroundColor, faction.toLowerCase() ]">
+	<div class="card-icon  text-largest" :class="[ backgroundColor, faction.toLowerCase() ]">
 		<div class="icon">{{ icon }}</div>
 	</div>
 </template>

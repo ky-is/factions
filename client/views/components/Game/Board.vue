@@ -38,9 +38,3 @@ const deckCards = reactive(deck.cards as CardData[])
 const shopCards = reactive(deck.shop as CardData[])
 const scrappedCards = reactive(deck.scrap as CardData[])
 </script>
-
-<style scoped lang="postcss">
-.game-container {
-	@apply text-base;
-}
-</style>
