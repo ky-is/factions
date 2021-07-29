@@ -1,5 +1,5 @@
 <template>
-	<div class="card-icon" :class="color" />
+	<div class="card-icon  mr-0.5" :class="color" />
 </template>
 
 <script setup lang="ts">

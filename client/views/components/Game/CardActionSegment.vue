@@ -19,7 +19,7 @@
 		<CardActionSegmentAcquire :acquire="segment.acquire" />
 	</template>
 	<template v-if="segment.fleetBonus">
-		all your {{ segment.fleetBonus.types.join(', ') }} gain {{ segment.fleetBonus.amount }} {{ segment.fleetBonus.resource }}
+		all your {{ segment.fleetBonus.types.join(', ') }} gain <CardActionSegmentResource :resource="segment.fleetBonus.resource" :quantity="segment.fleetBonus.amount" />
 	</template>
 	<template v-if="segment.destroyStations">
 		destroy {{ segment.destroyStations > 1 ? segment.destroyStations : 'a' }} station

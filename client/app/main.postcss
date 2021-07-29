@@ -5,7 +5,7 @@
 @import "tailwindcss/utilities";
 
 .card-vertical, .card-horizontal {
-	@apply rounded-lg bg-gray-200;
+	@apply p-1 rounded-lg bg-gray-200;
 	width: 16vw;
 	margin: 0.75vw 0 0 0.75vw;
 }
@@ -16,6 +16,7 @@
 	height: 13vw;
 }
 .card-small {
+	@apply p-0.5;
 	width: 7vw;
 }
 .card-small.card-vertical {
@@ -89,4 +90,8 @@ h3 {
 
 .bg-c-brand {
 	@apply bg-purple-500;
+}
+
+.text-base {
+	font-size: 1.5vw;
 }

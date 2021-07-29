@@ -41,6 +41,6 @@ const scrappedCards = reactive(deck.scrap as CardData[])
 
 <style lang="postcss">
 .game-container {
-	font-size: 1.5vw;
+	@apply text-base;
 }
 </style>
