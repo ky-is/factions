@@ -15,7 +15,7 @@ export enum CardDestination {
 }
 
 export enum CardSource {
-	SELF, SELF_DECK, SELF_HAND, SELF_DISCARD, TRADE, OPPONENT
+	SELF = 'self', SELF_DECK = 'your deck', SELF_HAND = 'your hand', SELF_DISCARD = 'your discard', TRADE = 'the trade row', OPPONENT = 'an opponent'
 }
 
 export enum CardResource {

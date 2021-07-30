@@ -197,7 +197,7 @@ function parseActionSegment(raw: string, fromOriginal: string) {
 		}
 	}
 	{
-		const [ newRaw, typeDesc, amount, resourceDesc ] = test(raw, /all of your (ship|base)s get \+(\d+) (combat|economy|healing)/)
+		const [ newRaw, typeDesc, amount, resourceDesc ] = test(raw, /all of your (ship|base|card)s get \+(\d+) (combat|economy|healing)/)
 		if (newRaw !== undefined) {
 			raw = newRaw
 			const resource = resourceDesc === 'combat'
@@ -208,7 +208,7 @@ function parseActionSegment(raw: string, fromOriginal: string) {
 			if (resource) {
 				raw = newRaw
 				result.fleetBonus = {
-					types: [ getDescType(typeDesc)! ],
+					type: getDescType(typeDesc),
 					resource,
 					amount: getDescInt(amount),
 				}
@@ -376,7 +376,7 @@ const processIf: PredicatePrecidenceFn = (entries) => {
 		}
 	}
 	if (!conditional) {
-		console.error('Unknown if conditional')
+		console.error('Unknown if conditional', entries)
 	}
 	entries[1] = raw
 	return [ entries, conditional ]
