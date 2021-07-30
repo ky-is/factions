@@ -7,7 +7,7 @@ import { defineProps } from 'vue'
 
 import type { ActionPredicate } from '#c/types/cards'
 
-import ActionSegmentContentVue from '#p/views/components/Game/CardActionPredicateContent.vue'
+import ActionSegmentContentVue from '#p/views/components/Game/Card/ActionPredicateContent.vue'
 
 const props = defineProps<{
 	predicate: ActionPredicate

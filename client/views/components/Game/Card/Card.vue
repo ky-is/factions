@@ -18,9 +18,9 @@ import { defineProps } from 'vue'
 import { CardResource, CardType } from '#c/types/cards'
 import type { CardData } from '#c/types/cards'
 
-import FactionVue from '#p/views/components/Game/CardFaction.vue'
-import CardActionVue from '#p/views/components/Game/CardAction.vue'
-import CardActionSegmentResource from '#p/views/components/Game/CardActionSegmentResource.vue'
+import FactionVue from '#p/views/components/Game/Card/CardFaction.vue'
+import CardActionVue from '#p/views/components/Game/Card/CardAction.vue'
+import CardActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
 
 const props = defineProps<{
 	card: CardData

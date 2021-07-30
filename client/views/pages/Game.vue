@@ -3,12 +3,12 @@
 		<template v-if="!game">
 			Unknown game
 		</template>
-		<BoardVue v-else :deck="game.deck" />
+		<ShopBoardVue v-else :deck="game.deck" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import BoardVue from '#p/views/components/Game/Board.vue'
+import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 
 import { PlayGame } from '#c/game/Play.js'
 import type { GameData } from '#c/types/data.js'

@@ -28,9 +28,9 @@ import { defineAsyncComponent, defineProps } from 'vue'
 import { PredicateConjunction } from '#c/types/cards'
 import type { ActionPredicate } from '#c/types/cards'
 
-import ActionSegmentVue from '#p/views/components/Game/CardActionSegment.vue'
-import CardActionConditionalVue from '#p/views/components/Game/CardActionConditional.vue'
-const ActionPredicateVue = defineAsyncComponent<any>(() => import('./CardActionPredicate.vue'))
+import ActionSegmentVue from '#p/views/components/Game/Card/ActionSegment.vue'
+import CardActionConditionalVue from '#p/views/components/Game/Card/ActionConditional.vue'
+const ActionPredicateVue = defineAsyncComponent<any>(() => import('./ActionPredicate.vue'))
 
 const props = defineProps<{
 	predicate: ActionPredicate

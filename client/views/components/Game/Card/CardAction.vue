@@ -16,8 +16,8 @@ import { defineProps } from 'vue'
 import { ActionActivation } from '#c/types/cards'
 import type { CardAction } from '#c/types/cards'
 
-import FactionVue from '#p/views/components/Game/CardFaction.vue'
-import ActionPredicateVue from '#p/views/components/Game/CardActionPredicate.vue'
+import FactionVue from '#p/views/components/Game/Card/CardFaction.vue'
+import ActionPredicateVue from '#p/views/components/Game/Card/ActionPredicate.vue'
 
 const props = defineProps<{
 	action: CardAction

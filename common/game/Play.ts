@@ -9,6 +9,7 @@ export class PlayPlayer {
 	name: string
 	cards: CardData[]
 	hand: CardData[] = []
+	discard: CardData[] = []
 
 	constructor(index: number, { id, name }: PlayerData, numberOfPlayers: number) {
 		this.index = index

@@ -30,11 +30,11 @@
 </template>
 
 <script setup lang="ts">
-import CardActionSegmentAcquire from '#p/views/components/Game/CardActionSegmentAcquire.vue'
-import CardActionSegmentDiscard from '#p/views/components/Game/CardActionSegmentDiscard.vue'
-import CardActionSegmentMoveUnit from '#p/views/components/Game/CardActionSegmentMoveUnit.vue'
-import CardActionSegmentMultiplier from '#p/views/components/Game/CardActionSegmentMultiplier.vue'
-import CardActionSegmentResource from '#p/views/components/Game/CardActionSegmentResource.vue'
+import CardActionSegmentAcquire from '#p/views/components/Game/Card/ActionSegmentAcquire.vue'
+import CardActionSegmentDiscard from '#p/views/components/Game/Card/ActionSegmentDiscard.vue'
+import CardActionSegmentMoveUnit from '#p/views/components/Game/Card/ActionSegmentMoveUnit.vue'
+import CardActionSegmentMultiplier from '#p/views/components/Game/Card/ActionSegmentMultiplier.vue'
+import CardActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
 
 import { defineProps } from 'vue'
 

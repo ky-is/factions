@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import CardActionSegmentResource from '#p/views/components/Game/CardActionSegmentResource.vue'
+import CardActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
 
 import { defineProps } from 'vue'
 
