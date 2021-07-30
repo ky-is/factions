@@ -2,7 +2,7 @@ import type { CardData } from '#c/types/cards'
 
 import { shuffle } from '#c/utils'
 
-export class Deck {
+export class GameDeck {
 	cards: CardData[]
 	shop: CardData[]
 	scrap: CardData[] = []

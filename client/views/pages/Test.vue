@@ -1,6 +1,6 @@
 <template>
 	<div class="text-large">
-		<BoardVue v-if="cards" :cards="cards" />
+		<BoardVue v-if="deck" :deck="deck" />
 		<div v-else>
 			<input type="file" @dragover.prevent="onDragOver" @drop.prevent="onDrop" @change.prevent="onChange">
 		</div>
@@ -14,8 +14,9 @@ import BoardVue from '#p/views/components/Game/Board.vue'
 
 import { loadCards } from '#p/helpers/parse'
 import type { CardData } from '#c/types/cards'
+import { GameDeck } from '#c/game/Deck.js'
 
-const cards = ref<CardData[] | null>(null)
+const deck = ref<GameDeck | null>(null)
 
 function onDragOver(event: DragEvent) {
 	event.dataTransfer!.dropEffect = 'link'
@@ -38,6 +39,7 @@ function onChange(event: Event) {
 
 async function handleFiles(files: FileList) {
 	const fileText = await files[0].text()
-	cards.value = loadCards(fileText)
+	const cards = loadCards(fileText)
+	deck.value = new GameDeck(cards)
 }
 </script>

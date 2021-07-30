@@ -20,21 +20,18 @@
 <script setup lang="ts">
 import { defineProps, reactive } from 'vue'
 
-import type { CardData } from '#c/types/cards'
+import type { GameDeck } from '#c/game/Deck'
 import { getPulsarsFor } from '#c/cards'
 
 import CardVue from '#p/views/components/Game/Card.vue'
 
-import { Deck } from '#c/game/Deck'
-
 const props = defineProps<{
-	cards: CardData[]
+	deck: GameDeck
 }>()
 
 const pulsars = reactive(getPulsarsFor(2))
 
-const deck = new Deck(props.cards)
-const deckCards = reactive(deck.cards as CardData[])
-const shopCards = reactive(deck.shop as CardData[])
-const scrappedCards = reactive(deck.scrap as CardData[])
+const deckCards = reactive(props.deck.cards)
+const shopCards = reactive(props.deck.shop)
+const scrappedCards = reactive(props.deck.scrap)
 </script>
