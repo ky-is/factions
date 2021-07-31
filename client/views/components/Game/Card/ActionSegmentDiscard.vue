@@ -1,11 +1,11 @@
 <template>
 	{{ targetsOpponent ? 'opponent' : null }} {{ discard.scraps ? 'scrap' : 'discard' }}{{ targetsOpponent ? 's' : null }} {{ discard.orFewer ? 'up to' : '' }}
-	<CardActionSegmentResource :resource="CardResource.DRAW" :quantity="discard.count" />
+	<ActionSegmentResource :resource="CardResource.DRAW" :quantity="discard.count" />
 	{{ targetDescription ? 'from ' + targetDescription : null }}
 </template>
 
 <script setup lang="ts">
-import CardActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
+import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
 
 import { defineProps } from 'vue'
 
