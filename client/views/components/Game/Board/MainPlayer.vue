@@ -2,6 +2,12 @@
 	<div class="flex">
 		<div class="flex flex-col">
 			<div class="flex">
+				<ActionSegmentResource :resource="CardResource.HEALING" :quantity="player.health" />
+				<div class="flex flex-col">
+					<ActionSegmentResource :resource="CardResource.ECONOMY" :quantity="turn.economy" />
+					<ActionSegmentResource :resource="CardResource.DAMAGE" :quantity="turn.damage" />
+					<ActionSegmentResource :resource="CardResource.HEALING" :quantity="turn.healing" />
+				</div>
 				<CardVue v-for="(card, index) in playedCards" :key="index" :card="card" class="card-small" />
 			</div>
 			<div class="flex">
@@ -31,6 +37,7 @@ import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentRe
 import { defineProps, reactive } from 'vue'
 
 import type { PlayPlayer } from '#c/game/Play'
+import { CardResource } from '#c/types/cards'
 
 const props = defineProps<{
 	player: PlayPlayer
@@ -40,6 +47,7 @@ const deckCards = reactive(props.player.deck)
 const handCards = reactive(props.player.hand)
 const playedCards = reactive(props.player.played)
 const discardCards = reactive(props.player.discard)
+const turn = reactive(props.player.turn)
 
 function onPlayAll() {
 	handCards.forEach(card => props.player.play(card)) //TODO
