@@ -33,7 +33,7 @@ export enum PredicateConjunction {
 	AND = 'AND', OR = 'OR', EITHER = 'EITHER', IF_END = 'IF_END', CONDITIONAL_END = 'CONDITIONAL_END'
 }
 
-interface ActionFleetBonus {
+export interface ActionFleetBonus {
 	type: CardType | null
 	resource: CardResource
 	amount: CardInt
@@ -107,6 +107,7 @@ export interface CardAction {
 	activation?: ActionActivation
 	predicate: ActionPredicate
 	raw?: string
+	played?: boolean
 }
 
 export interface CardData {

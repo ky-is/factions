@@ -1,10 +1,10 @@
 <template>
 	<div class="game-container  flex">
-		<CardVue :card="pulsars[0]" class="card-small" />
 		<div class="flex">
 			<CardVue v-for="(card, index) in shopCards" :key="index" :card="card" />
 		</div>
 		<div class="flex flex-col">
+			<CardVue :card="pulsars[0]" class="card-small" />
 			<div class="card-stack card-small card-vertical">
 				<div>{{ deckCards.length }}</div>
 				<div>Deck</div>
