@@ -7,15 +7,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
 import MainPlayerVue from '#p/views/components/Game/Board/MainPlayer.vue'
 import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 
+import { ref } from 'vue'
+
 import { loadCards } from '#p/helpers/parse'
-import { GameDeck } from '#c/game/Deck.js'
-import storage from '#p/models/storage.js'
-import { PlayPlayer } from '#c/game/Play.js'
+import { GameDeck } from '#c/game/Deck'
+import storage from '#p/models/storage'
+import { PlayPlayer } from '#c/game/Play'
 
 const deck = ref<GameDeck | null>(null)
 const mainPlayer = ref<PlayPlayer | null>(null)

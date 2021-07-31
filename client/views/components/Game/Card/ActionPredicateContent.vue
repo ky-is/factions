@@ -23,14 +23,15 @@
 </template>
 
 <script setup lang="ts">
+import ActionSegmentVue from '#p/views/components/Game/Card/ActionSegment.vue'
+import CardActionConditionalVue from '#p/views/components/Game/Card/ActionConditional.vue'
+
 import { defineAsyncComponent, defineProps } from 'vue'
+
+const ActionPredicateVue = defineAsyncComponent<any>(() => import('./ActionPredicate.vue'))
 
 import { PredicateConjunction } from '#c/types/cards'
 import type { ActionPredicate } from '#c/types/cards'
-
-import ActionSegmentVue from '#p/views/components/Game/Card/ActionSegment.vue'
-import CardActionConditionalVue from '#p/views/components/Game/Card/ActionConditional.vue'
-const ActionPredicateVue = defineAsyncComponent<any>(() => import('./ActionPredicate.vue'))
 
 const props = defineProps<{
 	predicate: ActionPredicate

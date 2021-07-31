@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-
 import User from '#p/views/components/User.vue'
+
+import { defineProps } from 'vue'
 
 defineProps<{
 	ids: readonly string[]

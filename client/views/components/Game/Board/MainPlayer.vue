@@ -25,10 +25,12 @@
 </template>
 
 <script setup lang="ts">
+import CardVue from '#p/views/components/Game/Card/Card.vue'
+import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
+
 import { defineProps, reactive } from 'vue'
 
-import CardVue from '#p/views/components/Game/Card/Card.vue'
-import type { PlayPlayer } from '#c/game/Play.js'
+import type { PlayPlayer } from '#c/game/Play'
 
 const props = defineProps<{
 	player: PlayPlayer

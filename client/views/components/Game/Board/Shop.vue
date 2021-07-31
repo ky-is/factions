@@ -18,12 +18,12 @@
 </template>
 
 <script setup lang="ts">
+import CardVue from '#p/views/components/Game/Card/Card.vue'
+
 import { defineProps, reactive } from 'vue'
 
 import type { GameDeck } from '#c/game/Deck'
 import { getPulsarsFor } from '#c/cards'
-
-import CardVue from '#p/views/components/Game/Card/Card.vue'
 
 const props = defineProps<{
 	deck: GameDeck

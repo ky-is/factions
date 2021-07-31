@@ -5,8 +5,8 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import type { ActionMoveUnit } from '#c/types/cards.js'
-import { CardAcquisition, CardDestination } from '#c/types/cards.js'
+import type { ActionMoveUnit } from '#c/types/cards'
+import { CardAcquisition, CardDestination } from '#c/types/cards'
 
 const props = defineProps<{
 	moveUnit: ActionMoveUnit

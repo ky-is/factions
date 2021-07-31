@@ -3,11 +3,11 @@
 </template>
 
 <script setup lang="ts">
+import ActionSegmentContentVue from '#p/views/components/Game/Card/ActionPredicateContent.vue'
+
 import { defineProps } from 'vue'
 
 import type { ActionPredicate } from '#c/types/cards'
-
-import ActionSegmentContentVue from '#p/views/components/Game/Card/ActionPredicateContent.vue'
 
 const props = defineProps<{
 	predicate: ActionPredicate

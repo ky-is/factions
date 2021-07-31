@@ -2,8 +2,8 @@ import { GameDeck } from '#c/game/Deck'
 import type { GameData, PlayerData } from '#c/types/data'
 import { ActionActivation, PredicateConjunction } from '#c/types/cards'
 import type { CardAction, CardData, CardFaction, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards'
-import { getStartingDeck } from '#c/cards.js'
-import { shuffle } from '#c/utils.js'
+import { getStartingDeck } from '#c/cards'
+import { shuffle } from '#c/utils'
 
 function checkFactions(availableFactions: CardFaction[], checkFactions: CardFaction[]) {
 	for (const faction of checkFactions) {

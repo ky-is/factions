@@ -10,8 +10,8 @@
 <script setup lang="ts">
 import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 
-import { PlayGame } from '#c/game/Play.js'
-import type { GameData } from '#c/types/data.js'
+import { PlayGame } from '#c/game/Play'
+import type { GameData } from '#c/types/data'
 
 import { sampleCards } from '#p/helpers/parseSample'
 import { useStore } from '#p/models/store'
