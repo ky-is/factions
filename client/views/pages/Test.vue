@@ -1,13 +1,19 @@
 <template>
 	<input type="file" @dragover.prevent="onDragOver" @drop.prevent="onDrop" @change.prevent="onChange">
 	<div class="text-large">
-		<ShopBoardVue v-if="deck" :deck="deck" />
-		<MainPlayerVue v-if="mainPlayer" :player="mainPlayer" />
+		<div class="flex justify-around">
+			<OpponentPlayerVue v-if="opponentPlayer" :player="opponentPlayer" @attack="onAttack(opponentPlayer)" />
+		</div>
+		<ShopBoardVue v-if="deck" :deck="deck" :turnPlayer="mainPlayer" />
+		<div class="flex justify-around">
+			<MainPlayerVue v-if="mainPlayer" :player="mainPlayer" />
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import MainPlayerVue from '#p/views/components/Game/Board/MainPlayer.vue'
+import OpponentPlayerVue from '#p/views/components/Game/Board/OpponentPlayer.vue'
 import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 
 import { ref } from 'vue'
@@ -19,6 +25,7 @@ import { PlayPlayer } from '#c/game/Play'
 
 const deck = ref<GameDeck | null>(null)
 const mainPlayer = ref<PlayPlayer | null>(null)
+const opponentPlayer = ref<PlayPlayer | null>(null)
 
 const saved = storage.get('TEST')
 if (saved) {
@@ -54,5 +61,11 @@ function updateDeck(raw: string) {
 	const cards = loadCards(raw)
 	deck.value = new GameDeck(cards)
 	mainPlayer.value = new PlayPlayer(0, { id: '0', name: 'test' }, 2)
+	opponentPlayer.value = new PlayPlayer(1, { id: '1', name: 'oppo' }, 2)
 }
+
+function onAttack(player: PlayPlayer) {
+	mainPlayer.value?.attack(player)
+}
+
 </script>

@@ -26,6 +26,7 @@ export class PlayPlayer {
 	turn = {
 		economy: 0,
 		damage: 0,
+		healing: 0,
 		moveUnits: [] as ActionMoveUnit[],
 		actionDiscarded: 0,
 		fleetBonuses: [] as ActionFleetBonus[],
@@ -54,6 +55,24 @@ export class PlayPlayer {
 		this.turn.fleetBonuses = []
 		this.turn.predicate = null
 		this.turn.segments = []
+	}
+
+	buy(card: CardData) {
+		const cost = card.cost ?? 0
+		if (this.turn.economy < cost) {
+			return false
+		}
+		this.turn.economy -= cost ?? 0
+		//TODO straight to play option
+		this.discard.push(card)
+		return true
+	}
+
+	attack(player: PlayPlayer) {
+		if (this.turn.damage > 0) {
+			player.health -= this.turn.damage
+			this.turn.damage = 0
+		}
 	}
 
 	endTurn() {
@@ -189,10 +208,12 @@ export class PlayGame {
 	data: GameData
 	deck: GameDeck
 	players: PlayPlayer[]
+	turnIndex: number
 
 	constructor(gameData: GameData, cards: CardData[]) {
 		this.data = gameData
 		this.deck = new GameDeck(cards)
 		this.players = gameData.players.map((playerData, index) => new PlayPlayer(index, playerData, gameData.players.length))
+		this.turnIndex = 0
 	}
 }
