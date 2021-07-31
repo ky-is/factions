@@ -21,10 +21,13 @@
 			</div>
 			<div class="card-stack card-small card-horizontal">
 				<div>{{ discardCards.length }}</div>
-				<div>discard</div>
+				<div>Discard</div>
 			</div>
 			<button v-if="handCards.length" class="card-stack card-small card-horizontal !bg-white border-[3px] border-gray-200 text-lg font-bold" @click="onPlayAll">
 				Play all
+			</button>
+			<button v-else class="card-stack card-small card-horizontal !bg-white border-[3px] border-gray-200 text-lg font-bold" @click="onEndTurn">
+				End turn
 			</button>
 		</div>
 	</div>
@@ -51,5 +54,9 @@ const turn = reactive(props.player.turn)
 
 function onPlayAll() {
 	handCards.forEach(card => props.player.play(card)) //TODO
+}
+
+function onEndTurn() {
+	console.log('End turn')
 }
 </script>

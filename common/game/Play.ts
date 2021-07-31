@@ -109,7 +109,9 @@ export class PlayPlayer {
 				this.turn.economy += segment.resources.economy * multiplier
 			}
 			if (segment.resources.healing) {
-				this.health += segment.resources.healing * multiplier
+				const health = segment.resources.healing * multiplier
+				this.turn.healing += health
+				this.health += health
 			}
 			if (segment.resources.draw) {
 				this.dealHand(segment.resources.draw)

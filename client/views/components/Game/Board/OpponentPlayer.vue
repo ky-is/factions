@@ -11,14 +11,14 @@
 					</div>
 				</button>
 				<CardVue v-for="(card, index) in playedCards" :key="index" :card="card" class="card-small" />
-				<div class="card-stack card-small card-horizontal">
+				<div class="card-stack card-small card-vertical">
 					<div>{{ handCards.length }}</div>
-					<div>hand</div>
+					<div>Hand</div>
 				</div>
 			</div>
 		</div>
 		<div class="flex flex-col">
-			<div class="card-stack card-small card-vertical">
+			<div class="card-stack card-small card-horizontal">
 				<div>{{ deckCards.length }}</div>
 				<div>Deck</div>
 			</div>

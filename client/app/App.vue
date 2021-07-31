@@ -10,10 +10,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-
 import SignIn from '#p/views/components/SignIn.vue'
+
+import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter, useRoute, RouterView } from 'vue-router'
 
 import { connect, socket } from '#p/models/api'
 import { useStore } from '#p/models/store'

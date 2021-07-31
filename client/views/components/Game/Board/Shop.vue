@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex flex-col">
 			<CardVue :card="pulsars[0]" class="card-small" :availableGold="turnPlayer.turn.economy" @click="onPurchase(null)" />
-			<div class="card-stack card-small card-vertical">
+			<div class="card-stack card-small card-horizontal">
 				<div>{{ deckCards.length }}</div>
 				<div>Deck</div>
 			</div>
