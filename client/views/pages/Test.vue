@@ -17,6 +17,7 @@ import OpponentPlayerVue from '#p/views/components/Game/Board/OpponentPlayer.vue
 import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 
 import { ref } from 'vue'
+import seedrandom from 'seedrandom'
 
 import { loadCards } from '#p/helpers/parse'
 import { GameDeck } from '#c/game/Deck'
@@ -59,9 +60,10 @@ async function handleFiles(files: FileList) {
 
 function updateDeck(raw: string) {
 	const cards = loadCards(raw)
-	deck.value = new GameDeck(cards)
-	mainPlayer.value = new PlayPlayer(0, { id: '0', name: 'test' }, 2)
-	opponentPlayer.value = new PlayPlayer(1, { id: '1', name: 'oppo' }, 2)
+	const rng = seedrandom()
+	deck.value = new GameDeck(rng, cards)
+	mainPlayer.value = new PlayPlayer(rng, 0, { id: '0', name: 'test' }, 2)
+	opponentPlayer.value = new PlayPlayer(rng, 1, { id: '1', name: 'oppo' }, 2)
 }
 
 function onAttack(player: PlayPlayer) {

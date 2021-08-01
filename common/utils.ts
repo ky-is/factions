@@ -1,3 +1,5 @@
+import type { PRNG } from '#c/types/external'
+
 export const SECONDS_IN_MINUTE = 60
 export const SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE
 export const SECONDS_IN_DAY = 24 * SECONDS_IN_HOUR
@@ -8,17 +10,17 @@ export function now() {
 
 // Random
 
-function randomIndex(length: number) {
-	return Math.floor(Math.random() * length)
+function randomIndex(rng: PRNG, length: number) {
+	return Math.floor(rng() * length)
 }
 
 export function randomRange(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min)) + min
 }
 
-export function shuffle<T>(array: T[]) {
+export function shuffle<T>(rng: PRNG, array: T[]) {
 	for (let i = array.length - 1; i > 0; i -= 1) {
-		const j = randomIndex(i + 1)
+		const j = randomIndex(rng, i + 1)
 		const temp = array[i]
 		array[i] = array[j]
 		array[j] = temp
@@ -26,7 +28,7 @@ export function shuffle<T>(array: T[]) {
 	return array
 }
 
-export function randomItem<T>(array: T[]) {
+export function randomItem<T>(rng: PRNG, array: T[]) {
 	const length = array.length
-	return length ? array[randomIndex(length)] : null
+	return length ? array[randomIndex(rng, length)] : null
 }

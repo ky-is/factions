@@ -1,4 +1,5 @@
 import type { CardData } from '#c/types/cards'
+import type { PRNG } from '#c/types/external'
 
 import { shuffle } from '#c/utils'
 
@@ -7,8 +8,8 @@ export class GameDeck {
 	shop: CardData[]
 	scrap: CardData[] = []
 
-	constructor(cards: CardData[]) {
-		this.cards = shuffle(cards)
+	constructor(rng: PRNG, cards: CardData[]) {
+		this.cards = shuffle(rng, cards)
 		this.shop = this.deal(5)
 	}
 

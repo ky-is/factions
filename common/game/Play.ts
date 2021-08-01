@@ -1,5 +1,8 @@
+import seedrandom from 'seedrandom'
+
 import { GameDeck } from '#c/game/Deck'
 import type { GameData, PlayerData } from '#c/types/data'
+import type { PRNG } from '#c/types/external'
 import { ActionActivation, PredicateConjunction } from '#c/types/cards'
 import type { CardAction, CardData, CardFaction, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards'
 import { getStartingDeck } from '#c/cards'
@@ -36,8 +39,10 @@ export class PlayPlayer {
 	playingCard?: CardData
 	resolvingPredicate?: ActionPredicate
 	resolvingSegment?: ActionSegment
+	rng: PRNG
 
-	constructor(index: number, { id, name }: PlayerData, numberOfPlayers: number) {
+	constructor(rng: PRNG, index: number, { id, name }: PlayerData, numberOfPlayers: number) {
+		this.rng = rng
 		this.index = index
 		this.id = id
 		this.name = name
@@ -80,7 +85,7 @@ export class PlayPlayer {
 	}
 
 	dealHand(size?: number) {
-		shuffle(this.deck)
+		shuffle(this.rng, this.deck)
 		const amountOfCards = size ?? 5
 		const remainingCurrentCount = this.deck.length
 		const remainingAfterCount = amountOfCards - remainingCurrentCount
@@ -207,15 +212,17 @@ export class PlayPlayer {
 }
 
 export class PlayGame {
+	rng: PRNG
 	data: GameData
 	deck: GameDeck
 	players: PlayPlayer[]
 	turnIndex: number
 
 	constructor(gameData: GameData, cards: CardData[]) {
+		this.rng = seedrandom(gameData.id)
 		this.data = gameData
-		this.deck = new GameDeck(cards)
-		this.players = gameData.players.map((playerData, index) => new PlayPlayer(index, playerData, gameData.players.length))
+		this.deck = new GameDeck(this.rng, cards)
+		this.players = gameData.players.map((playerData, index) => new PlayPlayer(this.rng, index, playerData, gameData.players.length))
 		this.turnIndex = 0
 	}
 }
