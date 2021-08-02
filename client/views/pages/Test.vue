@@ -69,5 +69,4 @@ function updateDeck(raw: string) {
 function onAttack(player: PlayPlayer) {
 	mainPlayer.value?.attack(player)
 }
-
 </script>

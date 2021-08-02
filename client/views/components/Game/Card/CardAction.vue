@@ -28,5 +28,4 @@ const activationIcon = props.action.activation === ActionActivation.ON_SCRAP
 	: props.action.activation === ActionActivation.OPTIONAL
 		? '？'
 		: undefined
-
 </script>

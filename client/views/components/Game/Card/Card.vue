@@ -53,5 +53,4 @@ function onPlay() {
 .for-sale:disabled .cost-icon {
 	@apply opacity-50;
 }
-
 </style>

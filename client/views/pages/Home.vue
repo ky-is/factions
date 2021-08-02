@@ -13,7 +13,6 @@ const { state } = useStore()
 const isConnected = computed(() => state.connected)
 
 watch(isConnected, () => {
-	console.log(isConnected.value)
 	if (isConnected.value) {
 		useRouter().push({ name: 'Lobby' })
 	}
