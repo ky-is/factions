@@ -16,7 +16,7 @@ import MainPlayerVue from '#p/views/components/Game/Board/MainPlayer.vue'
 import OpponentPlayerVue from '#p/views/components/Game/Board/OpponentPlayer.vue'
 import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import seedrandom from 'seedrandom'
 
 import { loadCards } from '#p/helpers/parse'
@@ -24,9 +24,9 @@ import { GameDeck } from '#c/game/Deck'
 import storage from '#p/models/storage'
 import { PlayPlayer } from '#c/game/Play'
 
-const deck = ref<GameDeck | null>(null)
-const mainPlayer = ref<PlayPlayer | null>(null)
-const opponentPlayer = ref<PlayPlayer | null>(null)
+const deck = shallowRef<GameDeck | null>(null)
+const mainPlayer = shallowRef<PlayPlayer | null>(null)
+const opponentPlayer = shallowRef<PlayPlayer | null>(null)
 
 const saved = storage.get('TEST')
 if (saved) {

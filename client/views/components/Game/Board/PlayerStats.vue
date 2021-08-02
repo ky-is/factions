@@ -1,5 +1,5 @@
 <template>
-	<ActionSegmentResource :resource="CardResource.HEALING" :quantity="player.health" />
+	<ActionSegmentResource :resource="CardResource.HEALING" :quantity="player.stats.health" />
 	<div v-if="isTurn" class="flex flex-col">
 		<ActionSegmentResource :resource="CardResource.ECONOMY" :quantity="player.turn.economy" />
 		<ActionSegmentResource :resource="CardResource.DAMAGE" :quantity="player.turn.damage" />

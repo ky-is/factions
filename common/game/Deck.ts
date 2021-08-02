@@ -1,3 +1,5 @@
+import { shallowReactive } from 'vue'
+
 import { getPulsarsFor } from '#c/cards.js'
 import type { CardData } from '#c/types/cards.js'
 import type { PRNG } from '#c/types/external.js'
@@ -8,12 +10,12 @@ export class GameDeck {
 	cards: CardData[]
 	shop: CardData[]
 	pulsars: CardData[]
-	scrap: CardData[] = []
+	scrap: CardData[] = shallowReactive([])
 
 	constructor(rng: PRNG, playerCount: number, cards: CardData[]) {
-		this.cards = shuffle(rng, cards)
-		this.shop = this.deal(5)
-		this.pulsars = getPulsarsFor(playerCount)
+		this.cards = shallowReactive(shuffle(rng, cards))
+		this.shop = shallowReactive(this.deal(5))
+		this.pulsars = shallowReactive(getPulsarsFor(playerCount))
 	}
 
 	deal(amount: number): CardData[] {

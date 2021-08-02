@@ -1,4 +1,5 @@
 import seedrandom from 'seedrandom'
+import { shallowReactive } from 'vue'
 
 import { GameDeck } from '#c/game/Deck.js'
 import type { GameData, PlayerData } from '#c/types/data.js'
@@ -18,15 +19,18 @@ function checkFactions(availableFactions: CardFaction[], checkFactions: CardFact
 }
 
 export class PlayPlayer {
+	rng: PRNG
 	index: number
 	id: string
 	name: string
 	deck: CardData[]
-	hand: CardData[] = []
-	played: CardData[] = []
-	discard: CardData[] = []
-	health: number
-	turn = {
+	hand: CardData[] = shallowReactive([])
+	played: CardData[] = shallowReactive([])
+	discard: CardData[] = shallowReactive([])
+	stats: {
+		health: number
+	}
+	turn = shallowReactive({
 		economy: 0,
 		damage: 0,
 		healing: 0,
@@ -35,21 +39,29 @@ export class PlayPlayer {
 		fleetBonuses: [] as ActionFleetBonus[],
 		predicate: null as ActionPredicate | null,
 		segments: [] as ActionSegment[],
+	})
+	playing: {
+		card: CardData | undefined
+		resolvingPredicate: ActionPredicate | undefined
+		resolvingSegment: ActionSegment | undefined
 	}
-	playingCard?: CardData
-	resolvingPredicate?: ActionPredicate
-	resolvingSegment?: ActionSegment
-	rng: PRNG
 
 	constructor(rng: PRNG, index: number, { id, name }: PlayerData, numberOfPlayers: number) {
 		this.rng = rng
 		this.index = index
 		this.id = id
 		this.name = name
-		this.health = 50
-		this.deck = getStartingDeck()
+		this.stats = shallowReactive({
+			health: 50,
+		})
+		this.deck = shallowReactive(getStartingDeck())
 		const startAdvantage = index < numberOfPlayers - 1 ? numberOfPlayers - index : 0
 		this.dealHand(5 - startAdvantage)
+		this.playing = shallowReactive({
+			card: undefined,
+			resolvingPredicate: undefined,
+			resolvingSegment: undefined,
+		})
 	}
 
 	startTurn() {
@@ -75,7 +87,7 @@ export class PlayPlayer {
 
 	attack(player: PlayPlayer) {
 		if (this.turn.damage > 0) {
-			player.health -= this.turn.damage
+			player.stats.health -= this.turn.damage
 			this.turn.damage = 0
 		}
 	}
@@ -116,7 +128,7 @@ export class PlayPlayer {
 			if (segment.resources.healing) {
 				const health = segment.resources.healing * multiplier
 				this.turn.healing += health
-				this.health += health
+				this.stats.health += health
 			}
 			if (segment.resources.draw) {
 				this.dealHand(segment.resources.draw)
@@ -149,7 +161,7 @@ export class PlayPlayer {
 			return
 		}
 		if (turnPredicate.conjunction === PredicateConjunction.OR) {
-			this.resolvingPredicate = turnPredicate
+			this.playing.resolvingPredicate = turnPredicate
 		} else if (turnPredicate.children) {
 			turnPredicate.children.forEach(child => this.runPredicate(child))
 		} else if (this.turn.segments) {
