@@ -5,7 +5,6 @@ import { isGameFull, isGameHost } from '#c/game.js'
 import { Game, getGame, emitLobbyGames } from '#s/game/Game.js'
 
 import type { SocketUser } from '#s/sockets/SocketUser.js'
-import { APIError } from '#s/helpers/errors.js'
 
 export function registerLobby(socket: Socket) {
 	socket.on('lobby-join', (joining, callback) => {
@@ -13,7 +12,7 @@ export function registerLobby(socket: Socket) {
 			emitLobbyGames(socket)
 			const user = socket.data.user as SocketUser
 			if (joining === true) {
-				if (user.game && !user.game.started) {
+				if (user.game && !user.game.play) {
 					user.leaveGame()
 					socket.join('lobby')
 				}
@@ -22,7 +21,7 @@ export function registerLobby(socket: Socket) {
 				let error: string
 				if (!game) {
 					error = 'Game does not exist'
-				} else if (game.started) {
+				} else if (game.play) {
 					error = 'Game already started'
 				} else if (isGameFull(game)) {
 					error = 'Game is full'

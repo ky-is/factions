@@ -1,9 +1,7 @@
-import type { GameData } from '#c/types/data'
-
-export function isGameFull(gameData: GameData | null) {
+export function isGameFull(gameData: {size: number, players: any[]} | null) {
 	return gameData ? gameData.players.length === gameData.size : false
 }
 
-export function isGameHost(gameData: GameData | null, user: {id: string}) {
+export function isGameHost(gameData: {host: string} | null, user: {id: string, name: string}) {
 	return gameData?.host === user.id
 }

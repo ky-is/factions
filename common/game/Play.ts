@@ -1,12 +1,12 @@
 import seedrandom from 'seedrandom'
 
-import { GameDeck } from '#c/game/Deck'
-import type { GameData, PlayerData } from '#c/types/data'
-import type { PRNG } from '#c/types/external'
-import { ActionActivation, PredicateConjunction } from '#c/types/cards'
-import type { CardAction, CardData, CardFaction, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards'
-import { getStartingDeck } from '#c/cards'
-import { shuffle } from '#c/utils'
+import { GameDeck } from '#c/game/Deck.js'
+import type { GameData, PlayerData } from '#c/types/data.js'
+import type { PRNG } from '#c/types/external.js'
+import { ActionActivation, PredicateConjunction } from '#c/types/cards.js'
+import type { CardAction, CardData, CardFaction, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards.js'
+import { getStartingDeck } from '#c/cards.js'
+import { shuffle } from '#c/utils.js'
 
 function checkFactions(availableFactions: CardFaction[], checkFactions: CardFaction[]) {
 	for (const faction of checkFactions) {
@@ -189,10 +189,10 @@ export class PlayPlayer {
 		}
 	}
 
-	play(card: CardData) {
-		const index = this.hand.findIndex(handCard => handCard.name === card.name)
-		if (index === -1) {
-			return
+	play(index: number) {
+		const card = this.hand[index]
+		if (!card) {
+			return console.log('Card unavailable', this.hand, index)
 		}
 		const playedFactions = this.played.flatMap(card => card.factions)
 		this.checkUnmatchedFactionActions(card.factions)
@@ -211,18 +211,24 @@ export class PlayPlayer {
 	}
 }
 
+export interface GameStatus {
+	turnIndex: number
+}
+
 export class PlayGame {
 	rng: PRNG
 	data: GameData
 	deck: GameDeck
 	players: PlayPlayer[]
-	turnIndex: number
+	status: GameStatus
 
 	constructor(gameData: GameData, cards: CardData[]) {
 		this.rng = seedrandom(gameData.id)
 		this.data = gameData
-		this.deck = new GameDeck(this.rng, cards)
+		this.deck = new GameDeck(this.rng, gameData.players.length, cards)
 		this.players = gameData.players.map((playerData, index) => new PlayPlayer(this.rng, index, playerData, gameData.players.length))
-		this.turnIndex = 0
+		this.status = {
+			turnIndex: 0,
+		}
 	}
 }

@@ -2,58 +2,51 @@
 	<div class="flex">
 		<div class="flex flex-col">
 			<div class="flex">
-				<ActionSegmentResource :resource="CardResource.HEALING" :quantity="player.health" />
-				<div class="flex flex-col">
-					<ActionSegmentResource :resource="CardResource.ECONOMY" :quantity="turn.economy" />
-					<ActionSegmentResource :resource="CardResource.DAMAGE" :quantity="turn.damage" />
-					<ActionSegmentResource :resource="CardResource.HEALING" :quantity="turn.healing" />
-				</div>
-				<CardVue v-for="(card, index) in playedCards" :key="index" :card="card" class="card-small" />
+				<PlayerStats :player="player" :isTurn="isTurn" />
+				<CardVue v-for="(card, index) in player.played" :key="index" :card="card" class="card-small" />
 			</div>
 			<div class="flex">
-				<CardVue v-for="(card, index) in handCards" :key="index" :card="card" :player="player" />
+				<CardVue v-for="(card, index) in player.hand" :key="index" :card="card" :index="index" :player="player" :isTurn="isTurn" />
 			</div>
 		</div>
 		<div class="flex flex-col">
 			<div class="card-stack card-small card-vertical">
-				<div>{{ deckCards.length }}</div>
+				<div>{{ player.deck.length }}</div>
 				<div>Deck</div>
 			</div>
 			<div class="card-stack card-small card-horizontal">
-				<div>{{ discardCards.length }}</div>
+				<div>{{ player.discard.length }}</div>
 				<div>Discard</div>
 			</div>
-			<button v-if="handCards.length" class="card-stack card-small card-horizontal !bg-white border-[3px] border-gray-200 text-lg font-bold" @click="onPlayAll">
-				Play all
-			</button>
-			<button v-else class="card-stack card-small card-horizontal !bg-white border-[3px] border-gray-200 text-lg font-bold" @click="onEndTurn">
-				End turn
-			</button>
+			<template v-if="isTurn">
+				<button v-if="player.hand.length" class="card-stack card-small card-horizontal !bg-white border-[3px] border-gray-200 text-lg font-bold" @click="onPlayAll">
+					Play all
+				</button>
+				<button v-else class="card-stack card-small card-horizontal !bg-white border-[3px] border-gray-200 text-lg font-bold" @click="onEndTurn">
+					End turn
+				</button>
+			</template>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import CardVue from '#p/views/components/Game/Card/Card.vue'
-import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
+import PlayerStats from '#p/views/components/Game/Board/PlayerStats.vue'
 
-import { defineProps, reactive } from 'vue'
+import { defineProps } from 'vue'
 
 import type { PlayPlayer } from '#c/game/Play'
-import { CardResource } from '#c/types/cards'
 
 const props = defineProps<{
 	player: PlayPlayer
+	isTurn: boolean
 }>()
 
-const deckCards = reactive(props.player.deck)
-const handCards = reactive(props.player.hand)
-const playedCards = reactive(props.player.played)
-const discardCards = reactive(props.player.discard)
-const turn = reactive(props.player.turn)
-
 function onPlayAll() {
-	handCards.forEach(card => props.player.play(card)) //TODO
+	for (let index = props.player.hand.length - 1; index >= 0; index -= 1) {
+		props.player.play(index)
+	}
 }
 
 function onEndTurn() {

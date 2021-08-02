@@ -10,10 +10,10 @@
 				<span class="text-yellow-700">{{ card.cost }}</span>
 			</div>
 		</div>
-		<CardActionVue v-for="(action, index) in card.actions" :key="index" :action="action" />
+		<CardActionVue v-for="(action, actionIndex) in card.actions" :key="actionIndex" :action="action" />
 		<div class="flex-grow" />
 		<div v-if="player" class="w-full text-center">
-			<button class="button-secondary bg-white" @click="onPlay">Play card</button>
+			<button v-if="isTurn" class="button-secondary bg-white" @click="onPlay">Play card</button>
 		</div>
 	</button>
 </template>
@@ -31,12 +31,14 @@ import type { PlayPlayer } from '#c/game/Play'
 
 const props = defineProps<{
 	card: CardData
+	isTurn?: boolean
+	index?: number
 	player?: PlayPlayer
 	availableGold?: number
 }>()
 
 function onPlay() {
-	props.player?.play(props.card)
+	props.player?.play(props.index!)
 }
 </script>
 

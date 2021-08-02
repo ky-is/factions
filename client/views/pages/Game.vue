@@ -3,13 +3,13 @@
 		<template v-if="!game">
 			Unknown game
 		</template>
-		<template v-else>
+		<template v-else-if="turnPlayer">
 			<div class="flex justify-around">
-				<OpponentPlayerVue v-for="player in opponentPlayer" :key="player.id" :player="player" :game="game" @attack="onAttack(player)" />
+				<OpponentPlayerVue v-for="player in opponentPlayers" :key="player.id" :player="player" :isTurn="turnPlayer.id === player.id" @attack="onAttack(player)" />
 			</div>
-			<ShopBoardVue :deck="game.deck" :turnPlayer="game.players[game.turnIndex]" />
+			<ShopBoardVue :deck="game.deck" :turnPlayer="turnPlayer" />
 			<div class="flex justify-around">
-				<MainPlayerVue v-if="localPlayer" :player="localPlayer" />
+				<MainPlayerVue v-if="localPlayer" :player="localPlayer" :isTurn="turnPlayer.id === localPlayer.id" />
 			</div>
 		</template>
 	</div>
@@ -19,6 +19,8 @@
 import MainPlayerVue from '#p/views/components/Game/Board/MainPlayer.vue'
 import OpponentPlayerVue from '#p/views/components/Game/Board/OpponentPlayer.vue'
 import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
+
+import { computed } from 'vue'
 
 import { PlayGame } from '#c/game/Play'
 import type { PlayPlayer } from '#c/game/Play'
@@ -31,13 +33,15 @@ const { state } = useStore()
 
 const game = state.game ? new PlayGame(state.game as GameData, sampleCards) : null
 
+const turnPlayer = computed(() => game && game?.players[game.status.turnIndex])
+
 const localPlayer = game?.players.find(player => player.id === state.user.id)
-const opponentPlayer = game?.players.filter(player => player.id !== state.user.id)
+const opponentPlayers = game?.players.filter(player => player.id !== state.user.id)
 
 function onAttack(player: PlayPlayer) {
 	if (!game) {
 		return
 	}
-	game.players[game.turnIndex].attack(player)
+	turnPlayer.value?.attack(player)
 }
 </script>

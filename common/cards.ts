@@ -1,5 +1,5 @@
-import type { CardData } from '#c/types/cards'
-import { ActionActivation, CardType } from '#c/types/cards'
+import type { CardData } from '#c/types/cards.js'
+import { ActionActivation, CardType } from '#c/types/cards.js'
 
 const miner: CardData = {
 	name: 'Miner',
@@ -31,7 +31,7 @@ const pewPew: CardData = {
 	}],
 }
 
-export const pulsar: CardData = {
+const pulsar: CardData = {
 	name: 'Pulsar',
 	cost: 2,
 	factions: [],

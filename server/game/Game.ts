@@ -1,4 +1,5 @@
 import type { GameData } from '#c/types/data.js'
+import { PlayGame } from '#c/game/Play.js'
 
 import { emit } from '#s/helpers/io.js'
 import type { EmitTarget } from '#s/helpers/io.js'
@@ -24,7 +25,7 @@ export class Game {
 	type: string
 	mode?: string
 	players: SocketUser[] = []
-	started = false
+	play?: PlayGame
 	finished = false
 
 	constructor(type: string, size: number, host: SocketUser) {
@@ -55,7 +56,7 @@ export class Game {
 	}
 
 	leave(user: SocketUser) {
-		if (this.started) {
+		if (this.play) {
 			//TODO
 		} else {
 			user.game = null
@@ -74,7 +75,7 @@ export class Game {
 	}
 
 	start() {
-		this.started = true
+		this.play = new PlayGame(this.lobbyData(), []) //TODO
 		this.emitLobbyStatus()
 	}
 
@@ -85,7 +86,7 @@ export class Game {
 			type: this.type,
 			size: this.size,
 			host: this.host,
-			started: this.started,
+			started: !!this.play,
 			finished: this.finished,
 			players: this.players.map(player => ({ id: player.id, name: player.name, connected: !!player.sockets.size })),
 		}

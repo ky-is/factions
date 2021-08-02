@@ -2,11 +2,11 @@
 	<input type="file" @dragover.prevent="onDragOver" @drop.prevent="onDrop" @change.prevent="onChange">
 	<div class="text-large">
 		<div class="flex justify-around">
-			<OpponentPlayerVue v-if="opponentPlayer" :player="opponentPlayer" @attack="onAttack(opponentPlayer)" />
+			<OpponentPlayerVue v-if="opponentPlayer" :player="opponentPlayer" :isTurn="false" @attack="onAttack(opponentPlayer)" />
 		</div>
 		<ShopBoardVue v-if="deck" :deck="deck" :turnPlayer="mainPlayer" />
 		<div class="flex justify-around">
-			<MainPlayerVue v-if="mainPlayer" :player="mainPlayer" />
+			<MainPlayerVue v-if="mainPlayer" :player="mainPlayer" :isTurn="true" />
 		</div>
 	</div>
 </template>
@@ -61,7 +61,7 @@ async function handleFiles(files: FileList) {
 function updateDeck(raw: string) {
 	const cards = loadCards(raw)
 	const rng = seedrandom()
-	deck.value = new GameDeck(rng, cards)
+	deck.value = new GameDeck(rng, 2, cards)
 	mainPlayer.value = new PlayPlayer(rng, 0, { id: '0', name: 'test' }, 2)
 	opponentPlayer.value = new PlayPlayer(rng, 1, { id: '1', name: 'oppo' }, 2)
 }

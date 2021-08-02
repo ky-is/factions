@@ -16,7 +16,7 @@
 			<span v-for="player in lobbyGame.players" :key="player.id" class="player-name">
 				{{ player.name }}
 			</span>
-			<button class="button-primary" :disabled="isFull" @click="onJoin(lobbyGame)">Join</button>
+			<button v-if="!lobbyGame.started" class="button-primary" :disabled="isGameFull(lobbyGame)" @click="onJoin(lobbyGame)">Join</button>
 		</div>
 		<button class="button-primary" @click="onCreate">Create game</button>
 	</template>
