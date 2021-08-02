@@ -13,7 +13,10 @@ socket.on('disconnect', (reason) => {
 	commit.connected(false)
 })
 socket.on('connect_error', error => {
-	console.log(error)
+	console.log('connect_error', error)
+})
+socket.on('reconnect_error', error => {
+	console.log('reconnect_error', error)
 })
 
 export function connect(sessionID: string) {

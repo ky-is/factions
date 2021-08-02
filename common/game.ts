@@ -5,5 +5,5 @@ export function isGameFull(gameData: GameData | null) {
 }
 
 export function isGameHost(gameData: GameData | null, user: {id: string}) {
-	return gameData?.id === user.id
+	return gameData?.host === user.id
 }

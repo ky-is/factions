@@ -6,7 +6,7 @@
 		<div v-for="player in currentGame.players" :key="player.id">
 			{{ player.name }}
 		</div>
-		<button class="button-primary" :disabled="isHost && isFull" @click="onStart">Start</button>
+		<button v-if="isHost" class="button-primary" :disabled="!isFull" @click="onStart">Start</button>
 		<button class="button-secondary" @click="onLeave">Leave</button>
 	</template>
 	<template v-else>
@@ -29,6 +29,7 @@ import { useRouter } from 'vue-router'
 import type { GameData } from '#c/types/data'
 import { isGameFull, isGameHost } from '#c/game'
 
+import { ioLobbyJoin } from '#p/helpers/bridge'
 import { socket } from '#p/models/api'
 import { commit, useStore } from '#p/models/store'
 
@@ -47,13 +48,13 @@ const currentGame = computed(() => state.game)
 const lobbyGames = ref<GameData[]>([])
 
 onMounted(() => {
-	socket.emit('lobby-join', props.id && !currentGame.value ? props.id : true)
+	ioLobbyJoin(router, props.id && !currentGame.value ? props.id : true)
 	socket.on('lobby-games', (games) => {
 		lobbyGames.value = games
 	})
 })
 onBeforeUnmount(() => {
-	socket.emit('lobby-join', false)
+	ioLobbyJoin(router, false)
 	socket.off('lobby-games')
 })
 
@@ -62,7 +63,7 @@ function onCreate() {
 }
 
 function onJoin(game: GameData) {
-	socket.emit('lobby-join', game.id)
+	ioLobbyJoin(router, game.id)
 }
 
 function onStart() {

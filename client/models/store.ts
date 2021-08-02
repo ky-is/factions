@@ -5,6 +5,7 @@ import type { GameData, UserData, SessionData } from '#c/types/data'
 
 import { emailStatus, registerEmail, signinPasscode, socket } from '#p/models/api'
 import storage from '#p/models/storage'
+import { ioLobbyJoin } from '#p/helpers/bridge'
 
 export const state = reactive({
 	connected: false,
@@ -88,12 +89,16 @@ export const commit = {
 
 	// Game
 
-	joinGame(game: GameData | null) {
+	joinGame(game: GameData | null, router: Router) {
 		state.game = game
+		if (game?.started) {
+			console.log('Join started', game.id)
+			router.push({ name: 'Game', params: { id: game.id } })
+		}
 	},
 
 	leaveGameLobby(router: Router) {
-		socket.emit('lobby-join', true)
+		ioLobbyJoin(router, true)
 		state.game = null
 		if (state.previousRoute?.name === 'Lobby' && !state.previousRoute.params.id) {
 			router.back()

@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import MainPlayerVue from '#p/views/components/Game/Board/MainPlayer.vue'
-import OpponentPlayerVue from '#p/views/components/Game/Board/MainPlayer.vue'
+import OpponentPlayerVue from '#p/views/components/Game/Board/OpponentPlayer.vue'
 import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 
 import { PlayGame } from '#c/game/Play'

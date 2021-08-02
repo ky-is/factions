@@ -12,7 +12,7 @@ export function getGame(id: string) {
 	return games.find(game => game.id === id)
 }
 
-export function emitLobby(target?: EmitTarget) {
+export function emitLobbyGames(target?: EmitTarget) {
 	emit(target ?? 'lobby', 'lobby-games', games.map(game => game.lobbyData()))
 }
 
@@ -36,7 +36,7 @@ export class Game {
 		this.type = type
 		this.join(host)
 		games.push(this)
-		emitLobby()
+		emitLobbyGames()
 	}
 
 	emitLobbyStatus(target?: EmitTarget) {
@@ -69,8 +69,13 @@ export class Game {
 			} else {
 				console.log('leave game', user.name, this.id)
 			}
-			emitLobby()
+			emitLobbyGames()
 		}
+	}
+
+	start() {
+		this.started = true
+		this.emitLobbyStatus()
 	}
 
 	lobbyData(): GameData {

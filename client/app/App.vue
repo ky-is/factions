@@ -15,6 +15,8 @@ import SignIn from '#p/views/components/SignIn.vue'
 import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter, useRoute, RouterView } from 'vue-router'
 
+import type { GameData } from '#c/types/data'
+
 import { connect, socket } from '#p/models/api'
 import { useStore } from '#p/models/store'
 
@@ -48,15 +50,15 @@ watchEffect(() => {
 
 // Leave lobby on navigation
 router.beforeEach((to, from) => {
-	if (from.name === 'Lobby' && state.game && from.params.id === state.game.id) {
+	if (from.name === 'Lobby' && state.game && from.params.id === state.game.id && to.params.id !== state.game.id) {
 		commit.leaveGameLobby(router)
 	}
 })
 
 // Listen to lobby
 onMounted(() => {
-	socket.on('lobby-status', (game) => {
-		commit.joinGame(game)
+	socket.on('lobby-status', (game: GameData) => {
+		commit.joinGame(game, router)
 	})
 })
 onBeforeUnmount(() => {
