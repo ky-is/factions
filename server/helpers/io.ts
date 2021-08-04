@@ -47,12 +47,12 @@ export function useIO(to: string) {
 
 export type EmitTarget = string | BroadcastOperator<any> | Socket
 
-export function emit(target: EmitTarget, event: string, data: unknown) {
+export function emit(target: EmitTarget, event: string, ...data: any[]) {
 	if (target instanceof Socket) {
-		target.emit(event, data)
+		target.emit(event, ...data)
 	} else if (typeof target === 'string') {
-		useIO(target).emit(event, data)
+		useIO(target).emit(event, ...data)
 	} else {
-		target.emit(event, data)
+		target.emit(event, ...data)
 	}
 }

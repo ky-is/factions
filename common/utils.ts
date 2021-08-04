@@ -10,6 +10,23 @@ export function now() {
 	return Math.round(Date.now() / 1000)
 }
 
+export function containsAll<T>(all: T[], checks: T[]) {
+	for (const check of checks) {
+		if (!all.includes(check)) {
+			return false
+		}
+	}
+	return true
+}
+export function containsAtLeastOne<T>(all: T[], checks: T[]) {
+	for (const check of checks) {
+		if (all.includes(check)) {
+			return true
+		}
+	}
+	return false
+}
+
 // Random
 
 function randomIndex(rng: PRNG, length: number) {

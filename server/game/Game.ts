@@ -47,8 +47,11 @@ export class Game {
 		emitLobbyGames()
 	}
 
+	emit(event: string, target: EmitTarget | undefined, ...data: any[]) {
+		emit(target ?? this.id, event, ...data)
+	}
 	emitLobbyStatus(target?: EmitTarget) {
-		emit(target ?? this.id, 'lobby-status', this.lobbyData())
+		this.emit('lobby-status', target, this.lobbyData())
 	}
 
 	join(user: SocketUser) {

@@ -57,8 +57,13 @@ export interface ActionCondition {
 export interface ActionPredicate {
 	children?: ActionPredicate[]
 	segments?: ActionSegment[] // eslint-disable-line no-use-before-define
+	pendingSegments?: ActionSegment[] // eslint-disable-line no-use-before-define
 	conjunction?: PredicateConjunction
 	conditional?: ActionCondition | true
+}
+
+export interface ActionResolution {
+	or?: number
 }
 
 export interface ActionDiscard {
@@ -107,7 +112,6 @@ export interface CardAction {
 	activation?: ActionActivation
 	predicate: ActionPredicate
 	raw?: string
-	played?: boolean
 }
 
 export interface CardData {

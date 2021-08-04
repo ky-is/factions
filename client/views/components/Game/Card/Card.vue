@@ -12,7 +12,7 @@
 		</div>
 		<CardActionVue v-for="(action, actionIndex) in card.actions" :key="actionIndex" :action="action" />
 		<div class="flex-grow" />
-		<div v-if="player" class="w-full text-center">
+		<div v-if="resolve" class="w-full text-center">
 			<button v-if="isTurn" class="button-secondary bg-white" @click="onPlay">Play card</button>
 		</div>
 	</button>
@@ -27,18 +27,18 @@ import { defineProps } from 'vue'
 
 import { CardResource, CardType } from '#c/types/cards'
 import type { CardData } from '#c/types/cards'
-import type { PlayPlayer } from '#c/game/Play'
+import type { ResolveCard } from '#p/helpers/ResolveCard.js'
 
 const props = defineProps<{
 	card: CardData
 	isTurn?: boolean
 	index?: number
-	player?: PlayPlayer
+	resolve?: ResolveCard
 	availableGold?: number
 }>()
 
 function onPlay() {
-	props.player?.play(props.index!)
+	props.resolve!.resolveCardAt(props.index!)
 }
 </script>
 

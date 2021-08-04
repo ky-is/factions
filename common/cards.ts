@@ -1,5 +1,5 @@
+import { ActionActivation, CardType, PredicateConjunction } from '#c/types/cards.js'
 import type { CardData } from '#c/types/cards.js'
-import { ActionActivation, CardType } from '#c/types/cards.js'
 
 const miner: CardData = {
 	name: 'Miner',
@@ -15,6 +15,30 @@ const miner: CardData = {
 		},
 	}],
 }
+
+// const miner: CardData = { //SAMPLE
+// 	name: 'Miner',
+// 	factions: [],
+// 	type: CardType.BASIC,
+// 	actions: [{
+// 		predicate: {
+// 			conjunction: PredicateConjunction.OR,
+// 			children: [{
+// 				segments: [{
+// 					resources: {
+// 						economy: 1,
+// 					},
+// 				}],
+// 			}, {
+// 				segments: [{
+// 					resources: {
+// 						damage: 1,
+// 					},
+// 				}],
+// 			}],
+// 		},
+// 	}],
+// }
 
 const pewPew: CardData = {
 	name: 'Pew-Pew',

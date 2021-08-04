@@ -5,18 +5,9 @@ import { GameDeck } from '#c/game/Deck.js'
 import type { GameData, PlayerData } from '#c/types/data.js'
 import type { PRNG } from '#c/types/external.js'
 import { ActionActivation, PredicateConjunction } from '#c/types/cards.js'
-import type { CardAction, CardData, CardFaction, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards.js'
+import type { CardAction, CardData, CardFaction, ActionResolution, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards.js'
 import { getStartingDeck } from '#c/cards.js'
-import { shuffle } from '#c/utils.js'
-
-function checkFactions(availableFactions: CardFaction[], checkFactions: CardFaction[]) {
-	for (const faction of checkFactions) {
-		if (!availableFactions.includes(faction)) {
-			return false
-		}
-	}
-	return true
-}
+import { containsAtLeastOne, shuffle } from '#c/utils.js'
 
 export class PlayPlayer {
 	rng: PRNG
@@ -37,14 +28,9 @@ export class PlayPlayer {
 		moveUnits: [] as ActionMoveUnit[],
 		actionDiscarded: 0,
 		fleetBonuses: [] as ActionFleetBonus[],
-		predicate: null as ActionPredicate | null,
-		segments: [] as ActionSegment[],
+		availableActions: [] as CardAction[],
+		alliances: [] as CardFaction[],
 	})
-	playing: {
-		card: CardData | undefined
-		resolvingPredicate: ActionPredicate | undefined
-		resolvingSegment: ActionSegment | undefined
-	}
 
 	constructor(rng: PRNG, index: number, { id, name }: PlayerData, numberOfPlayers: number) {
 		this.rng = rng
@@ -57,11 +43,6 @@ export class PlayPlayer {
 		this.deck = shallowReactive(getStartingDeck())
 		const startAdvantage = index < numberOfPlayers - 1 ? numberOfPlayers - index : 0
 		this.dealHand(5 - startAdvantage)
-		this.playing = shallowReactive({
-			card: undefined,
-			resolvingPredicate: undefined,
-			resolvingSegment: undefined,
-		})
 	}
 
 	startTurn() {
@@ -70,8 +51,8 @@ export class PlayPlayer {
 		this.turn.moveUnits = []
 		this.turn.actionDiscarded = 0
 		this.turn.fleetBonuses = []
-		this.turn.predicate = null
-		this.turn.segments = []
+		this.turn.availableActions = []
+		this.turn.alliances = []
 	}
 
 	buy(card: CardData) {
@@ -110,9 +91,9 @@ export class PlayPlayer {
 		}
 	}
 
-	private runSegment(segment: ActionSegment, optional: boolean) {
+	private runSegment(segment: ActionSegment, resolutions: ActionResolution[]) {
 		if (segment.alliances) {
-			this.checkUnmatchedFactionActions(segment.alliances)
+			this.turn.alliances.push(...segment.alliances)
 		}
 		if (segment.resources) {
 			const multiplier = 1
@@ -141,90 +122,74 @@ export class PlayPlayer {
 			this.turn.moveUnits.push(segment.moveUnit)
 		}
 		if (segment.acquire) {
-			return false
+			const resolution = resolutions.shift()
+			console.log(resolution)
 		}
 		if (segment.copy) {
-			return false
+			const resolution = resolutions.shift()
+			console.log(resolution)
 		}
 		if (segment.destroyStations) {
-			return false
+			const resolution = resolutions.shift()
+			console.log(resolution)
 		}
 		if (segment.discard) {
-			return false
+			const resolution = resolutions.shift()
+			console.log(resolution)
 		}
 		return true
 	}
 
-	resumePredicate() {
-		const turnPredicate = this.turn.predicate
-		if (!turnPredicate) {
-			return
-		}
-		if (turnPredicate.conjunction === PredicateConjunction.OR) {
-			this.playing.resolvingPredicate = turnPredicate
-		} else if (turnPredicate.children) {
-			turnPredicate.children.forEach(child => this.runPredicate(child))
-		} else if (this.turn.segments) {
-			if (turnPredicate.conditional && turnPredicate.conditional !== true) {
+
+	private runPredicate(predicate: ActionPredicate, resolutions: ActionResolution[]) {
+		if (predicate.conjunction === PredicateConjunction.OR && predicate.children) {
+			const resolution = resolutions.shift()
+			const index = resolution?.or
+			if (index === undefined) {
+				return console.log('Invalid resolution', predicate, resolution, resolutions)
+			}
+			this.runPredicate(predicate.children[index], resolutions)
+		} else if (predicate.children) {
+			predicate.children.forEach(child => this.runPredicate(child, resolutions))
+		} else if (predicate.segments) {
+			const isOptional = predicate.conditional === true
+			if (!isOptional && predicate.conditional) {
 				//TODO
 			}
-			const isOptional = turnPredicate.conditional === true
-			while (this.turn.segments.length) {
-				const segment = this.turn.segments.shift()!
-				if (!this.runSegment(segment, isOptional)) {
-					break
-				}
+			predicate.segments.forEach(segment => this.runSegment(segment, resolutions))
+		}
+	}
+
+	private runUnmatchedFactionActions(newFactions: CardFaction[]) {
+		for (let index = this.turn.availableActions.length - 1; index >= 0; index += 1) {
+			const action = this.turn.availableActions[index]
+			if (action.factions && containsAtLeastOne(newFactions, action.factions.concat(this.turn.alliances))) {
+				this.runPredicate(action.predicate, []) //TODO
+				this.turn.availableActions.splice(index, 1)
 			}
 		}
 	}
 
-	private runPredicate(predicate: ActionPredicate) {
-		this.turn.predicate = predicate
-		if (predicate.segments) {
-			this.turn.segments = [...predicate.segments]
-		}
-		this.resumePredicate()
-	}
-
-	private activate(action: CardAction) {
-		action.played = true
-		this.runPredicate(action.predicate)
-	}
-
-	private checkUnmatchedFactionActions(newFactions: CardFaction[]) {
-		for (const oldCard of this.played) {
-			for (const oldAction of oldCard.actions) {
-				if (!oldAction.played && oldAction.factions && checkFactions(newFactions, oldAction.factions)) {
-					this.activate(oldAction)
-				}
-			}
-		}
-	}
-
-	play(index: number) {
+	playCardAt(index: number, resolutions: ActionResolution[]) {
 		const card = this.hand[index]
 		if (!card) {
 			return console.log('Card unavailable', this.hand, index)
 		}
 		const playedFactions = this.played.flatMap(card => card.factions)
-		this.checkUnmatchedFactionActions(card.factions)
 		for (const action of card.actions) {
-			action.played = false
-			if (action.activation === ActionActivation.ON_SCRAP) {
-				continue
+			if (action.activation === ActionActivation.ON_SCRAP || (action.factions && !containsAtLeastOne(playedFactions, action.factions))) {
+				this.turn.availableActions.push(action)
+			} else {
+				this.runPredicate(action.predicate, [...resolutions])
 			}
-			if (action.factions && !checkFactions(playedFactions, action.factions)) {
-				continue
-			}
-			this.activate(action)
 		}
+		this.runUnmatchedFactionActions(card.factions)
 		this.hand.splice(index, 1)
 		this.played.push(card)
 	}
 }
 
 export interface GameStatus {
-	turnIndex: number
 }
 
 export class PlayGame {
@@ -232,15 +197,16 @@ export class PlayGame {
 	data: GameData
 	deck: GameDeck
 	players: PlayPlayer[]
-	status: GameStatus
+	turnIndex = 0
 
 	constructor(gameData: GameData, cards: CardData[]) {
 		this.rng = seedrandom(gameData.id)
 		this.data = gameData
 		this.deck = new GameDeck(this.rng, gameData.players.length, cards)
 		this.players = gameData.players.map((playerData, index) => new PlayPlayer(this.rng, index, playerData, gameData.players.length))
-		this.status = {
-			turnIndex: 0,
-		}
+	}
+
+	currentPlayer() {
+		return this.players[this.turnIndex % this.players.length]
 	}
 }

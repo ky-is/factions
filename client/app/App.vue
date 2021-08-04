@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import SignIn from '#p/views/components/SignIn.vue'
 
-import { computed, watchEffect, onMounted, onBeforeUnmount } from 'vue'
+import { computed, watchEffect, onBeforeUnmount, onBeforeMount } from 'vue'
 import { useRouter, useRoute, RouterView } from 'vue-router'
 
 import type { GameData } from '#c/types/data'
@@ -56,7 +56,7 @@ router.beforeEach((to, from) => {
 })
 
 // Listen to lobby
-onMounted(() => {
+onBeforeMount(() => {
 	socket.on('lobby-status', (game: GameData) => {
 		commit.joinGame(game, router)
 	})
