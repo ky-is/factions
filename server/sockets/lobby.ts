@@ -2,7 +2,7 @@ import type { Socket } from 'socket.io'
 
 import { isGameFull, isGameHost } from '#c/game.js'
 
-import { Game, getGame, emitLobbyGames } from '#s/game/Game.js'
+import { Game, getGame, emitLobbyGames, getAvailableGame } from '#s/game/Game.js'
 
 import type { SocketUser } from '#s/sockets/SocketUser.js'
 
@@ -37,13 +37,26 @@ export function registerLobby(socket: Socket) {
 			socket.leave('lobby')
 		}
 	})
+	socket.on('lobby-autojoin', () => {
+		const user = socket.data.user as SocketUser
+		if (user.game) {
+			user.game.emitLobbyStatus(socket)
+			return console.log('ERR: User already in game', user.id, user.game.id)
+		}
+		const game = getAvailableGame()
+		if (game) {
+			game.join(user)
+		} else {
+			new Game('factions', 2, user, true)
+		}
+	})
 	socket.on('lobby-create', () => {
 		const user = socket.data.user as SocketUser
 		if (user.game) {
 			user.game.emitLobbyStatus(socket)
 			return console.log('ERR: User already in game', user.id, user.game.id)
 		}
-		new Game('factions', 2, user)
+		new Game('factions', 2, user, false)
 	})
 	socket.on('lobby-start', () => {
 		const user = socket.data.user as SocketUser

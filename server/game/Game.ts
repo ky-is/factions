@@ -1,5 +1,6 @@
 import type { GameData } from '#c/types/data.js'
 import { PlayGame } from '#c/game/Play.js'
+import { isGameFull } from '#c/game.js'
 
 import { emit } from '#s/helpers/io.js'
 import type { EmitTarget } from '#s/helpers/io.js'
@@ -13,6 +14,10 @@ export function getGame(id: string) {
 	return games.find(game => game.id === id)
 }
 
+export function getAvailableGame() {
+	return games.find(game => game.autostart && !game.play && !isGameFull(game))
+}
+
 export function emitLobbyGames(target?: EmitTarget) {
 	emit(target ?? 'lobby', 'lobby-games', games.map(game => game.lobbyData()))
 }
@@ -24,17 +29,19 @@ export class Game {
 	host: string
 	type: string
 	mode?: string
+	autostart: boolean
 	players: SocketUser[] = []
 	play?: PlayGame
 	finished = false
 
-	constructor(type: string, size: number, host: SocketUser) {
+	constructor(type: string, size: number, host: SocketUser, autostart: boolean) {
 		gameNumber += 1
 		this.id = `g-${gameNumber}` //TODO uuid
 		this.title = `${type} / ${host.name}`
 		this.size = size
 		this.host = host.id
 		this.type = type
+		this.autostart = autostart
 		this.join(host)
 		games.push(this)
 		emitLobbyGames()
@@ -52,7 +59,11 @@ export class Game {
 		this.players.push(user)
 		user.game = this
 		user.join(this.id)
-		this.emitLobbyStatus()
+		if (this.autostart && isGameFull(this)) {
+			this.start()
+		} else {
+			this.emitLobbyStatus()
+		}
 	}
 
 	leave(user: SocketUser) {

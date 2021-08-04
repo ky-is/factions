@@ -23,11 +23,12 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { defineProps, computed, ref, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
 import type { GameData } from '#c/types/data'
 import { isGameFull, isGameHost } from '#c/game'
+import { TESTING } from '#c/utils'
 
 import { ioLobbyJoin } from '#p/helpers/bridge'
 import { socket } from '#p/models/api'
@@ -47,11 +48,14 @@ const currentGame = computed(() => state.game)
 
 const lobbyGames = ref<GameData[]>([])
 
-onMounted(() => {
+onBeforeMount(() => {
 	ioLobbyJoin(router, props.id && !currentGame.value ? props.id : true)
 	socket.on('lobby-games', (games) => {
 		lobbyGames.value = games
 	})
+	if (TESTING && !currentGame.value) {
+		socket.emit('lobby-autojoin')
+	}
 })
 onBeforeUnmount(() => {
 	ioLobbyJoin(router, false)
