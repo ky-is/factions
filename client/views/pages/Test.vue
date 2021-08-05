@@ -1,12 +1,12 @@
 <template>
 	<input type="file" @dragover.prevent="onDragOver" @drop.prevent="onDrop" @change.prevent="onChange">
-	<div class="text-large">
+	<div v-if="deck" class="text-large">
 		<div class="flex justify-around">
-			<OpponentPlayerVue v-if="opponentPlayer" :player="opponentPlayer" :isTurn="false" @attack="onAttack(opponentPlayer)" />
+			<OpponentPlayerVue :player="opponentPlayer" :isTurn="false" @attack="onAttack(opponentPlayer)" />
 		</div>
-		<ShopBoardVue v-if="deck" :deck="deck" :turnPlayer="mainPlayer" />
+		<ShopBoardVue :deck="deck" :turnPlayer="mainPlayer" />
 		<div class="flex justify-around">
-			<MainPlayerVue v-if="mainPlayer" :player="mainPlayer" :isTurn="true" />
+			<MainPlayerVue :player="mainPlayer" :isTurn="true" />
 		</div>
 	</div>
 </template>
@@ -25,8 +25,8 @@ import storage from '#p/models/storage'
 import { PlayPlayer } from '#c/game/Player'
 
 const deck = shallowRef<GameDeck | null>(null)
-const mainPlayer = shallowRef<PlayPlayer | null>(null)
-const opponentPlayer = shallowRef<PlayPlayer | null>(null)
+const mainPlayer = shallowRef<PlayPlayer>(null as any)
+const opponentPlayer = shallowRef<PlayPlayer>(null as any)
 
 const saved = storage.get('TEST')
 if (saved) {

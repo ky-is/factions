@@ -140,6 +140,6 @@ export class ResolveCard {
 			return true
 		}
 		this.actions.push(...card.actions)
-		return this.continueResolving()
+		this.continueResolving()
 	}
 }
