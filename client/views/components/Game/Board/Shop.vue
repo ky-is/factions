@@ -24,6 +24,7 @@ import { defineProps } from 'vue'
 
 import type { GameDeck } from '#c/game/Deck'
 import type { PlayPlayer } from '#c/game/Play'
+import { ioBuyCard } from '#p/helpers/bridge.js'
 
 const props = defineProps<{
 	deck: GameDeck
@@ -31,10 +32,6 @@ const props = defineProps<{
 }>()
 
 function onPurchase(index: number | null) {
-	const card = index === null ? props.deck.pulsars[0] : props.deck.shop[index]
-	if (!card || !props.turnPlayer.buy(card)) {
-		return
-	}
-	props.deck.sold(index)
+	ioBuyCard(index)
 }
 </script>

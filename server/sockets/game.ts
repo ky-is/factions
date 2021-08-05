@@ -20,4 +20,20 @@ export function registerGame(socket: Socket) {
 		currentPlayer.playCardAt(handIndex, resolutions)
 		game.emit('factions-play', undefined, handIndex, resolutions)
 	})
+	socket.on('factions-buy', (shopIndex: number | null, callback: (response: SocketResponse) => void) => {
+		const user = socket.data.user as SocketUser
+		const game = user.game
+		const play = game?.play
+		if (!game || !play) {
+			return callback({ message: 'Invalid game' })
+		}
+		const currentPlayer = play.currentPlayer()
+		if (currentPlayer.id !== user.id) {
+			return callback({ message: 'Not your turn' })
+		}
+		if (!play.acquireFromShopAt(shopIndex)) {
+			return callback({ message: 'Unable to purchase' })
+		}
+		game.emit('factions-buy', undefined, shopIndex)
+	})
 }

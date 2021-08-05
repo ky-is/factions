@@ -209,4 +209,19 @@ export class PlayGame {
 	currentPlayer() {
 		return this.players[this.turnIndex % this.players.length]
 	}
+
+	acquireFromShopAt(shopIndex: number | null) {
+		const card = shopIndex === null ? this.deck.pulsars[0] : this.deck.shop[shopIndex]
+		if (!card) {
+			console.log('Invalid card buy', shopIndex, shopIndex === null ? this.deck.pulsars : this.deck.shop)
+			return false
+		}
+		const player = this.currentPlayer()
+		if (!player.buy(card)) {
+			console.log('Unable to purchase', player, shopIndex, card)
+			return false
+		}
+		this.deck.sold(shopIndex)
+		return true
+	}
 }

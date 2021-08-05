@@ -32,28 +32,20 @@ import { TESTING } from '#c/utils'
 import { socket } from '#p/models/api'
 import { sampleCards } from '#p/helpers/parseSample'
 import { useStore } from '#p/models/store'
+import { registerGame, deregisterGame } from '#p/helpers/bridge.js'
 
 const router = useRouter()
 const { state } = useStore()
 
-const game = state.game ? new PlayGame(state.game as GameData, sampleCards) : null
+const game = state.game ? new PlayGame(state.game as GameData, sampleCards) : null //TODO computed watch
 
-onBeforeMount(() => {
-	socket.on('factions-play', (handIndex: number, resolutions: ActionResolution[], c: any) => {
-		console.log(handIndex, resolutions, c)
-		if (!game) {
-			return console.log('No game')
-		}
-		game.currentPlayer().playCardAt(handIndex, resolutions)
-	})
-})
+onBeforeMount(() => game && registerGame(game))
+onBeforeUnmount(deregisterGame)
+
 onMounted(() => {
 	if (!game && TESTING) {
 		router.replace({ name: 'Lobby' })
 	}
-})
-onBeforeUnmount(() => {
-	socket.off('factions-play')
 })
 
 const turnPlayer = computed(() => game?.currentPlayer())
