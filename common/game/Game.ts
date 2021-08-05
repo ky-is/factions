@@ -1,4 +1,5 @@
 import seedrandom from 'seedrandom'
+import { shallowRef } from 'vue'
 
 import { GameDeck } from '#c/game/Deck.js'
 import { PlayPlayer } from '#c/game/Player.js'
@@ -12,7 +13,7 @@ export class PlayGame {
 	data: GameData
 	deck: GameDeck
 	players: PlayPlayer[]
-	turnIndex = 0
+	turnIndex = shallowRef(0)
 	moves: [string, any[]][] = []
 
 	constructor(gameData: GameData, cards: CardData[]) {
@@ -23,7 +24,7 @@ export class PlayGame {
 	}
 
 	currentPlayer() {
-		return this.players[this.turnIndex % this.players.length]
+		return this.players[this.turnIndex.value % this.players.length]
 	}
 
 	acquireFromShopAt(shopIndex: number | null) {
@@ -39,5 +40,10 @@ export class PlayGame {
 		}
 		this.deck.sold(shopIndex)
 		return true
+	}
+
+	endTurn() {
+		this.currentPlayer().endTurn()
+		this.turnIndex.value += 1
 	}
 }

@@ -54,6 +54,7 @@ import { computed, defineProps } from 'vue'
 
 import type { PlayPlayer } from '#c/game/Player'
 import { ResolveCard } from '#p/helpers/ResolveCard.js'
+import { emitGame } from '#p/helpers/bridge.js'
 
 const props = defineProps<{
 	player: PlayPlayer
@@ -72,7 +73,8 @@ function onPlayAll() {
 }
 
 function onEndTurn() {
-	console.log('End turn')
+	//TODO confirm unused gold/damage
+	emitGame('end')
 }
 
 function onResolve(index: number) {

@@ -58,4 +58,13 @@ export function registerGame(socket: Socket) {
 		game.recordPlay('attack', playerIndex, damage)
 	})
 
+	socket.on('factions-end', (playerIndex: number, damage: number, callback: (response: SocketResponse) => void) => {
+		const turnData = validateTurnAction(socket)
+		if (typeof turnData === 'string') {
+			return callback({ message: turnData })
+		}
+		const [ game, play, turnPlayer ] = turnData
+		play.endTurn()
+		game.recordPlay('end')
+	})
 }

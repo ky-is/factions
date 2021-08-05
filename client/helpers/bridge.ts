@@ -35,10 +35,14 @@ export function registerGame(game: PlayGame) {
 		const target = game.players[playerIndex]
 		game.currentPlayer().attack(target, damage)
 	})
+	socket.on('factions-end', () => {
+		game.endTurn()
+	})
 }
 
 export function deregisterGame() {
 	socket.off('factions-play')
 	socket.off('factions-buy')
 	socket.off('factions-attack')
+	socket.off('factions-end')
 }

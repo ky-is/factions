@@ -43,7 +43,10 @@ export class PlayPlayer {
 		this.dealHand(5 - startAdvantage)
 	}
 
-	startTurn() {
+	endTurn() {
+		this.discard.push(...this.played)
+		this.played = []
+		this.dealHand()
 		this.turn.economy = 0
 		this.turn.damage = 0
 		this.turn.moveUnits = []
@@ -64,18 +67,14 @@ export class PlayPlayer {
 		return true
 	}
 
-	attack(player: PlayPlayer, damage: number) {
+	attack(target: PlayPlayer, damage: number) {
 		if (damage > this.turn.damage) {
-			console.log('Too much damage')
+			console.log('Too much damage', this.turn.damage, damage)
 			return false
 		}
-		player.stats.health -= damage
+		target.stats.health -= damage
 		this.turn.damage -= damage
 		return true
-	}
-
-	endTurn() {
-		this.dealHand()
 	}
 
 	dealHand(size?: number) {
@@ -140,7 +139,6 @@ export class PlayPlayer {
 		}
 		return true
 	}
-
 
 	private runPredicate(predicate: ActionPredicate, resolutions: ActionResolution[]) {
 		if (predicate.conjunction === PredicateConjunction.OR && predicate.children) {
