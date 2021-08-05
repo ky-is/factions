@@ -162,7 +162,7 @@ export class PlayPlayer {
 	}
 
 	private runUnmatchedFactionActions(newFactions: CardFaction[]) {
-		for (let index = this.turn.availableActions.length - 1; index >= 0; index += 1) {
+		for (let index = this.turn.availableActions.length - 1; index >= 0; index -= 1) {
 			const action = this.turn.availableActions[index]
 			if (action.factions && containsAtLeastOne(newFactions, action.factions.concat(this.turn.alliances))) {
 				this.runPredicate(action.predicate, []) //TODO

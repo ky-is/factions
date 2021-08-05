@@ -41,7 +41,7 @@ export class ResolveCard {
 
 	private resolveUnmatchedFactionActions(newFactions: CardFaction[]) {
 		const availableActions = this.player.turn.availableActions
-		for (let index = availableActions.length; index >= 0; index += 1) {
+		for (let index = availableActions.length - 1; index >= 0; index -= 1) {
 			const action = availableActions[index]
 			if (action.factions && containsAtLeastOne(newFactions, action.factions.concat(this.player.turn.alliances))) {
 				if (!this.resolvePredicate(action.predicate)) {
