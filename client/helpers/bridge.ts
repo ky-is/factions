@@ -1,13 +1,13 @@
 import type { Router } from 'vue-router'
 
 import type { ActionResolution } from '#c/types/cards.js'
-import type { SocketResponse } from '#c/types/socket.js'
+import type { SocketError } from '#c/types/socket.js'
 import type { PlayGame } from '#c/game/Game.js'
 
 import { socket } from '#p/models/api'
 
 export function ioLobbyJoin(router: Router, status: boolean | string) {
-	socket.emit('lobby-join', status, (error?: SocketResponse) => {
+	socket.emit('lobby-join', status, (error?: SocketError) => {
 		if (error) {
 			console.log('lobby-join', error.message)
 			router.replace({ name: 'Lobby' })
@@ -16,11 +16,16 @@ export function ioLobbyJoin(router: Router, status: boolean | string) {
 }
 
 export function emitGame(action: string, ...params: any[]) {
-	const event = `factions-${action}`
-	socket.emit(event, ...params, (error?: SocketResponse) => {
-		if (error?.message) {
-			console.log(event, error.message)
-		}
+	return new Promise<boolean>((resolve, reject) => {
+		const event = `factions-${action}`
+		socket.emit(event, ...params, (error?: SocketError) => {
+			if (error) {
+				if (error.message) {
+					console.log(event, error.message)
+				}
+			}
+			resolve(!error)
+		})
 	})
 }
 

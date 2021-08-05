@@ -95,14 +95,14 @@ export class ResolveCard {
 		}
 	}
 
-	private continueResolving() {
+	private async continueResolving() {
 		if (!this.continueResolvingPredicates()) {
 			return
 		}
 		if (!this.continueResolvingActions()) {
 			return
 		}
-		emitGame('play', this.handIndex.value!, this.resolutions)
+		await emitGame('play', this.handIndex.value!, this.resolutions)
 		if (this.playAllIndex > 0) {
 			this.playAllIndex -= 1
 			return this.resolveCardAt(this.playAllIndex)

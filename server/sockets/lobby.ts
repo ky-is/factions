@@ -1,14 +1,14 @@
 import type { Socket } from 'socket.io'
 
 import { isGameFull, isGameHost } from '#c/game/utils.js'
-import type { SocketResponse } from '#c/types/socket.js'
+import type { SocketError } from '#c/types/socket.js'
 
 import { Game, getGame, emitLobbyGames, getAvailableGame } from '#s/game/Game.js'
 
 import type { SocketUser } from '#s/sockets/SocketUser.js'
 
 export function registerLobby(socket: Socket) {
-	socket.on('lobby-join', (joining, callback: (response: SocketResponse) => void) => {
+	socket.on('lobby-join', (joining, callback: (error?: SocketError) => void) => {
 		if (joining) {
 			emitLobbyGames(socket)
 			const user = socket.data.user as SocketUser

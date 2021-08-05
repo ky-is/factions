@@ -1,6 +1,7 @@
 import { sampleCards } from '#c/cards/parseSample.js'
 
 import type { GameData } from '#c/types/data.js'
+import type { SocketError } from '#c/types/socket.js'
 import { PlayGame } from '#c/game/Game.js'
 import { isGameFull } from '#c/game/utils.js'
 
@@ -56,9 +57,10 @@ export class Game {
 		this.emit('lobby-status', target, this.lobbyData())
 	}
 
-	recordPlay(event: string, ...data: any[]) {
+	recordPlay(callback: (error?: SocketError) => void, event: string, ...data: any[]) {
 		this.play?.moves.push([event, data])
 		this.emit(`factions-${event}`, undefined, ...data)
+		callback()
 	}
 
 	join(user: SocketUser) {

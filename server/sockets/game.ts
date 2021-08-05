@@ -3,7 +3,7 @@ import type { Socket } from 'socket.io'
 import { TESTING } from '#c/utils.js'
 
 import type { ActionResolution } from '#c/types/cards.js'
-import type { SocketResponse } from '#c/types/socket.js'
+import type { SocketError } from '#c/types/socket.js'
 
 import type { SocketUser } from '#s/sockets/SocketUser.js'
 import type { Game } from '#s/game/Game.js'
@@ -30,17 +30,17 @@ function validateTurnAction(socket: Socket, event: string, ...data: any[]): stri
 }
 
 export function registerGame(socket: Socket) {
-	socket.on('factions-play', (handIndex: number, resolutions: ActionResolution[], callback: (response: SocketResponse) => void) => {
+	socket.on('factions-play', (handIndex: number, resolutions: ActionResolution[], callback: (error?: SocketError) => void) => {
 		const turnData = validateTurnAction(socket, 'play', handIndex)
 		if (typeof turnData === 'string') {
 			return callback({ message: turnData })
 		}
 		const [ game, play, turnPlayer ] = turnData
 		turnPlayer.playCardAt(handIndex, resolutions)
-		game.recordPlay('play', handIndex, resolutions)
+		game.recordPlay(callback, 'play', handIndex, resolutions)
 	})
 
-	socket.on('factions-buy', (shopIndex: number | null, callback: (response: SocketResponse) => void) => {
+	socket.on('factions-buy', (shopIndex: number | null, callback: (error?: SocketError) => void) => {
 		const turnData = validateTurnAction(socket, 'buy', shopIndex)
 		if (typeof turnData === 'string') {
 			return callback({ message: turnData })
@@ -49,10 +49,10 @@ export function registerGame(socket: Socket) {
 		if (!play.acquireFromShopAt(shopIndex)) {
 			return callback({ message: 'Unable to purchase' })
 		}
-		game.recordPlay('buy', shopIndex)
+		game.recordPlay(callback, 'buy', shopIndex)
 	})
 
-	socket.on('factions-attack', (playerIndex: number, damage: number, callback: (response: SocketResponse) => void) => {
+	socket.on('factions-attack', (playerIndex: number, damage: number, callback: (error?: SocketError) => void) => {
 		const turnData = validateTurnAction(socket, 'attack', playerIndex, damage)
 		if (typeof turnData === 'string') {
 			return callback({ message: turnData })
@@ -62,16 +62,16 @@ export function registerGame(socket: Socket) {
 		if (!turnPlayer.attack(target, damage)) {
 			return callback({ message: 'Invalid damage' })
 		}
-		game.recordPlay('attack', playerIndex, damage)
+		game.recordPlay(callback, 'attack', playerIndex, damage)
 	})
 
-	socket.on('factions-end', (callback: (response: SocketResponse) => void) => {
+	socket.on('factions-end', (callback: (error?: SocketError) => void) => {
 		const turnData = validateTurnAction(socket, 'end')
 		if (typeof turnData === 'string') {
 			return callback({ message: turnData })
 		}
 		const [ game, play, turnPlayer ] = turnData
 		play.endTurn()
-		game.recordPlay('end')
+		game.recordPlay(callback, 'end')
 	})
 }
