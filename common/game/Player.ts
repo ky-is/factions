@@ -169,7 +169,7 @@ export class PlayPlayer {
 		}
 	}
 
-	playCardAt(index: number, resolutions: ActionResolution[]) {
+	playCardAt(index: number, resolutions: ActionResolution[] | undefined) {
 		const card = this.hand[index]
 		if (!card) {
 			return console.log('Card unavailable', this.hand, index)
@@ -179,7 +179,7 @@ export class PlayPlayer {
 			if (action.activation === ActionActivation.ON_SCRAP || (action.factions && !containsAtLeastOne(playedFactions, action.factions))) {
 				this.turn.availableActions.push(action)
 			} else {
-				this.runPredicate(action.predicate, [...resolutions])
+				this.runPredicate(action.predicate, resolutions ? [...resolutions] : [])
 			}
 		}
 		this.runUnmatchedFactionActions(card.factions)
