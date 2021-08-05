@@ -1,9 +1,9 @@
-import type seedrandom from 'seedrandom'
+import type { State } from 'seedrandom'
 
 export interface PRNG {
 	(): number
 	double(): number
 	int32(): number
 	quick(): number
-	state(): seedrandom.State
+	state(): State
 }

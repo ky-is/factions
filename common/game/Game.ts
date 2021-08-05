@@ -1,4 +1,4 @@
-import seedrandom from 'seedrandom'
+import { prng_alea as seedrandom } from 'esm-seedrandom' //TODO monitoring original repo for module support
 import { shallowRef } from 'vue'
 
 import { GameDeck } from '#c/game/Deck.js'
@@ -10,7 +10,6 @@ import type { PRNG } from '#c/types/external.js'
 
 export class PlayGame {
 	rng: PRNG
-	data: GameData
 	deck: GameDeck
 	players: PlayPlayer[]
 	turnIndex = shallowRef(0)
@@ -18,7 +17,6 @@ export class PlayGame {
 
 	constructor(gameData: GameData, cards: CardData[]) {
 		this.rng = seedrandom(gameData.id)
-		this.data = gameData
 		this.deck = new GameDeck(this.rng, gameData.players.length, cards)
 		this.players = gameData.players.map((playerData, index) => new PlayPlayer(this.rng, index, playerData, gameData.players.length))
 	}

@@ -17,12 +17,12 @@ import OpponentPlayerVue from '#p/views/components/Game/Board/OpponentPlayer.vue
 import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 
 import { shallowRef } from 'vue'
-import seedrandom from 'seedrandom'
 
 import { loadCards } from '#c/cards/parse'
 import { GameDeck } from '#c/game/Deck'
 import storage from '#p/models/storage'
 import { PlayPlayer } from '#c/game/Player'
+import { PlayGame } from '#c/game/Game.js'
 
 const deck = shallowRef<GameDeck | null>(null)
 const mainPlayer = shallowRef<PlayPlayer>(null as any)
@@ -60,10 +60,10 @@ async function handleFiles(files: FileList) {
 
 function updateDeck(raw: string) {
 	const cards = loadCards(raw)
-	const rng = seedrandom()
-	deck.value = new GameDeck(rng, 2, cards)
-	mainPlayer.value = new PlayPlayer(rng, 0, { id: '0', name: 'test' }, 2)
-	opponentPlayer.value = new PlayPlayer(rng, 1, { id: '1', name: 'oppo' }, 2)
+	const game = new PlayGame({ id: 'TEST', title: 'test', type: 'factions', size: 2, host: '0', started: true, finished: false, players: [{id: '0', name: 'main'}, {id: '1', name: 'oppo'}] }, cards)
+	deck.value = game.deck
+	mainPlayer.value = game.players[0]
+	opponentPlayer.value = game.players[1]
 }
 
 function onAttack(player: PlayPlayer) {
