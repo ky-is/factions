@@ -26,11 +26,9 @@ import { useRouter } from 'vue-router'
 import { PlayGame } from '#c/game/Play'
 import type { PlayPlayer } from '#c/game/Play'
 import type { GameData } from '#c/types/data'
-import type { ActionResolution } from '#c/types/cards'
 import { TESTING } from '#c/utils'
 
-import { socket } from '#p/models/api'
-import { sampleCards } from '#p/helpers/parseSample'
+import { sampleCards } from '#c/cards/parseSample'
 import { useStore } from '#p/models/store'
 import { registerGame, deregisterGame } from '#p/helpers/bridge.js'
 

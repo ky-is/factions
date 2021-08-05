@@ -6,7 +6,7 @@ import type { GameData, PlayerData } from '#c/types/data.js'
 import type { PRNG } from '#c/types/external.js'
 import { ActionActivation, PredicateConjunction } from '#c/types/cards.js'
 import type { CardAction, CardData, CardFaction, ActionResolution, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards.js'
-import { getStartingDeck } from '#c/cards.js'
+import { getStartingDeck } from '#c/cards/default.js'
 import { containsAtLeastOne, shuffle } from '#c/utils.js'
 
 export class PlayPlayer {

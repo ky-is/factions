@@ -19,7 +19,7 @@ import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 import { shallowRef } from 'vue'
 import seedrandom from 'seedrandom'
 
-import { loadCards } from '#p/helpers/parse'
+import { loadCards } from '#c/cards/parse'
 import { GameDeck } from '#c/game/Deck'
 import storage from '#p/models/storage'
 import { PlayPlayer } from '#c/game/Play'

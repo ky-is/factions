@@ -1,6 +1,8 @@
+import { sampleCards } from '#c/cards/parseSample.js'
+
 import type { GameData } from '#c/types/data.js'
 import { PlayGame } from '#c/game/Play.js'
-import { isGameFull } from '#c/game.js'
+import { isGameFull } from '#c/game/utils.js'
 
 import { emit } from '#s/helpers/io.js'
 import type { EmitTarget } from '#s/helpers/io.js'
@@ -89,7 +91,7 @@ export class Game {
 	}
 
 	start() {
-		this.play = new PlayGame(this.lobbyData(), []) //TODO
+		this.play = new PlayGame(this.lobbyData(), sampleCards)
 		this.emitLobbyStatus()
 	}
 

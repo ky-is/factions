@@ -1,6 +1,6 @@
 import type { Socket } from 'socket.io'
 
-import { isGameFull, isGameHost } from '#c/game.js'
+import { isGameFull, isGameHost } from '#c/game/utils.js'
 import type { SocketResponse } from '#c/types/socket.js'
 
 import { Game, getGame, emitLobbyGames, getAvailableGame } from '#s/game/Game.js'

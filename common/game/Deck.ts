@@ -1,6 +1,6 @@
 import { shallowReactive } from 'vue'
 
-import { getPulsarsFor } from '#c/cards.js'
+import { getPulsarsFor } from '#c/cards/default.js'
 import type { CardData } from '#c/types/cards.js'
 import type { PRNG } from '#c/types/external.js'
 
