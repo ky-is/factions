@@ -1,11 +1,13 @@
 import Fastify from 'fastify'
 
+import { TESTING } from '#c/utils.js'
+
 import { useUserRoutes } from '#s/controllers/users.js'
 
 import { APIError } from '#s/helpers/errors.js'
 import { createIO } from '#s/helpers/io.js'
 
-const clientURL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3100'
+const clientURL = TESTING ? 'http://localhost:3100' : 'https://playfactions.netlify.app'
 
 const fastify = Fastify({
 	logger: true,

@@ -1,6 +1,6 @@
 import type { PRNG } from '#c/types/external'
 
-export const TESTING = process.env.NODE_ENV === 'development'
+export const TESTING = process.env.NODE_ENV !== 'production'
 
 export const SECONDS_IN_MINUTE = 60
 export const SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE

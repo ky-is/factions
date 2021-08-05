@@ -26,9 +26,10 @@
 import { defineProps, computed, ref, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { TESTING } from '#c/utils'
+
 import type { GameData } from '#c/types/data'
 import { isGameFull, isGameHost } from '#c/game/utils'
-import { TESTING } from '#c/utils'
 
 import { ioLobbyJoin } from '#p/helpers/bridge'
 import { socket } from '#p/models/api'

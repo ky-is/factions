@@ -18,7 +18,7 @@ export function ioLobbyJoin(router: Router, status: boolean | string) {
 export function emitGame(action: string, ...params: any[]) {
 	const event = `factions-${action}`
 	socket.emit(event, ...params, (error?: SocketResponse) => {
-		if (error) {
+		if (error?.message) {
 			console.log(event, error.message)
 		}
 	})

@@ -1,9 +1,11 @@
 import { reactive, readonly } from 'vue'
 import type { Router, RouteLocationNormalized } from 'vue-router'
 
+import { TESTING } from '#c/utils.js'
+
 import type { GameData, UserData, SessionData } from '#c/types/data'
 
-import { emailStatus, registerEmail, signinPasscode, socket } from '#p/models/api'
+import { emailStatus, registerEmail, signinPasscode } from '#p/models/api'
 import storage from '#p/models/storage'
 import { ioLobbyJoin } from '#p/helpers/bridge'
 
@@ -109,7 +111,7 @@ export const commit = {
 }
 
 const store = {
-	state: process.env.NODE_ENV === 'production' ? state : readonly(state),
+	state: TESTING ? readonly(state) : state,
 	commit,
 }
 
