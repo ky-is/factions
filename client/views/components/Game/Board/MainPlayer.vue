@@ -52,7 +52,7 @@ import ActionPredicateVue from '#p/views/components/Game/Card/ActionPredicate.vu
 
 import { computed, defineProps } from 'vue'
 
-import type { PlayPlayer } from '#c/game/Play'
+import type { PlayPlayer } from '#c/game/Player'
 import { ResolveCard } from '#p/helpers/ResolveCard.js'
 
 const props = defineProps<{

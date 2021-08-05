@@ -1,6 +1,6 @@
 import { shallowRef } from 'vue'
 
-import type { PlayPlayer } from '#c/game/Play'
+import type { PlayPlayer } from '#c/game/Player'
 import { ActionActivation, ActionPredicate, CardFaction, PredicateConjunction } from '#c/types/cards.js'
 import type { ActionResolution, ActionSegment, CardAction } from '#c/types/cards.js'
 import { containsAtLeastOne } from '#c/utils.js'

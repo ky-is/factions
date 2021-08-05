@@ -22,7 +22,7 @@ import seedrandom from 'seedrandom'
 import { loadCards } from '#c/cards/parse'
 import { GameDeck } from '#c/game/Deck'
 import storage from '#p/models/storage'
-import { PlayPlayer } from '#c/game/Play'
+import { PlayPlayer } from '#c/game/Player'
 
 const deck = shallowRef<GameDeck | null>(null)
 const mainPlayer = shallowRef<PlayPlayer | null>(null)

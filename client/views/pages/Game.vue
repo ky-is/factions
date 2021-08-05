@@ -23,8 +23,8 @@ import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
 import { computed, onBeforeMount, onBeforeUnmount, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { PlayGame } from '#c/game/Play'
-import type { PlayPlayer } from '#c/game/Play'
+import { PlayGame } from '#c/game/Game'
+import type { PlayPlayer } from '#c/game/Player'
 import type { GameData } from '#c/types/data'
 import { TESTING } from '#c/utils'
 

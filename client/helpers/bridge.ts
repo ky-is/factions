@@ -2,7 +2,7 @@ import type { Router } from 'vue-router'
 
 import type { ActionResolution } from '#c/types/cards.js'
 import type { SocketResponse } from '#c/types/socket.js'
-import type { PlayGame } from '#c/game/Play.js'
+import type { PlayGame } from '#c/game/Game.js'
 
 import { socket } from '#p/models/api'
 

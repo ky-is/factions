@@ -23,7 +23,7 @@ import CardVue from '#p/views/components/Game/Card/Card.vue'
 import { defineProps } from 'vue'
 
 import type { GameDeck } from '#c/game/Deck'
-import type { PlayPlayer } from '#c/game/Play'
+import type { PlayPlayer } from '#c/game/Player'
 import { ioBuyCard } from '#p/helpers/bridge.js'
 
 const props = defineProps<{
