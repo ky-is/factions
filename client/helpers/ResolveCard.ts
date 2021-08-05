@@ -14,6 +14,7 @@ export class ResolveCard {
 	resolutions: ActionResolution[] = []
 	predicate = shallowRef<ActionPredicate | null>(null)
 	handIndex = shallowRef<number | null>(null)
+	playAllIndex = -1
 
 	constructor(player: PlayPlayer) {
 		this.player = player
@@ -102,6 +103,10 @@ export class ResolveCard {
 			return
 		}
 		emitGame('play', this.handIndex.value!, this.resolutions)
+		if (this.playAllIndex > 0) {
+			this.playAllIndex -= 1
+			return this.resolveCardAt(this.playAllIndex)
+		}
 	}
 
 	private continueResolvingPredicates() {

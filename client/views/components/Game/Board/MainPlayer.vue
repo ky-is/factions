@@ -65,11 +65,8 @@ const resolveCard = new ResolveCard(props.player)
 const resolvingPredicate = computed(() => resolveCard.predicate.value)
 
 function onPlayAll() {
-	for (let index = props.player.hand.length - 1; index >= 0; index -= 1) {
-		if (!resolveCard.resolveCardAt(index)) {
-			break
-		}
-	}
+	resolveCard.playAllIndex = props.player.hand.length - 1
+	resolveCard.resolveCardAt(resolveCard.playAllIndex)
 }
 
 function onEndTurn() {
