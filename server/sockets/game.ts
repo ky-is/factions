@@ -18,8 +18,9 @@ export function registerGame(socket: Socket) {
 			return callback({ message: 'Not your turn' })
 		}
 		currentPlayer.playCardAt(handIndex, resolutions)
-		game.emit('factions-play', undefined, handIndex, resolutions)
+		game.recordPlay('play', handIndex, resolutions)
 	})
+
 	socket.on('factions-buy', (shopIndex: number | null, callback: (response: SocketResponse) => void) => {
 		const user = socket.data.user as SocketUser
 		const game = user.game
@@ -34,6 +35,6 @@ export function registerGame(socket: Socket) {
 		if (!play.acquireFromShopAt(shopIndex)) {
 			return callback({ message: 'Unable to purchase' })
 		}
-		game.emit('factions-buy', undefined, shopIndex)
+		game.recordPlay('buy', shopIndex)
 	})
 }

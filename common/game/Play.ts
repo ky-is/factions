@@ -198,6 +198,7 @@ export class PlayGame {
 	deck: GameDeck
 	players: PlayPlayer[]
 	turnIndex = 0
+	moves: [string, any[]][] = []
 
 	constructor(gameData: GameData, cards: CardData[]) {
 		this.rng = seedrandom(gameData.id)

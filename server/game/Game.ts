@@ -56,6 +56,11 @@ export class Game {
 		this.emit('lobby-status', target, this.lobbyData())
 	}
 
+	recordPlay(event: string, ...data: any[]) {
+		this.play?.moves.push([event, data])
+		this.emit(`factions-${event}`, undefined, ...data)
+	}
+
 	join(user: SocketUser) {
 		if (this.players.includes(user)) {
 			return console.log('ERR: already joined', user.id, this.id)
