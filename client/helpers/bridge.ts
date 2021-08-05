@@ -15,20 +15,13 @@ export function ioLobbyJoin(router: Router, status: boolean | string) {
 	})
 }
 
-function emitGame(action: string, ...params: any[]) {
+export function emitGame(action: string, ...params: any[]) {
 	const event = `factions-${action}`
 	socket.emit(event, ...params, (error?: SocketResponse) => {
 		if (error) {
 			console.log(event, error.message)
 		}
 	})
-}
-
-export function ioPlayCard(handIndex: number, resolutions: ActionResolution[]) {
-	emitGame('play', handIndex, resolutions)
-}
-export function ioBuyCard(shopIndex: number | null) {
-	emitGame('buy', shopIndex)
 }
 
 export function registerGame(game: PlayGame) {
@@ -38,9 +31,14 @@ export function registerGame(game: PlayGame) {
 	socket.on('factions-buy', (shopIndex: number | null) => {
 		game.acquireFromShopAt(shopIndex)
 	})
+	socket.on('factions-attack', (playerIndex: number, damage: number) => {
+		const target = game.players[playerIndex]
+		game.currentPlayer().attack(target, damage)
+	})
 }
 
 export function deregisterGame() {
 	socket.off('factions-play')
 	socket.off('factions-buy')
+	socket.off('factions-attack')
 }

@@ -5,7 +5,7 @@ import { ActionActivation, ActionPredicate, CardFaction, PredicateConjunction } 
 import type { ActionResolution, ActionSegment, CardAction } from '#c/types/cards.js'
 import { containsAtLeastOne } from '#c/utils.js'
 
-import { ioPlayCard } from '#p/helpers/bridge.js'
+import { emitGame } from '#p/helpers/bridge.js'
 
 export class ResolveCard {
 	player: PlayPlayer
@@ -101,7 +101,7 @@ export class ResolveCard {
 		if (!this.continueResolvingActions()) {
 			return
 		}
-		ioPlayCard(this.handIndex.value!, this.resolutions)
+		emitGame('play', this.handIndex.value!, this.resolutions)
 	}
 
 	private continueResolvingPredicates() {

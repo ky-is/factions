@@ -64,11 +64,14 @@ export class PlayPlayer {
 		return true
 	}
 
-	attack(player: PlayPlayer) {
-		if (this.turn.damage > 0) {
-			player.stats.health -= this.turn.damage
-			this.turn.damage = 0
+	attack(player: PlayPlayer, damage: number) {
+		if (damage > this.turn.damage) {
+			console.log('Too much damage')
+			return false
 		}
+		player.stats.health -= damage
+		this.turn.damage -= damage
+		return true
 	}
 
 	endTurn() {

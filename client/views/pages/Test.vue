@@ -67,6 +67,6 @@ function updateDeck(raw: string) {
 }
 
 function onAttack(player: PlayPlayer) {
-	mainPlayer.value?.attack(player)
+	mainPlayer.value?.attack(player, mainPlayer.value.turn.damage)
 }
 </script>

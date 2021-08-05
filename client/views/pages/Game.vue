@@ -5,7 +5,7 @@
 		</template>
 		<template v-else-if="turnPlayer">
 			<div class="flex justify-around">
-				<OpponentPlayerVue v-for="player in opponentPlayers" :key="player.id" :player="player" :isTurn="turnPlayer.id === player.id" @attack="onAttack(player)" />
+				<OpponentPlayerVue v-for="player in opponentPlayers" :key="player.id" :player="player" :isTurn="turnPlayer.id === player.id" @attack="onAttack(player.index)" />
 			</div>
 			<ShopBoardVue :deck="game.deck" :turnPlayer="turnPlayer" />
 			<div class="flex">
@@ -30,7 +30,7 @@ import { TESTING } from '#c/utils'
 
 import { sampleCards } from '#c/cards/parseSample'
 import { useStore } from '#p/models/store'
-import { registerGame, deregisterGame } from '#p/helpers/bridge.js'
+import { registerGame, deregisterGame, emitGame } from '#p/helpers/bridge.js'
 
 const router = useRouter()
 const { state } = useStore()
@@ -51,10 +51,8 @@ const turnPlayer = computed(() => game?.currentPlayer())
 const localPlayer = game?.players.find(player => player.id === state.user.id)
 const opponentPlayers = game?.players.filter(player => player.id !== state.user.id)
 
-function onAttack(player: PlayPlayer) {
-	if (!game) {
-		return
-	}
-	turnPlayer.value?.attack(player)
+function onAttack(playerIndex: number) {
+	const damage = turnPlayer.value?.turn.damage
+	emitGame('attack', playerIndex, damage)
 }
 </script>
