@@ -1,20 +1,6 @@
 <template>
 	<div class="flex">
-		<div v-if="resolvingPredicate" class=" absolute inset-0  flex flex-col justify-center items-center">
-			<div v-if="resolvingPredicate.children" class="text-center p-8 space-y-4 bg-white shadow-xl rounded-xl">
-				Choose an option:
-				<div class="space-x-4  flex">
-					<template v-for="(predicate, index) in resolvingPredicate.children" :key="index">
-						<button class="w-32 h-32 rounded-lg border-2" @click="onResolve(index)">
-							<ActionPredicateVue :predicate="predicate" />
-						</button>
-					</template>
-				</div>
-			</div>
-			<div v-else-if="resolvingPredicate.segments" class="text-center p-8 space-y-4 bg-white shadow-xl rounded-xl">
-				{{ resolvingPredicate.segments[0] }}
-			</div>
-		</div>
+		<ResolveBoardVue v-if="resolvingPredicate" :resolving="resolvingPredicate" :resolveCard="resolveCard" />
 		<div class="flex flex-col">
 			<div class="flex">
 				<PlayerStats :player="player" :isTurn="isTurn" />
@@ -46,9 +32,9 @@
 </template>
 
 <script setup lang="ts">
-import CardVue from '#p/views/components/Game/Card/Card.vue'
 import PlayerStats from '#p/views/components/Game/Board/PlayerStats.vue'
-import ActionPredicateVue from '#p/views/components/Game/Card/ActionPredicate.vue'
+import ResolveBoardVue from '#p/views/components/Game/Board/ResolveBoard.vue'
+import CardVue from '#p/views/components/Game/Card/Card.vue'
 
 import { computed, defineProps } from 'vue'
 
