@@ -12,19 +12,19 @@
 	<template v-if="predicate.segments">
 		<template v-for="(segment, index) in predicate.segments" :key="index">
 			<template v-if="predicate.conditional && predicate.segments.length === 1">
-				<CardActionConditionalVue :conditional="predicate.conditional" />
+				<CardActionConditional :conditional="predicate.conditional" />
 			</template>
-			<ActionSegmentVue :segment="segment" />
+			<ActionSegment :segment="segment" />
 			<template v-if="predicate.conditional && index < predicate.segments.length - 1">
-				<CardActionConditionalVue :conditional="predicate.conditional" />
+				<CardActionConditional :conditional="predicate.conditional" />
 			</template>
 		</template>
 	</template>
 </template>
 
 <script setup lang="ts">
-import ActionSegmentVue from '#p/views/components/Game/Card/ActionSegment.vue'
-import CardActionConditionalVue from '#p/views/components/Game/Card/ActionConditional.vue'
+import ActionSegment from '#p/views/components/Game/Card/ActionSegment.vue'
+import CardActionConditional from '#p/views/components/Game/Card/ActionConditional.vue'
 
 import { defineAsyncComponent, defineProps } from 'vue'
 

@@ -3,12 +3,12 @@
 		<template v-if="!gameData">
 			Unknown game
 		</template>
-		<GameBoardVue v-else :data="gameData" :cards="sampleCards" />
+		<GameBoard v-else :data="gameData" :cards="sampleCards" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import GameBoardVue from '#p/views/components/Game/Board/GameBoard.vue'
+import GameBoard from '#p/views/components/Game/Board/GameBoard.vue'
 
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'

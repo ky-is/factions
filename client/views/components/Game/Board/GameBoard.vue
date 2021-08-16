@@ -1,21 +1,21 @@
 <template>
 	<div v-if="turnPlayer" class="text-large">
 		<div class="flex justify-around">
-			<OpponentPlayerVue v-for="player in opponentPlayers" :key="player.id" :player="player" :isTurn="turnPlayer.id === player.id" @attack="onAttack(player.index)" />
+			<OpponentPlayer v-for="player in opponentPlayers" :key="player.id" :player="player" :isTurn="turnPlayer.id === player.id" @attack="onAttack(player.index)" />
 		</div>
-		<ShopBoardVue :deck="game.deck" :turnPlayer="turnPlayer" />
+		<ShopBoard :deck="game.deck" :turnPlayer="turnPlayer" />
 		<div class="flex">
-			<MainPlayerVue v-if="localPlayer" :player="localPlayer" :isTurn="turnPlayer.id === localPlayer.id" />
+			<MainPlayer v-if="localPlayer" :player="localPlayer" :isTurn="turnPlayer.id === localPlayer.id" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import MainPlayerVue from '#p/views/components/Game/Board/MainPlayer.vue'
-import OpponentPlayerVue from '#p/views/components/Game/Board/OpponentPlayer.vue'
-import ShopBoardVue from '#p/views/components/Game/Board/Shop.vue'
+import MainPlayer from '#p/views/components/Game/Board/MainPlayer.vue'
+import OpponentPlayer from '#p/views/components/Game/Board/OpponentPlayer.vue'
+import ShopBoard from '#p/views/components/Game/Board/Shop.vue'
 
-import { computed, defineProps, onBeforeMount, onBeforeUnmount, onMounted } from 'vue'
+import { computed, defineProps, onBeforeMount, onBeforeUnmount } from 'vue'
 
 import { PlayGame } from '#c/game/Game'
 import type { GameData } from '#c/types/data'

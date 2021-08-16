@@ -2,7 +2,7 @@
 	<button :class="[ card.type === CardType.STATION ? 'card-horizontal' : 'card-vertical', availableGold !== undefined ? 'for-sale' : null ]" class="card-container flex flex-col" :disabled="card.cost !== undefined && availableGold !== undefined && availableGold < card.cost">
 		<div class="w-full flex">
 			<div class="flex flex-col">
-				<FactionVue v-for="faction in card.factions" :key="faction" :faction="faction" />
+				<CardFaction v-for="faction in card.factions" :key="faction" :faction="faction" />
 			</div>
 			<div class="flex-grow text-left">{{ card.name }}</div>
 			<ActionSegmentResource v-if="card.defense" :resource="CardResource.DEFENSE" :quantity="card.defense" :bg="card.isShield ? 'text-gray-900' : 'text-gray-400'" />
@@ -10,7 +10,7 @@
 				<span class="text-yellow-700">{{ card.cost }}</span>
 			</div>
 		</div>
-		<CardActionVue v-for="(action, actionIndex) in card.actions" :key="actionIndex" :action="action" />
+		<CardAction v-for="(action, actionIndex) in card.actions" :key="actionIndex" :action="action" />
 		<div class="flex-grow" />
 		<div v-if="resolve" class="w-full text-center">
 			<button v-if="isTurn" class="button-secondary bg-white" @click="onPlay">Play card</button>
@@ -19,8 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import FactionVue from '#p/views/components/Game/Card/CardFaction.vue'
-import CardActionVue from '#p/views/components/Game/Card/CardAction.vue'
+import CardFaction from '#p/views/components/Game/Card/CardFaction.vue'
+import CardAction from '#p/views/components/Game/Card/CardAction.vue'
 import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
 
 import { defineProps } from 'vue'

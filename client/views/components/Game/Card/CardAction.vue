@@ -4,14 +4,14 @@
 			{{ activationIcon }}
 		</div>
 		<div v-if="action.factions" class="flex">
-			<FactionVue v-for="faction in action.factions" :key="faction" :faction="faction" />
+			<CardFaction v-for="faction in action.factions" :key="faction" :faction="faction" />
 		</div>
 		<ActionPredicateVue :predicate="action.predicate" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import FactionVue from '#p/views/components/Game/Card/CardFaction.vue'
+import CardFaction from '#p/views/components/Game/Card/CardFaction.vue'
 import ActionPredicateVue from '#p/views/components/Game/Card/ActionPredicate.vue'
 
 import { defineProps } from 'vue'

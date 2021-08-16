@@ -1,10 +1,10 @@
 <template>
 	<input type="file" @dragover.prevent="onDragOver" @drop.prevent="onDrop" @change.prevent="onChange">
-	<GameBoardVue v-if="data && cards" :data="data" :cards="cards" />
+	<GameBoard v-if="data && cards" :data="data" :cards="cards" />
 </template>
 
 <script setup lang="ts">
-import GameBoardVue from '#p/views/components/Game/Board/GameBoard.vue'
+import GameBoard from '#p/views/components/Game/Board/GameBoard.vue'
 
 import { shallowRef } from 'vue'
 
