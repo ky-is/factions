@@ -79,15 +79,20 @@ export class PlayPlayer {
 
 	dealHand(size?: number) {
 		shuffle(this.rng, this.deck)
-		const amountOfCards = size ?? 5
+		const requestedNumberOfCards = size ?? 5
 		const remainingCurrentCount = this.deck.length
-		const remainingAfterCount = amountOfCards - remainingCurrentCount
-		if (remainingCurrentCount > 0) {
-			this.hand.push(...this.deck.splice(0, amountOfCards))
+		const dealFromRemainingDeckCount = Math.min(requestedNumberOfCards, remainingCurrentCount)
+		if (dealFromRemainingDeckCount > 0) {
+			this.hand.push(...this.deck.splice(0, dealFromRemainingDeckCount))
 		}
-		if (remainingAfterCount > 0 && this.discard.length) {
-			this.deck.push(...this.discard.splice(0))
-			this.dealHand(remainingAfterCount)
+		const requestedSecondDealCount = requestedNumberOfCards - dealFromRemainingDeckCount
+		if (requestedSecondDealCount > 0) {
+			if (this.discard.length) {
+				this.deck.push(...this.discard.splice(0))
+				this.dealHand(requestedSecondDealCount)
+			} else {
+				console.log('No discarded cards remaming to deal')
+			}
 		}
 	}
 
@@ -141,15 +146,17 @@ export class PlayPlayer {
 	}
 
 	private runPredicate(predicate: ActionPredicate, resolutions: ActionResolution[]) {
-		if (predicate.conjunction === PredicateConjunction.OR && predicate.children) {
-			const resolution = resolutions.shift()
-			const index = resolution?.or
-			if (index === undefined) {
-				return console.log('Invalid resolution', predicate, resolution, resolutions)
+		if (predicate.children) {
+			if (predicate.conjunction === PredicateConjunction.OR) {
+				const resolution = resolutions.shift()
+				const index = resolution?.or
+				if (index === undefined) {
+					return console.log('Invalid resolution', predicate, resolution, resolutions)
+				}
+				this.runPredicate(predicate.children[index], resolutions)
+			} else {
+				predicate.children.forEach(child => this.runPredicate(child, resolutions))
 			}
-			this.runPredicate(predicate.children[index], resolutions)
-		} else if (predicate.children) {
-			predicate.children.forEach(child => this.runPredicate(child, resolutions))
 		} else if (predicate.segments) {
 			const isOptional = predicate.conditional === true
 			if (!isOptional && predicate.conditional) {
@@ -159,11 +166,18 @@ export class PlayPlayer {
 		}
 	}
 
-	private runUnmatchedFactionActions(newFactions: CardFaction[]) {
+	private runFactionPredicate(action: CardAction, availableFactions: CardFaction[]) {
+		if (!action.factions || !containsAtLeastOne(action.factions, availableFactions)) {
+			return false
+		}
+		this.runPredicate(action.predicate, []) //TODO resolve
+		return true
+	}
+
+	private runUnmatchedFactionActions(availableFactions: CardFaction[]) {
 		for (let index = this.turn.availableActions.length - 1; index >= 0; index -= 1) {
 			const action = this.turn.availableActions[index]
-			if (action.factions && containsAtLeastOne(newFactions, action.factions.concat(this.turn.alliances))) {
-				this.runPredicate(action.predicate, []) //TODO
+			if (this.runFactionPredicate(action, availableFactions)) {
 				this.turn.availableActions.splice(index, 1)
 			}
 		}
@@ -174,15 +188,21 @@ export class PlayPlayer {
 		if (!card) {
 			return console.log('Card unavailable', this.hand, index)
 		}
-		const playedFactions = this.played.flatMap(card => card.factions)
+		const playedFactions = this.played.flatMap(card => card.factions).concat(this.turn.alliances)
+		const newPendingActions = []
 		for (const action of card.actions) {
-			if (action.activation === ActionActivation.ON_SCRAP || (action.factions && !containsAtLeastOne(playedFactions, action.factions))) {
-				this.turn.availableActions.push(action)
+			if (action.activation === ActionActivation.ON_SCRAP) {
+				newPendingActions.push(action)
+			} else if (action.factions?.length) {
+				if (!this.runFactionPredicate(action, playedFactions)) {
+					newPendingActions.push(action)
+				}
 			} else {
 				this.runPredicate(action.predicate, resolutions ? [...resolutions] : [])
 			}
 		}
-		this.runUnmatchedFactionActions(card.factions)
+		this.runUnmatchedFactionActions(card.factions.concat(this.turn.alliances))
+		this.turn.availableActions.push(...newPendingActions)
 		this.hand.splice(index, 1)
 		this.played.push(card)
 	}

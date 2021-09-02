@@ -18,9 +18,9 @@ export function containsAll<T>(all: T[], checks: T[]) {
 	}
 	return true
 }
-export function containsAtLeastOne<T>(all: T[], checks: T[]) {
-	for (const check of checks) {
-		if (all.includes(check)) {
+export function containsAtLeastOne<T>(entries: T[], comparison: T[]) {
+	for (const entry of entries) {
+		if (comparison.includes(entry)) {
 			return true
 		}
 	}
