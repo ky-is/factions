@@ -40,6 +40,7 @@ export class ResolveCard {
 		return true
 	}
 
+	//TODO
 	private resolveUnmatchedFactionActions(newFactions: CardFaction[]) {
 		const availableActions = this.player.turn.availableActions
 		for (let index = availableActions.length - 1; index >= 0; index -= 1) {

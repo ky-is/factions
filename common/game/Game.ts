@@ -7,6 +7,7 @@ import { PlayPlayer } from '#c/game/Player.js'
 import type { CardData } from '#c/types/cards.js'
 import type { GameData } from '#c/types/data.js'
 import type { PRNG } from '#c/types/external.js'
+import { TESTING } from '#c/utils.js'
 
 export class PlayGame {
 	rng: PRNG
@@ -19,6 +20,10 @@ export class PlayGame {
 		this.rng = seedrandom(gameData.id)
 		this.deck = new GameDeck(this.rng, gameData.players.length, cards)
 		this.players = gameData.players.map((playerData, index) => new PlayPlayer(this.rng, index, playerData, gameData.players.length))
+		if (TESTING) { //SAMPLE
+			const card = cards[1]
+			this.players[0].hand.push(card, card)
+		}
 	}
 
 	currentPlayer() {

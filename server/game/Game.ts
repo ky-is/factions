@@ -1,4 +1,5 @@
 import { sampleCards } from '#c/cards/parseSample.js'
+import { TESTING } from '#c/utils.js'
 
 import type { GameData } from '#c/types/data.js'
 import type { SocketError } from '#c/types/socket.js'
@@ -79,7 +80,7 @@ export class Game {
 	}
 
 	leave(user: SocketUser) {
-		if (this.play) {
+		if (!TESTING && this.play) {
 			//TODO
 		} else {
 			user.game = null
