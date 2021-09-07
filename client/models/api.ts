@@ -2,8 +2,11 @@ import { io } from 'socket.io-client'
 import { state, updateUsers, commit } from '#p/models/store'
 
 import type { UserData, SessionData } from '#c/types/data'
+import { TESTING } from '#c/utils'
 
-export const socket = io('http://localhost:3101', { autoConnect: false })
+const ENDPOINT_URL = TESTING ? 'http://localhost:3101' : 'https://factions.ky.is'
+
+export const socket = io(ENDPOINT_URL, { autoConnect: false })
 
 socket.on('connect', () => {
 	commit.connected(true)
@@ -27,7 +30,7 @@ export function connect(sessionID: string) {
 async function ajax<Response>(endpointComponents: [string, string?, string?], body?: object) {
 	const sessionID = state.user.sid
 	return fetch(
-		`/api/${endpointComponents.join('/')}`,
+		`${TESTING ? '' : ENDPOINT_URL}/api/${endpointComponents.join('/')}`,
 		{
 			method: body ? 'POST' : 'GET',
 			headers: {
