@@ -103,6 +103,7 @@ export class ResolveCard {
 		if (!this.continueResolvingActions()) {
 			return
 		}
+		// return console.log(this.resolutions) //SAMPLE
 		await emitGame('play', this.handIndex.value!, this.resolutions)
 		if (this.playAllIndex > 0) {
 			this.playAllIndex -= 1

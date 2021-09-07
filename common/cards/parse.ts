@@ -429,7 +429,7 @@ export function loadCards(raw: string): CardData[] {
 		return []
 	}
 	if (rows.length < 1) { //TODO
-		console.error('TSV: Insufficient rows.')
+		console.error('TSV: Insufficient rows.', raw)
 		return []
 	}
 	return rows.flatMap((row): CardData[] => {
