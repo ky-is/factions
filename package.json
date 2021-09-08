@@ -8,13 +8,15 @@
 		"server:run": "tsc --project server/tsconfig.json && node './~$dist/server/index.js'",
 		"client:build": "vite build client --emptyOutDir",
 		"server:build": "tsc --project server/tsconfig.json",
-		"server:deploy": "git -C ../factions-server-deploy reset --hard && tsc --project server/tsconfig.json && node build/deploy && echo `date` && git -C ../factions-server-deploy add . && git -C ../factions-server-deploy commit -m \"🚀\" && git -C ../factions-server-deploy push dokku main && echo `date`"
+		"server:deploy": "git -C ../factions-server-deploy reset --hard && tsc --project server/tsconfig.json && node build/deploy && echo `date` && git -C ../factions-server-deploy add . && git -C ../factions-server-deploy commit -m \"🚀\" && git -C ../factions-server-deploy push dokku main && echo `date`",
+		"start": "node './~$dist/server/index.js'"
 	},
 	"dependencies": {
 		"esm-seedrandom": "3.0.5",
 		"fastify": "^3.21.0",
 		"postgres": "^2.0.0-beta.8",
-		"socket.io": "^4.2.0"
+		"socket.io": "^4.2.0",
+		"vue": "^3.2.10"
 	},
 	"devDependencies": {
 		"@ky-is/eslint-config": "^2.3.6",
@@ -35,7 +37,6 @@
 		"tailwindcss": "^2.2.11",
 		"typescript": "^4.4.2",
 		"vite": "^2.5.4",
-		"vue": "^3.2.10",
 		"vue-router": "^4.0.11"
 	},
 	"eslintConfig": {
