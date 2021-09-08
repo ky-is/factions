@@ -1,4 +1,5 @@
 import Fastify from 'fastify'
+import FastifyCORS from 'fastify-cors'
 
 import { TESTING } from '#c/utils.js'
 
@@ -14,6 +15,9 @@ const fastify = Fastify({
 })
 
 fastify
+	.register(FastifyCORS, {
+		origin: clientURL,
+	})
 	.setErrorHandler((error, request, reply) => {
 		if (error instanceof APIError) {
 			reply.statusCode = 400
@@ -21,10 +25,6 @@ fastify
 		} else {
 			throw error
 		}
-	})
-	.addHook('onRequest', (request, reply, next) => {
-		reply.header('Access-Control-Allow-Origin', clientURL)
-		next()
 	})
 	.after(() => {
 		useUserRoutes(fastify)
