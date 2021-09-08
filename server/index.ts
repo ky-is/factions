@@ -32,7 +32,7 @@ fastify
 
 createIO(fastify, clientURL)
 
-fastify.listen(3101, (error, address) => {
+fastify.listen(process.env.PORT ?? 3101, '0.0.0.0', (error, address) => {
 	if (error) {
 		throw error
 	}
