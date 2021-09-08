@@ -25,8 +25,10 @@ const translateTypes: Record<string, CardType> = {
 	'YmFzZQ==': CardType.STATION,
 }
 
+const toBase64 = typeof btoa !== 'undefined' ? btoa : ((data: string) => Buffer.from(data.toLowerCase(), 'binary').toString('base64'))
+
 function encoded<Input extends string | undefined>(raw: Input) {
-	return raw !== undefined ? btoa(raw.toLowerCase()) : undefined
+	return raw !== undefined ? toBase64(raw.toLowerCase()) : undefined
 }
 
 function translate<Result>(label: string, row: string[], raw: string, translation: Record<string, Result>) {
