@@ -16,10 +16,10 @@ function validateTurnAction(socket: Socket, event: string, ...data: any[]): stri
 	const game = user.game
 	const play = game?.play
 	if (!game || !play) {
-		if (TESTING) {
+		// if (TESTING) { //TODO handle /test mode
 			socket.emit(`factions-${event}`, ...data)
 			return ''
-		}
+		// }
 		return 'Invalid game'
 	}
 	const turnPlayer = play.currentPlayer()
