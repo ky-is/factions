@@ -28,9 +28,8 @@ fastify
 	})
 	.after(() => {
 		useUserRoutes(fastify)
+		createIO(fastify, clientURL)
 	})
-
-createIO(fastify, clientURL)
 
 fastify.listen(process.env.PORT ?? 3101, '0.0.0.0', (error, address) => {
 	if (error) {

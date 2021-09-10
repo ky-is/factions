@@ -146,6 +146,10 @@ export class PlayPlayer {
 	}
 
 	private runPredicate(predicate: ActionPredicate, resolutions: ActionResolution[]) {
+		let skipLast = false
+		if (predicate.conditional && predicate.conditional !== true) {
+			//TODO skipLast
+		}
 		if (predicate.children) {
 			if (predicate.conjunction === PredicateConjunction.OR) {
 				const resolution = resolutions.shift()
@@ -158,10 +162,6 @@ export class PlayPlayer {
 				predicate.children.forEach(child => this.runPredicate(child, resolutions))
 			}
 		} else if (predicate.segments) {
-			const isOptional = predicate.conditional === true
-			if (!isOptional && predicate.conditional) {
-				//TODO
-			}
 			predicate.segments.forEach(segment => this.runSegment(segment, resolutions))
 		}
 	}

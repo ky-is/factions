@@ -64,7 +64,7 @@ export class ResolveCard {
 			const conditional = predicate?.conditional
 			const isOptional = conditional === true
 			if (!isOptional && conditional) {
-				//TODO
+				//TODO check if condition is met
 			}
 			if (!predicate.pendingSegments?.length) {
 				predicate.pendingSegments = [...predicate.segments]

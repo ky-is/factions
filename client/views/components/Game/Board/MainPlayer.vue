@@ -59,8 +59,4 @@ function onEndTurn() {
 	//TODO confirm unused gold/damage
 	emitGame('end')
 }
-
-function onResolve(index: number) {
-	resolveCard.resolveOr(index)
-}
 </script>

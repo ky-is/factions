@@ -3,7 +3,7 @@
 	<div v-if="isTurn" class="flex flex-col">
 		<ActionSegmentResource :resource="CardResource.ECONOMY" :quantity="player.turn.economy" />
 		<ActionSegmentResource :resource="CardResource.DAMAGE" :quantity="player.turn.damage" />
-		<ActionSegmentResource :resource="CardResource.HEALING" :quantity="player.turn.healing" />
+		<ActionSegmentResource v-show="player.turn.healing > 0" :resource="CardResource.HEALING" :quantity="player.turn.healing" />
 	</div>
 </template>
 

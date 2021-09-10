@@ -1,23 +1,13 @@
 <template>
-	<template v-if="segment.resources">
-		<ActionSegmentResource v-for="(quantity, resource) in segment.resources" :key="resource" :resource="resource" :quantity="quantity" />
-	</template>
-	<template v-if="segment.discard">
-		<ActionSegmentDiscard :discard="segment.discard" />
-	</template>
-	<template v-if="segment.moveUnit">
-		<ActionSegmentMoveUnit :moveUnit="segment.moveUnit" />
-	</template>
-	<template v-if="segment.multiplier">
-		<ActionSegmentMultiplier :multiplier="segment.multiplier" />
-	</template>
+	<ActionSegmentResource v-if="segment.resources" v-for="(quantity, resource) in segment.resources" :key="resource" :resource="resource" :quantity="quantity" />
+	<ActionSegmentDiscard v-if="segment.discard" :discard="segment.discard" />
+	<ActionSegmentMoveUnit v-if="segment.moveUnit" :moveUnit="segment.moveUnit" />
+	<ActionSegmentMultiplier v-if="segment.multiplier" :multiplier="segment.multiplier" />
 	<template v-if="segment.copy">
 		copy a {{ segment.copy.type }} you {{ segment.copy.predicate === ActionActivationPredicate.PLAYED ? 'played this turn' : 'have in play' }}
 		{{ segment.copyFaction ? 'this card also gains its faction' : null }}
 	</template>
-	<template v-if="segment.acquire">
-		<ActionSegmentAcquire :acquire="segment.acquire" />
-	</template>
+	<ActionSegmentAcquire v-if="segment.acquire" :acquire="segment.acquire" />
 	<template v-if="segment.fleetBonus">
 		all your {{ segment.fleetBonus.type ?? 'card' }}s gain <ActionSegmentResource :resource="segment.fleetBonus.resource" :quantity="segment.fleetBonus.amount" />
 	</template>
