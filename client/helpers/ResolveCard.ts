@@ -45,7 +45,7 @@ export class ResolveCard {
 		const availableActions = this.player.turn.availableActions
 		for (let index = availableActions.length - 1; index >= 0; index -= 1) {
 			const action = availableActions[index]
-			if (action.factions && containsAtLeastOne(newFactions, action.factions.concat(this.player.turn.alliances))) {
+			if (action.factions?.length && containsAtLeastOne(newFactions, action.factions.concat(this.player.turn.alliances))) {
 				if (!this.resolvePredicate(action.predicate)) {
 					return
 				}
@@ -122,11 +122,12 @@ export class ResolveCard {
 		return true
 	}
 	private continueResolvingActions() {
-		const playedFactions = this.player.played.flatMap(card => card.factions)
 		while (this.actions.length) {
 			const action = this.actions.shift()!
-			if (action.activation === ActionActivation.ON_SCRAP || (action.factions && !containsAtLeastOne(playedFactions, action.factions))) {
-			} else if (!this.resolvePredicate(action.predicate)) {
+			if (action.activation === ActionActivation.ON_SCRAP || action.factions?.length) {
+				continue
+			}
+			if (!this.resolvePredicate(action.predicate)) {
 				return false
 			}
 		}

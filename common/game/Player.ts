@@ -167,7 +167,7 @@ export class PlayPlayer {
 	}
 
 	private runFactionPredicate(action: CardAction, availableFactions: CardFaction[]) {
-		if (!action.factions || !containsAtLeastOne(action.factions, availableFactions)) {
+		if (!action.factions?.length || !containsAtLeastOne(action.factions, availableFactions)) {
 			return false
 		}
 		this.runPredicate(action.predicate, []) //TODO resolve
@@ -194,7 +194,7 @@ export class PlayPlayer {
 			if (action.activation === ActionActivation.ON_SCRAP) {
 				newPendingActions.push(action)
 			} else if (action.factions?.length) {
-				if (!this.runFactionPredicate(action, playedFactions)) {
+				if (!this.runFactionPredicate(action, playedFactions)) { //TODO resolve
 					newPendingActions.push(action)
 				}
 			} else {
