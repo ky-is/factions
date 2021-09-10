@@ -1,5 +1,5 @@
 <template>
-	<button :class="[ card.type === CardType.STATION ? 'card-horizontal' : 'card-vertical', availableGold !== undefined ? 'for-sale' : null ]" class="card-container flex flex-col" :disabled="card.cost !== undefined && availableGold !== undefined && availableGold < card.cost">
+	<button :class="[ card.type === CardType.STATION ? 'card-horizontal' : 'card-vertical', availableGold !== undefined ? 'for-sale' : null ]" class="card-container" :disabled="card.cost !== undefined && availableGold !== undefined && availableGold < card.cost">
 		<div class="w-full flex">
 			<div class="flex flex-col">
 				<CardFaction v-for="faction in card.factions" :key="faction" :faction="faction" />
@@ -43,13 +43,17 @@ function onPlay() {
 </script>
 
 <style scoped lang="postcss">
+.card-container {
+	@apply text-left flex flex-col;
+}
+.card-container:not(.for-sale), .for-sale:disabled {
+	@apply cursor-default;
+}
+
 .cost-icon {
 	@apply bg-yellow-200 border-2 border-yellow-700;
 }
 
-.card-container:not(.for-sale), .for-sale:disabled {
-	@apply cursor-default;
-}
 .for-sale:disabled .cost-icon {
 	@apply opacity-50;
 }

@@ -320,6 +320,7 @@ function recursivePredicates(original: string, raw: string, precidences: Predica
 		const isOnlyChild = children.length === 1
 		return {
 			children,
+			conditional,
 			conjunction: isOnlyChild ? undefined : precidence[0],
 		}
 	}

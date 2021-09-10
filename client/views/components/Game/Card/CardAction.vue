@@ -1,10 +1,12 @@
 <template>
-	<div class="flex">
-		<div v-if="activationIcon" class="card-icon">
-			{{ activationIcon }}
+	<div>
+		<div v-if="activationIcon" class="inline-block">
+			<div v-if="activationIcon" class="card-icon">{{ activationIcon }}</div>
 		</div>
-		<div v-if="action.factions" class="flex">
-			<CardFaction v-for="faction in action.factions" :key="faction" :faction="faction" />
+		<div v-if="action.factions" class="inline-block">
+			<div class="flex">
+				<CardFaction v-for="faction in action.factions" :key="faction" :faction="faction" class="inline" />
+			</div>
 		</div>
 		<ActionPredicateVue :predicate="action.predicate" />
 	</div>
