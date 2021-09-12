@@ -31,7 +31,7 @@ import PlayerStats from '#p/views/components/Game/Board/PlayerStats.vue'
 
 import { defineEmits, defineProps } from 'vue'
 
-import type { PlayPlayer } from '#c/game/Player'
+import type { PlayPlayer } from '#c/game/Player.js'
 
 const props = defineProps<{
 	player: PlayPlayer

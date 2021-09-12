@@ -6,7 +6,7 @@
 import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { useStore } from '#p/models/store'
+import { useStore } from '#p/models/store.js'
 
 const { state } = useStore()
 

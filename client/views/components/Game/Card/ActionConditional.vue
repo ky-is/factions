@@ -16,8 +16,8 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import { ActionActivationPredicate, CardSource } from '#c/types/cards'
-import type { ActionCondition } from '#c/types/cards'
+import { ActionActivationPredicate, CardSource } from '#c/types/cards.js'
+import type { ActionCondition } from '#c/types/cards.js'
 
 const props = defineProps<{
 	conditional: ActionCondition | true | Object //TODO remove "| Object", required due to Vue prop type error

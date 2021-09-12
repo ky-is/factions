@@ -13,10 +13,10 @@ import SignIn from '#p/views/components/SignIn.vue'
 import { computed, watchEffect, onBeforeUnmount, onBeforeMount } from 'vue'
 import { useRouter, useRoute, RouterView } from 'vue-router'
 
-import type { GameData } from '#c/types/data'
+import type { GameData } from '#c/types/data.js'
 
-import { connect, socket } from '#p/models/api'
-import { useStore } from '#p/models/store'
+import { connect, socket } from '#p/models/api.js'
+import { useStore } from '#p/models/store.js'
 
 const route = useRoute()
 const router = useRouter()

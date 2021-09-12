@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import { CardResource } from '#c/types/cards'
+import { CardResource } from '#c/types/cards.js'
 
 const props = defineProps<{
 	resource: string

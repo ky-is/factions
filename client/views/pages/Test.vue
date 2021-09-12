@@ -8,12 +8,12 @@ import GameBoard from '#p/views/components/Game/Board/GameBoard.vue'
 
 import { shallowRef } from 'vue'
 
-import { loadCards } from '#c/cards/parse'
-import type { GameData } from '#c/types/data'
-import type { CardData } from '#c/types/cards'
+import { loadCards } from '#c/cards/parse.js'
+import type { GameData } from '#c/types/data.js'
+import type { CardData } from '#c/types/cards.js'
 
-import storage from '#p/models/storage'
-import { useStore } from '#p/models/store'
+import storage from '#p/models/storage.js'
+import { useStore } from '#p/models/store.js'
 
 const { state } = useStore()
 

@@ -34,8 +34,8 @@ import { defineAsyncComponent, defineProps } from 'vue'
 
 const ActionPredicateVue = defineAsyncComponent<any>(() => import('./ActionPredicate.vue'))
 
-import { PredicateConjunction } from '#c/types/cards'
-import type { ActionPredicate } from '#c/types/cards'
+import { PredicateConjunction } from '#c/types/cards.js'
+import type { ActionPredicate } from '#c/types/cards.js'
 
 const props = defineProps<{
 	predicate: ActionPredicate

@@ -1,8 +1,9 @@
 import { io } from 'socket.io-client'
-import { state, updateUsers, commit } from '#p/models/store'
 
-import type { UserData, SessionData } from '#c/types/data'
-import { TESTING } from '#c/utils'
+import type { UserData, SessionData } from '#c/types/data.js'
+import { TESTING } from '#c/utils.js'
+
+import { state, updateUsers, commit } from '#p/models/store.js'
 
 const ENDPOINT_URL = TESTING ? 'http://localhost:3101' : 'https://factions.ky.is'
 

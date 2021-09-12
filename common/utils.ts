@@ -1,4 +1,4 @@
-import type { PRNG } from '#c/types/external'
+import type { PRNG } from '#c/types/external.js'
 
 export const TESTING = process.env.NODE_ENV !== 'production'
 

@@ -3,11 +3,11 @@ import type { Router, RouteLocationNormalized } from 'vue-router'
 
 import { nonEmpty, TESTING } from '#c/utils.js'
 
-import type { GameData, UserData, SessionData } from '#c/types/data'
+import type { GameData, UserData, SessionData } from '#c/types/data.js'
 
-import { emailStatus, registerEmail, signinPasscode } from '#p/models/api'
-import storage from '#p/models/storage'
-import { ioLobbyJoin } from '#p/helpers/bridge'
+import { emailStatus, registerEmail, signinPasscode } from '#p/models/api.js'
+import storage from '#p/models/storage.js'
+import { ioLobbyJoin } from '#p/helpers/bridge.js'
 
 export const state = reactive({
 	connected: false,

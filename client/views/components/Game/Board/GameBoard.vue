@@ -18,10 +18,10 @@ import ShopBoard from '#p/views/components/Game/Board/Shop.vue'
 import { computed, defineProps, onBeforeMount, onBeforeUnmount } from 'vue'
 
 import { PlayGame } from '#c/game/Game'
-import type { GameData } from '#c/types/data'
+import type { GameData } from '#c/types/data.js'
 import type { CardData } from '#c/types/cards.js'
 
-import { useStore } from '#p/models/store'
+import { useStore } from '#p/models/store.js'
 import { registerGame, deregisterGame, emitGame } from '#p/helpers/bridge.js'
 
 const { state } = useStore()

@@ -30,8 +30,8 @@ import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentRe
 
 import { defineProps } from 'vue'
 
-import { ActionActivationPredicate } from '#c/types/cards'
-import type { ActionSegment } from '#c/types/cards'
+import { ActionActivationPredicate } from '#c/types/cards.js'
+import type { ActionSegment } from '#c/types/cards.js'
 
 const props = defineProps<{
 	segment: ActionSegment

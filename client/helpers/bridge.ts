@@ -4,7 +4,7 @@ import type { ActionResolution } from '#c/types/cards.js'
 import type { SocketError } from '#c/types/socket.js'
 import type { PlayGame } from '#c/game/Game.js'
 
-import { socket } from '#p/models/api'
+import { socket } from '#p/models/api.js'
 
 export function ioLobbyJoin(router: Router, status: boolean | string) {
 	socket.emit('lobby-join', status, (error?: SocketError) => {

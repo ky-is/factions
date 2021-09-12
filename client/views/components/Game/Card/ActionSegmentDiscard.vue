@@ -9,8 +9,8 @@ import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentRe
 
 import { defineProps } from 'vue'
 
-import type { ActionDiscard } from '#c/types/cards'
-import { CardSource, CardResource } from '#c/types/cards'
+import type { ActionDiscard } from '#c/types/cards.js'
+import { CardSource, CardResource } from '#c/types/cards.js'
 
 const props = defineProps<{
 	discard: ActionDiscard

@@ -26,14 +26,14 @@
 import { defineProps, computed, ref, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { TESTING } from '#c/utils'
+import { TESTING } from '#c/utils.js'
 
-import type { GameData } from '#c/types/data'
-import { isGameFull, isGameHost } from '#c/game/utils'
+import type { GameData } from '#c/types/data.js'
+import { isGameFull, isGameHost } from '#c/game/utils.js'
 
-import { ioLobbyJoin } from '#p/helpers/bridge'
-import { socket } from '#p/models/api'
-import { commit, useStore } from '#p/models/store'
+import { ioLobbyJoin } from '#p/helpers/bridge.js'
+import { socket } from '#p/models/api.js'
+import { commit, useStore } from '#p/models/store.js'
 
 const router = useRouter()
 

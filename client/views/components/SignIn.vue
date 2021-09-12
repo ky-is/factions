@@ -26,9 +26,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import { useStore } from '#p/models/store'
 import type { UserData } from '#c/types/data.js'
 
+import { useStore } from '#p/models/store.js'
 
 const { commit, state } = useStore()
 

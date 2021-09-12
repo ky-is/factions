@@ -23,8 +23,9 @@ import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentRe
 
 import { defineProps } from 'vue'
 
-import { CardResource, CardType } from '#c/types/cards'
-import type { CardData } from '#c/types/cards'
+import { CardResource, CardType } from '#c/types/cards.js'
+import type { CardData } from '#c/types/cards.js'
+
 import type { ResolveCard } from '#p/helpers/ResolveCard.js'
 
 const props = defineProps<{

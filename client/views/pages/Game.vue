@@ -13,12 +13,12 @@ import GameBoard from '#p/views/components/Game/Board/GameBoard.vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { TESTING } from '#c/utils'
+import { TESTING } from '#c/utils.js'
 
-import type { GameData } from '#c/types/data'
-import { sampleCards } from '#c/cards/parseSample'
+import type { GameData } from '#c/types/data.js'
+import { sampleCards } from '#c/cards/parseSample.js'
 
-import { useStore } from '#p/models/store'
+import { useStore } from '#p/models/store.js'
 
 const router = useRouter()
 const { state } = useStore()

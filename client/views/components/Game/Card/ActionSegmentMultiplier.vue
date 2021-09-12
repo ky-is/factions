@@ -5,8 +5,8 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import { ActionActivationPredicate } from '#c/types/cards'
-import type { ActionCondition } from '#c/types/cards'
+import { ActionActivationPredicate } from '#c/types/cards.js'
+import type { ActionCondition } from '#c/types/cards.js'
 
 const props = defineProps<{
 	multiplier: ActionCondition

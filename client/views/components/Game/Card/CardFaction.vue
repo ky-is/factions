@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import { CardFaction } from '#c/types/cards'
+import { CardFaction } from '#c/types/cards.js'
 
 const props = defineProps<{
 	faction: CardFaction
