@@ -1,7 +1,7 @@
 import { reactive, readonly } from 'vue'
 import type { Router, RouteLocationNormalized } from 'vue-router'
 
-import { TESTING } from '#c/utils.js'
+import { nonEmpty, TESTING } from '#c/utils.js'
 
 import type { GameData, UserData, SessionData } from '#c/types/data'
 
@@ -64,7 +64,7 @@ export const commit = {
 			storage.set('user.email', response.email)
 			return response.exists
 		} catch (error) {
-			if (error) { console.log(error) }
+			console.log(error)
 			return false
 		}
 	},
@@ -75,7 +75,7 @@ export const commit = {
 			console.log(response)
 			processSignin(response)
 		} catch (error) {
-			if (error) { console.log(error) }
+			console.log(error)
 		}
 	},
 
@@ -85,7 +85,7 @@ export const commit = {
 			console.log(response)
 			processSignin(response)
 		} catch (error) {
-			if (error) { console.log(error) }
+			console.log(error)
 		}
 	},
 
@@ -93,7 +93,7 @@ export const commit = {
 
 	joinGame(game: GameData | null, router: Router) {
 		state.game = game
-		if (game?.started) {
+		if (game && game.started) {
 			console.log('Join started', game.id)
 			router.push({ name: 'Game', params: { id: game.id } })
 		}
@@ -102,7 +102,7 @@ export const commit = {
 	leaveGameLobby(router: Router) {
 		ioLobbyJoin(router, true)
 		state.game = null
-		if (state.previousRoute?.name === 'Lobby' && !state.previousRoute.params.id) {
+		if (state.previousRoute?.name === 'Lobby' && !nonEmpty(state.previousRoute.params.id)) {
 			router.back()
 		} else {
 			router.replace({ name: 'Lobby' })

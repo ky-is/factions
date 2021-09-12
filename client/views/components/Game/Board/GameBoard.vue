@@ -33,7 +33,7 @@ const props = defineProps<{
 
 const game = new PlayGame(props.data, props.cards) //TODO computed watch
 
-onBeforeMount(() => game && registerGame(game))
+onBeforeMount(() => registerGame(game))
 onBeforeUnmount(deregisterGame)
 
 const turnPlayer = computed(() => game?.currentPlayer())

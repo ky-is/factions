@@ -10,15 +10,14 @@ import type { Game } from '#s/game/Game.js'
 import type { PlayGame } from '#c/game/Game.js'
 import type { PlayPlayer } from '#c/game/Player.js'
 
-
 function validateTurnAction(socket: Socket, event: string, ...data: any[]): string | [Game, PlayGame, PlayPlayer] {
 	const user = socket.data.user as SocketUser
 	const game = user.game
 	const play = game?.play
 	if (!game || !play) {
 		// if (TESTING) { //TODO handle /test mode
-			socket.emit(`factions-${event}`, ...data)
-			return ''
+		socket.emit(`factions-${event}`, ...data)
+		return ''
 		// }
 		return 'Invalid game'
 	}

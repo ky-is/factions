@@ -1,4 +1,4 @@
-let storage: Storage
+let storage: Storage | undefined
 {
 	const sampleDate = new Date().toString()
 	try {

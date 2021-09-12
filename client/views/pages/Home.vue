@@ -10,7 +10,7 @@ import { useStore } from '#p/models/store'
 
 const { state } = useStore()
 
-const isConnected = computed(() => state.connected)
+const isConnected = computed<boolean>(() => state.connected)
 
 watch(isConnected, () => {
 	if (isConnected.value) {

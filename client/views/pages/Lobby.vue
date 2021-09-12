@@ -45,12 +45,12 @@ const props = defineProps<{
 	id?: string
 }>()
 
-const currentGame = computed(() => state.game)
+const currentGame = computed(() => state.game as GameData | null)
 
 const lobbyGames = ref<GameData[]>([])
 
 onBeforeMount(() => {
-	ioLobbyJoin(router, props.id && !currentGame.value ? props.id : true)
+	ioLobbyJoin(router, props.id != null && !currentGame.value ? props.id : true)
 	socket.on('lobby-games', (games) => {
 		lobbyGames.value = games
 	})

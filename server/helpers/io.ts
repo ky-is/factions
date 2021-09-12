@@ -23,8 +23,8 @@ export function createIO(fastify: FastifyInstance, clientURL: string | undefined
 		},
 	})
 	io.use(async (socket, next) => {
-		const { sessionID } = socket.handshake.auth
-		if (!sessionID) {
+		const { sessionID } = socket.handshake.auth as { sessionID?: string }
+		if (sessionID == null) {
 			return next(new APIError('Unauthorized.', true))
 		}
 		const user = await getUserForSession(sessionID)

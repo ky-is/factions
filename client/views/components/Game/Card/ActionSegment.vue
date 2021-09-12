@@ -1,5 +1,7 @@
 <template>
-	<ActionSegmentResource v-if="segment.resources" v-for="(quantity, resource) in segment.resources" :key="resource" :resource="resource" :quantity="quantity" />
+	<template v-if="segment.resources">
+		<ActionSegmentResource v-for="(quantity, resource) in segment.resources" :key="resource" :resource="resource" :quantity="quantity" />
+	</template>
 	<ActionSegmentDiscard v-if="segment.discard" :discard="segment.discard" />
 	<ActionSegmentMoveUnit v-if="segment.moveUnit" :moveUnit="segment.moveUnit" />
 	<ActionSegmentMultiplier v-if="segment.multiplier" :multiplier="segment.multiplier" />

@@ -1,3 +1,5 @@
+import { nonEmpty } from '#c/utils.js'
+
 import { APIError } from '#s/helpers/errors.js'
 
 const REGEX_EMAIL = /^\S+@\S+\.\S+$/
@@ -7,7 +9,7 @@ function process(object: unknown, name: string, regex: RegExp) {
 	object = object as Object
 	if (object instanceof Object && name in object) {
 		const value = (object as Record<string, string | undefined>)[name]?.trim()
-		if (value && regex.test(value)) {
+		if (nonEmpty(value) && regex.test(value)) {
 			return value
 		}
 	}

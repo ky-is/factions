@@ -25,7 +25,7 @@ export async function authUser(email: string, passcode: string) {
 	if (!passcodeUser) {
 		throw new APIError('Invalid account for authorization.', true)
 	}
-	if (passcodeUser.passcode_at && passcodeUser.passcode_at + SECONDS_IN_DAY < now()) {
+	if (passcodeUser.passcode_at != null && passcodeUser.passcode_at + SECONDS_IN_DAY < now()) {
 		throw new APIError('Passcode expired, please try signing in again.', true)
 	}
 	if (passcodeUser.passcode_tries > 3) {
@@ -50,12 +50,12 @@ export async function authUser(email: string, passcode: string) {
 }
 
 export async function createUser(email: string, name: string) {
-	const [ user ] = await sql<[UserData]>`
+	const [ user ] = await sql<[UserData?]>`
 		INSERT INTO users(email, name)
 		VALUES (${email}, ${name})
 		RETURNING ${userDataColumns}
 	`
-	if (!user.id) {
+	if (!user) {
 		throw new APIError('User already exists, please try signing in instead.', true)
 	}
 	const session = await newSessionFor(user.id)
@@ -67,7 +67,7 @@ export async function createSession(user: UserData) {
 }
 
 export async function refreshPasscode(user: UserData) {
-	if (user.passcode_at && user.passcode_at + 5 * SECONDS_IN_MINUTE > now()) {
+	if (user.passcode_at !== undefined && user.passcode_at + 5 * SECONDS_IN_MINUTE > now()) {
 		return
 	}
 	const PASSCODE_LENGTH = 4
@@ -101,7 +101,7 @@ export async function getUserForSession(sessionID: string) {
 			WHERE id = ${sessionID}
 			RETURNING user_id
 		`
-		if (session?.user_id) {
+		if (session) {
 			const [ user ] = await sql<[UserData?]>`
 				SELECT ${userDataColumns}
 				FROM users

@@ -28,7 +28,7 @@ export function connect(sessionID: string) {
 }
 
 async function ajax<Response>(endpointComponents: [string, string?, string?], body?: object) {
-	const sessionID = state.user.sid
+	const sessionID: string = state.user.sid
 	return fetch(
 		`${TESTING ? '' : ENDPOINT_URL}/api/${endpointComponents.join('/')}`,
 		{
@@ -44,7 +44,7 @@ async function ajax<Response>(endpointComponents: [string, string?, string?], bo
 			return response.json()
 		})
 		.then(json => {
-			if (json.users) {
+			if (json.users != null) {
 				updateUsers(json.users, json.addUsers)
 			}
 			// console.log(endpointComponents, json) //SAMPLE

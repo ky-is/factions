@@ -1,5 +1,6 @@
 import { ActionActivation, CardResource, CardFaction, CardType, PredicateConjunction, CardSource, CardAcquisition, CardDestination, PREVIOUS_AMOUNT, ActionActivationPredicate } from '#c/types/cards.js'
 import type { CardAction, CardData, CardInt, ActionSegment, ActionPredicate, CardAmountMoreLess, ActionCondition } from '#c/types/cards.js'
+import { nonEmpty } from '#c/utils.js'
 
 const translateFactions: Record<string, CardFaction> = {
 	'YmxvYg==': CardFaction.GREEN,
@@ -47,7 +48,7 @@ function translate<Result>(label: string, row: string[], raw: string, translatio
 }
 
 function parseCardInt(row: string[], raw: string | null | undefined) {
-	if (!raw) {
+	if (!nonEmpty(raw)) {
 		return undefined
 	}
 	const number = parseInt(raw, 10)
@@ -257,7 +258,7 @@ function parseActionSegment(raw: string, fromOriginal: string) {
 	}
 	const words = raw.split(' ')
 	let currentWord = words.shift()
-	while (currentWord) {
+	while (currentWord != null) {
 		let amount: CardInt | null | undefined
 		let resource: CardResource | undefined
 		if (currentWord[0] === '+') {
@@ -266,7 +267,7 @@ function parseActionSegment(raw: string, fromOriginal: string) {
 				return undefined
 			}
 			const nextWord = words.shift()
-			if (!nextWord) {
+			if (!nonEmpty(nextWord)) {
 				console.error('Action: missing +specifier', amount, original, fromOriginal)
 				return undefined
 			}
@@ -292,7 +293,7 @@ type PredicatePrecidence = [conjunction: PredicateConjunction, splitOn: string, 
 
 function unnest(predicate: ActionPredicate): ActionPredicate {
 	const children = predicate.children?.map(child => unnest(child))
-	if (!predicate.conjunction && !predicate.conditional && children?.length === 1) {
+	if (!predicate.conjunction && predicate.conditional == null && children?.length === 1) {
 		return children[0]
 	}
 	predicate.children = children
@@ -314,7 +315,7 @@ function recursivePredicates(original: string, raw: string, precidences: Predica
 		split = split.filter(segment => !!segment)
 	}
 
-	if (precidences[index + 1]) {
+	if (precidences[index + 1] != null) {
 		const children = split
 			.map(section => recursivePredicates(original, section, precidences, index + 1) as ActionPredicate)
 		const isOnlyChild = children.length === 1
@@ -325,8 +326,8 @@ function recursivePredicates(original: string, raw: string, precidences: Predica
 		}
 	}
 	const segments = split
-		.map((segment) => parseActionSegment(segment, original)!)
-		.filter(segment => !!segment)
+		.map((segment) => parseActionSegment(segment, original))
+		.filter(nonEmpty)
 	return {
 		segments,
 		conditional,
@@ -338,7 +339,7 @@ function describePredicate(value: ActionPredicate): string {
 		// console.log(value.conjunction, value.children, value.children.map(child => describePredicate(child)))
 		return `${(value.conjunction ?? 'x')}[${value.children.map(child => `(${describePredicate(child)})`).join('')}]`
 	}
-	return value.segments!.map(segment => Object.entries(segment).filter(e => !!e[1]).map(e => e.join(':')).toString()).join(',')
+	return value.segments!.map(segment => Object.entries(segment).filter(e => e[1] != null).map(e => e.join(':')).toString()).join(',')
 }
 
 const processConditional: PredicatePrecidenceFn = (entries) => {
@@ -394,7 +395,7 @@ const predicatePrecidences: PredicatePrecidence[] = [
 ]
 
 function processAction(original: string, cardName: string, factions: CardFaction[], activation: ActionActivation | undefined, words: string[]): CardAction {
-	if (factions) {
+	if (factions.length) {
 		words.splice(0, words.indexOf(ALLY_MARKER) + 1)
 	}
 	if (activation !== undefined) {
@@ -425,7 +426,7 @@ export function loadCards(raw: string): CardData[] {
 		.trim()
 		.split('\n')
 		.map(row => row.trim().split('\t').map(col => col.trim()))
-		.filter(row => !!row)
+		.filter(row => row.length)
 	const columns = rows.shift()?.map(column => column.toLowerCase())
 	if (columns?.length !== 8) {
 		console.error('TSV: Invalid columns.', columns)
@@ -456,18 +457,18 @@ export function loadCards(raw: string): CardData[] {
 			return []
 		}
 		const encodedType = encoded(rawType)
-		if (!encodedType || encodedType === 'cnVsZXMgY2FyZA==' || encodedType === 'c2NvcmUgY2FyZA==') {
+		if (encodedType == null || encodedType === 'cnVsZXMgY2FyZA==' || encodedType === 'c2NvcmUgY2FyZA==') {
 			return []
 		}
 		const skipType = todoTypes.includes(encodedType)
 		const type = skipType ? undefined : translate('type', row, rawType, translateTypes)[0]
-		if (!factions || !type) {
+		if (!factions || type == null) {
 			return []
 		}
 		const rawDefense = row[7]
 		const defense = parseCardInt(row, row[7]?.[0])
 		const cost = parseCardInt(row, row[5])
-		if (defense === null || cost === null) {
+		if (defense == null || cost == null) {
 			return []
 		}
 		let rawActions = row[6]
@@ -565,9 +566,7 @@ export function loadCards(raw: string): CardData[] {
 				}
 				if (newSegment) {
 					const action = processAction(rawActions, name, withFactions ? factions : [], currentActivation, currentWords)
-					if (action) {
-						actions.push(action)
-					}
+					actions.push(action)
 					newSegment = false
 					currentWords = []
 					withFactions = false

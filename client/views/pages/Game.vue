@@ -23,7 +23,7 @@ import { useStore } from '#p/models/store'
 const router = useRouter()
 const { state } = useStore()
 
-const gameData = state.game as GameData
+const gameData = state.game as GameData | null
 
 onMounted(() => {
 	if (!gameData && TESTING) {

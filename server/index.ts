@@ -32,7 +32,7 @@ fastify
 	})
 
 fastify.listen(process.env.PORT ?? 3101, '0.0.0.0', (error, address) => {
-	if (error) {
+	if (error != null) {
 		throw error
 	}
 })

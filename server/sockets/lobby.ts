@@ -8,8 +8,8 @@ import { Game, getGame, emitLobbyGames, getAvailableGame } from '#s/game/Game.js
 import type { SocketUser } from '#s/sockets/SocketUser.js'
 
 export function registerLobby(socket: Socket) {
-	socket.on('lobby-join', (joining, callback: (error?: SocketError) => void) => {
-		if (joining) {
+	socket.on('lobby-join', (joining: boolean | string, callback: (error?: SocketError) => void) => {
+		if (joining !== false) {
 			emitLobbyGames(socket)
 			const user = socket.data.user as SocketUser
 			if (joining === true) {

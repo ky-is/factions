@@ -146,8 +146,8 @@ export class PlayPlayer {
 	}
 
 	private runPredicate(predicate: ActionPredicate, resolutions: ActionResolution[]) {
-		let skipLast = false
-		if (predicate.conditional && predicate.conditional !== true) {
+		// let skipLast = false
+		if (predicate.conditional != null && predicate.conditional !== true) {
 			//TODO skipLast
 		}
 		if (predicate.children) {
@@ -167,7 +167,7 @@ export class PlayPlayer {
 	}
 
 	private runFactionPredicate(action: CardAction, availableFactions: CardFaction[]) {
-		if (!action.factions?.length || !containsAtLeastOne(action.factions, availableFactions)) {
+		if (!action.factions || !action.factions.length || !containsAtLeastOne(action.factions, availableFactions)) {
 			return false
 		}
 		this.runPredicate(action.predicate, []) //TODO resolve
@@ -185,13 +185,13 @@ export class PlayPlayer {
 
 	playCardAt(index: number, resolutions: ActionResolution[] | undefined) {
 		const card = this.hand[index]
-		if (!card) {
+		if (card == null) {
 			return console.log('Card unavailable', this.hand, index)
 		}
 		const playedFactions = this.played.flatMap(card => card.factions).concat(this.turn.alliances)
 		const newPendingActions = []
 		for (const action of card.actions) {
-			if (action.factions?.length || action.activation === ActionActivation.ON_SCRAP) {
+			if (action.factions && action.factions.length || action.activation === ActionActivation.ON_SCRAP) {
 				newPendingActions.push(action)
 			} else {
 				this.runPredicate(action.predicate, resolutions ? [...resolutions] : [])
@@ -200,7 +200,7 @@ export class PlayPlayer {
 
 		//TODO resolve
 		for (const action of newPendingActions) {
-			if (action.factions?.length) {
+			if (action.factions && action.factions.length) {
 				this.runFactionPredicate(action, playedFactions)
 			}
 		}

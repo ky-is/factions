@@ -25,7 +25,7 @@ const { state, commit } = useStore()
 const isConnected = computed(() => state.connected)
 
 // Connect after signin
-const sessionID = computed(() => state.user.sid)
+const sessionID = computed<string>(() => state.user.sid)
 watchEffect(() => {
 	if (sessionID.value) {
 		connect(sessionID.value)
@@ -33,7 +33,7 @@ watchEffect(() => {
 })
 
 // Auto-enter joined game
-const currentGame = computed(() => state.game)
+const currentGame = computed(() => state.game as GameData | null)
 watchEffect(() => {
 	const game = currentGame.value
 	if (!game) {
@@ -48,7 +48,7 @@ watchEffect(() => {
 
 // Leave lobby on navigation
 router.beforeEach((to, from) => {
-	if (from.name === 'Lobby' && state.game && from.params.id === state.game.id && to.params.id !== state.game.id) {
+	if (from.name === 'Lobby' && state.game != null && from.params.id === state.game.id && to.params.id !== state.game.id) {
 		commit.leaveGameLobby(router)
 	}
 })

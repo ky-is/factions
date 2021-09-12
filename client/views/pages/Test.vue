@@ -20,7 +20,7 @@ const { state } = useStore()
 const cards = shallowRef<CardData[] | null>(null)
 const data = shallowRef<GameData | null>(null)
 
-const saved = storage.get('TEST')
+const saved: string = storage.get('TEST')
 if (saved) {
 	updateDeck(saved)
 }

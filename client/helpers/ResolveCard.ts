@@ -1,9 +1,9 @@
 import { shallowRef } from 'vue'
 
 import type { PlayPlayer } from '#c/game/Player'
-import { ActionActivation, ActionPredicate, CardFaction, PredicateConjunction } from '#c/types/cards.js'
-import type { ActionResolution, ActionSegment, CardAction } from '#c/types/cards.js'
-import { containsAtLeastOne } from '#c/utils.js'
+import { ActionActivation, PredicateConjunction } from '#c/types/cards.js'
+import type { ActionPredicate, ActionResolution, ActionSegment, CardAction, CardFaction } from '#c/types/cards.js'
+import { containsAtLeastOne, nonEmpty } from '#c/utils.js'
 
 import { emitGame } from '#p/helpers/bridge.js'
 
@@ -45,7 +45,7 @@ export class ResolveCard {
 		const availableActions = this.player.turn.availableActions
 		for (let index = availableActions.length - 1; index >= 0; index -= 1) {
 			const action = availableActions[index]
-			if (action.factions?.length && containsAtLeastOne(newFactions, action.factions.concat(this.player.turn.alliances))) {
+			if (nonEmpty(action.factions) && containsAtLeastOne(newFactions, action.factions.concat(this.player.turn.alliances))) {
 				if (!this.resolvePredicate(action.predicate)) {
 					return
 				}
@@ -66,7 +66,7 @@ export class ResolveCard {
 			if (!isOptional && conditional) {
 				//TODO check if condition is met
 			}
-			if (!predicate.pendingSegments?.length) {
+			if (!nonEmpty(predicate.pendingSegments)) {
 				predicate.pendingSegments = [...predicate.segments]
 			}
 			while (predicate.pendingSegments.length) {
@@ -89,7 +89,7 @@ export class ResolveCard {
 			return console.error('Invalid child', predicate, index)
 		}
 		this.resolutions.push({
-			or: index
+			or: index,
 		})
 		if (this.resolvePredicate(childPredicate)) {
 			this.continueResolving()
@@ -124,7 +124,7 @@ export class ResolveCard {
 	private continueResolvingActions() {
 		while (this.actions.length) {
 			const action = this.actions.shift()!
-			if (action.activation === ActionActivation.ON_SCRAP || action.factions?.length) {
+			if (action.activation === ActionActivation.ON_SCRAP || nonEmpty(action.factions)) {
 				continue
 			}
 			if (!this.resolvePredicate(action.predicate)) {
@@ -138,7 +138,7 @@ export class ResolveCard {
 		this.handIndex.value = index
 		this.resolutions = []
 		const card = this.player.hand[index]
-		if (!card) {
+		if (card == null) {
 			console.log('Card unavailable', this.player.hand, index)
 			return true
 		}

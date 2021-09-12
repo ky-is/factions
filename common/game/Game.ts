@@ -32,7 +32,7 @@ export class PlayGame {
 
 	acquireFromShopAt(shopIndex: number | null) {
 		const card = shopIndex === null ? this.deck.pulsars[0] : this.deck.shop[shopIndex]
-		if (!card) {
+		if (card == null) {
 			console.log('Invalid card buy', shopIndex, shopIndex === null ? this.deck.pulsars : this.deck.shop)
 			return false
 		}
