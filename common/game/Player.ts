@@ -191,18 +191,22 @@ export class PlayPlayer {
 		const playedFactions = this.played.flatMap(card => card.factions).concat(this.turn.alliances)
 		const newPendingActions = []
 		for (const action of card.actions) {
-			if (action.activation === ActionActivation.ON_SCRAP) {
+			if (action.factions?.length || action.activation === ActionActivation.ON_SCRAP) {
 				newPendingActions.push(action)
-			} else if (action.factions?.length) {
-				if (!this.runFactionPredicate(action, playedFactions)) { //TODO resolve
-					newPendingActions.push(action)
-				}
 			} else {
 				this.runPredicate(action.predicate, resolutions ? [...resolutions] : [])
 			}
 		}
+
+		//TODO resolve
+		for (const action of newPendingActions) {
+			if (action.factions?.length) {
+				this.runFactionPredicate(action, playedFactions)
+			}
+		}
 		this.runUnmatchedFactionActions(card.factions.concat(this.turn.alliances))
-		this.turn.availableActions.push(...newPendingActions)
+
+		this.turn.availableActions.unshift(...newPendingActions)
 		this.hand.splice(index, 1)
 		this.played.push(card)
 	}

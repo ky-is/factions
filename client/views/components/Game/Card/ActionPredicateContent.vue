@@ -3,15 +3,13 @@
 		<template v-for="(child, index) in predicate.children" :key="index">
 			<template v-if="predicate.conjunction && index === predicate.children.length - 1">
 				<template v-if="predicate.conjunction === PredicateConjunction.IF_END || predicate.conjunction === PredicateConjunction.CONDITIONAL_END">
-					<div class="clear w-full" />
 					<CardActionConditional v-if="predicate.conditional" :conditional="predicate.conditional" />
 				</template>
 			</template>
 			<ActionPredicateVue :predicate="child" />
 			<template v-if="predicate.conjunction && index < predicate.children.length - 1">
 				<template v-if="predicate.conjunction === PredicateConjunction.AND">then</template>
-				<template v-else-if="predicate.conjunction === PredicateConjunction.OR"> OR </template>
-				<div v-else-if="predicate.conjunction !== PredicateConjunction.EITHER && predicate.conjunction !== PredicateConjunction.IF_END && predicate.conjunction !== PredicateConjunction.CONDITIONAL_END">{{ predicate.conjunction }}</div>
+				<span v-else-if="predicate.conjunction === PredicateConjunction.OR" class="text-secondary smallcaps"> OR </span>
 			</template>
 		</template>
 	</template>

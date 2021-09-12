@@ -2,9 +2,7 @@
 	<main class="select-none" :class="{ container: route.name !== 'Game' && route.name !== 'Test' }">
 		<RouterView v-if="route.name === 'Test'" />
 		<SignIn v-else-if="!sessionID" />
-		<div v-else-if="!isConnected && !currentGame ">
-			Loading...
-		</div>
+		<div v-else-if="!isConnected && !currentGame ">Loading...</div>
 		<RouterView v-else />
 	</main>
 </template>
