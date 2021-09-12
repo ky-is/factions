@@ -258,7 +258,7 @@ function parseActionSegment(raw: string, fromOriginal: string) {
 	}
 	const words = raw.split(' ')
 	let currentWord = words.shift()
-	while (currentWord != null) {
+	while (nonEmpty(currentWord)) {
 		let amount: CardInt | null | undefined
 		let resource: CardResource | undefined
 		if (currentWord[0] === '+') {
