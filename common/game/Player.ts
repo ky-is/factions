@@ -5,7 +5,7 @@ import type { PRNG } from '#c/types/external.js'
 import { ActionActivation, PredicateConjunction } from '#c/types/cards.js'
 import type { CardAction, CardData, CardFaction, ActionResolution, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards.js'
 import { getStartingDeck } from '#c/cards/default.js'
-import { containsAtLeastOne, shuffle } from '#c/utils.js'
+import { containsAtLeastOne, shuffle, TESTING } from '#c/utils.js'
 
 export class PlayPlayer {
 	rng: PRNG
@@ -59,7 +59,10 @@ export class PlayPlayer {
 	buy(card: CardData) {
 		const cost = card.cost ?? 0
 		if (this.turn.economy < cost) {
-			return false
+			console.log('Insufficient funds', this.turn.economy, cost)
+			if (!TESTING) {
+				return false
+			}
 		}
 		this.turn.economy -= cost ?? 0
 		//TODO straight to play option
@@ -70,7 +73,9 @@ export class PlayPlayer {
 	attack(target: PlayPlayer, damage: number) {
 		if (damage > this.turn.damage) {
 			console.log('Too much damage', this.turn.damage, damage)
-			return false
+			if (!TESTING) {
+				return false
+			}
 		}
 		target.stats.health -= damage
 		this.turn.damage -= damage
@@ -181,6 +186,20 @@ export class PlayPlayer {
 				this.turn.availableActions.splice(index, 1)
 			}
 		}
+	}
+
+	playPendingAction(playedCardIndex: number, actionIndex: number, resolutions: ActionResolution[] | undefined) {
+		const card = this.played[playedCardIndex]
+		if (card == null) {
+			return console.log('Card unavailable', this.played, playedCardIndex)
+		}
+		const action = this.turn.availableActions[actionIndex]
+		if (action == null) {
+			return console.log('Action unavailable', this.turn.availableActions, actionIndex)
+		}
+		this.runPredicate(action.predicate, resolutions ? [...resolutions] : []) //TODO verify shallow copy
+		this.played.splice(playedCardIndex, 1) //TODO add to scrap pile
+		this.turn.availableActions.splice(actionIndex, 1)
 	}
 
 	playCardAt(index: number, resolutions: ActionResolution[] | undefined) {

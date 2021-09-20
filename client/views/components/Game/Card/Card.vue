@@ -8,9 +8,14 @@
 				<span class="text-yellow-700">{{ card.cost }}</span>
 			</div>
 		</div>
-		<CardAction v-for="(action, actionIndex) in card.actions" :key="actionIndex" :action="action" />
+		<button v-for="(action, actionIndex) in card.actions" :key="actionIndex"
+			:class="played && action.activation === ActionActivation.ON_SCRAP ? undefined : 'cursor-default'"
+			@click="played && action.activation === ActionActivation.ON_SCRAP ? onDiscard(action) : undefined"
+		>
+			<CardAction :action="action" />
+		</button>
 		<div class="flex-grow" />
-		<div v-if="resolve" class="w-full text-center">
+		<div v-if="resolver && !played" class="w-full text-center">
 			<button v-if="isTurn" class="button-secondary bg-white" @click="onPlay">Play card</button>
 		</div>
 	</button>
@@ -23,7 +28,7 @@ import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentRe
 
 import { defineProps } from 'vue'
 
-import { CardResource, CardType } from '#c/types/cards.js'
+import { ActionActivation, CardResource, CardType } from '#c/types/cards.js'
 import type { CardData } from '#c/types/cards.js'
 
 import type { ResolveCard } from '#p/helpers/ResolveCard.js'
@@ -32,12 +37,17 @@ const props = defineProps<{
 	card: CardData
 	isTurn?: boolean
 	index?: number
-	resolve?: ResolveCard
+	resolver?: ResolveCard
 	availableGold?: number
+	played?: boolean
 }>()
 
 function onPlay() {
-	props.resolve!.resolveCardAt(props.index!)
+	props.resolver!.resolveCardAt(props.index!)
+}
+
+function onDiscard(action) {
+	props.resolver!.resolvePendingAction(props.index!, action)
 }
 </script>
 

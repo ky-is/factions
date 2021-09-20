@@ -14,6 +14,7 @@ export class ResolveCard {
 	resolutions: ActionResolution[] = []
 	predicate = shallowRef<ActionPredicate | null>(null)
 	handIndex = shallowRef<number | null>(null)
+	actionIndex: number | null = null
 	playAllIndex = -1
 
 	constructor(player: PlayPlayer) {
@@ -104,10 +105,15 @@ export class ResolveCard {
 			return
 		}
 		// return console.log(this.resolutions) //SAMPLE
-		await emitGame('play', this.handIndex.value!, this.resolutions)
-		if (this.playAllIndex > 0) {
-			this.playAllIndex -= 1
-			return this.resolveCardAt(this.playAllIndex)
+		if (this.actionIndex !== null) {
+			await emitGame('action', this.handIndex.value!, this.actionIndex, this.resolutions)
+			this.actionIndex = null
+		} else {
+			await emitGame('play', this.handIndex.value!, this.resolutions)
+			if (this.playAllIndex > 0) {
+				this.playAllIndex -= 1
+				return this.resolveCardAt(this.playAllIndex)
+			}
 		}
 	}
 
@@ -132,6 +138,19 @@ export class ResolveCard {
 			}
 		}
 		return true
+	}
+
+	async resolvePendingAction(playedCardIndex: number, action: CardAction) {
+		this.handIndex.value = playedCardIndex
+		const availableActions = this.player.turn.availableActions
+		const actionIndex = availableActions.indexOf(action)
+		if (actionIndex === -1) {
+			console.log('Invalid available action to resolve')
+			return false
+		}
+		this.actionIndex = actionIndex
+		this.actions.push(action)
+		this.continueResolving()
 	}
 
 	resolveCardAt(index: number) {

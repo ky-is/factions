@@ -38,6 +38,15 @@ export function registerGame(socket: Socket) {
 		turnPlayer.playCardAt(handIndex, resolutions)
 		game.recordPlay(callback, 'play', handIndex, resolutions)
 	})
+	socket.on('factions-action', (playedCardIndex: number, actionIndex: number, resolutions: ActionResolution[], callback: (error?: SocketError) => void) => {
+		const turnData = validateTurnAction(socket, 'action', playedCardIndex)
+		if (typeof turnData === 'string') {
+			return callback({ message: turnData })
+		}
+		const [ game, play, turnPlayer ] = turnData
+		turnPlayer.playPendingAction(playedCardIndex, actionIndex, resolutions)
+		game.recordPlay(callback, 'action', playedCardIndex, actionIndex, resolutions)
+	})
 
 	socket.on('factions-buy', (shopIndex: number | null, callback: (error?: SocketError) => void) => {
 		const turnData = validateTurnAction(socket, 'buy', shopIndex)

@@ -30,8 +30,11 @@ export function emitGame(action: string, ...params: any[]) {
 }
 
 export function registerGame(game: PlayGame) {
-	socket.on('factions-play', (handIndex: number, resolutions: ActionResolution[]) => {
-		game.currentPlayer().playCardAt(handIndex, resolutions)
+	socket.on('factions-play', (handCardIndex: number, resolutions: ActionResolution[]) => {
+		game.currentPlayer().playCardAt(handCardIndex, resolutions)
+	})
+	socket.on('factions-action', (playedCardIndex: number, actionIndex: number, resolutions: ActionResolution[]) => {
+		game.currentPlayer().playPendingAction(playedCardIndex, actionIndex, resolutions)
 	})
 	socket.on('factions-buy', (shopIndex: number | null) => {
 		game.acquireFromShopAt(shopIndex)
@@ -47,6 +50,7 @@ export function registerGame(game: PlayGame) {
 
 export function deregisterGame() {
 	socket.off('factions-play')
+	socket.off('factions-action')
 	socket.off('factions-buy')
 	socket.off('factions-attack')
 	socket.off('factions-end')

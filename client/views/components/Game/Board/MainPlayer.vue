@@ -4,10 +4,10 @@
 		<div class="flex flex-col">
 			<div class="flex">
 				<PlayerStats :player="player" :isTurn="isTurn" />
-				<CardVue v-for="(card, index) in player.played" :key="index" :card="card" class="card-small" />
+				<CardVue v-for="(card, index) in player.played" :key="index" :card="card" :index="index" :resolver="resolveCard" :isTurn="isTurn" played class="card-small" />
 			</div>
 			<div class="flex">
-				<CardVue v-for="(card, index) in player.hand" :key="index" :card="card" :index="index" :resolve="resolveCard" :isTurn="isTurn" />
+				<CardVue v-for="(card, index) in player.hand" :key="index" :card="card" :index="index" :resolver="resolveCard" :isTurn="isTurn" />
 			</div>
 		</div>
 		<div class="flex flex-col">
