@@ -44,8 +44,13 @@ export class PlayPlayer {
 	}
 
 	endTurn() {
-		this.discard.push(...this.played)
-		this.played = []
+		for (let index = this.played.length - 1; index >= 0; index -= 1) {
+			const card = this.played[index]
+			if (!card.defense) {
+				this.played.splice(index, 1)
+				this.discard.push(card)
+			}
+		}
 		this.dealHand()
 		this.turn.economy = 0
 		this.turn.damage = 0
