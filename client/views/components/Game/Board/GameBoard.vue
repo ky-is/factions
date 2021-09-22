@@ -5,7 +5,7 @@
 		</div>
 		<ShopBoard :deck="game.deck" :turnPlayer="turnPlayer" />
 		<div class="flex">
-			<MainPlayer v-if="localPlayer" :player="localPlayer" :isTurn="turnPlayer.id === localPlayer.id" />
+			<MainPlayer v-if="localPlayer" :player="localPlayer" :resolver="resolver" :isTurn="turnPlayer.id === localPlayer.id" />
 		</div>
 	</div>
 </template>
@@ -23,6 +23,7 @@ import type { CardData } from '#c/types/cards.js'
 
 import { useStore } from '#p/models/store.js'
 import { registerGame, deregisterGame, emitGame } from '#p/helpers/bridge.js'
+import { ResolveCard } from '#p/helpers/ResolveCard.js'
 
 const { state } = useStore()
 
@@ -32,8 +33,9 @@ const props = defineProps<{
 }>()
 
 const game = new PlayGame(props.data, props.cards) //TODO computed watch
+const resolver = new ResolveCard()
 
-onBeforeMount(() => registerGame(game))
+onBeforeMount(() => registerGame(game, resolver))
 onBeforeUnmount(deregisterGame)
 
 const turnPlayer = computed(() => game?.currentPlayer())

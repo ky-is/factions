@@ -5,6 +5,7 @@ import type { SocketError } from '#c/types/socket.js'
 import type { PlayGame } from '#c/game/Game.js'
 
 import { socket } from '#p/models/api.js'
+import type { ResolveCard } from '#p/helpers/ResolveCard.js'
 
 export function ioLobbyJoin(router: Router, status: boolean | string) {
 	socket.emit('lobby-join', status, (error?: SocketError) => {
@@ -29,12 +30,16 @@ export function emitGame(action: string, ...params: any[]) {
 	})
 }
 
-export function registerGame(game: PlayGame) {
+export function registerGame(game: PlayGame, resolver: ResolveCard) {
 	socket.on('factions-play', (handCardIndex: number, resolutions: ActionResolution[]) => {
-		game.currentPlayer().playCardAt(handCardIndex, resolutions)
+		const player = game.currentPlayer()
+		player.playCardAt(handCardIndex, resolutions)
+		resolver.resumeResolving(player)
 	})
-	socket.on('factions-action', (playedCardIndex: number, actionIndex: number, resolutions: ActionResolution[]) => {
-		game.currentPlayer().playPendingAction(playedCardIndex, actionIndex, resolutions)
+	socket.on('factions-action', (playedCardIndex: number, cardActionIndex: number, resolutions: ActionResolution[]) => {
+		const player = game.currentPlayer()
+		player.playPendingAction(playedCardIndex, cardActionIndex, resolutions)
+		resolver.resumeResolving(player)
 	})
 	socket.on('factions-buy', (shopIndex: number | null) => {
 		game.acquireFromShopAt(shopIndex)

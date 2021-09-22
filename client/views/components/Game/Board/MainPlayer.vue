@@ -1,13 +1,13 @@
 <template>
 	<div class="flex">
-		<ResolveBoardVue v-if="resolvingPredicate" :resolving="resolvingPredicate" :resolveCard="resolveCard" />
+		<ResolveBoardVue v-if="resolvingPredicate" :resolving="resolvingPredicate" :player="player" :resolver="resolver" />
 		<div class="flex flex-col">
 			<div class="flex">
 				<PlayerStats :player="player" :isTurn="isTurn" />
-				<CardVue v-for="(card, index) in player.played" :key="index" :card="card" :index="index" :resolver="resolveCard" :isTurn="isTurn" played class="card-small" />
+				<CardVue v-for="(card, index) in player.played" :key="index" :card="card" :index="index" :player="player" :resolver="resolver" :isTurn="isTurn" played class="card-small" />
 			</div>
 			<div class="flex">
-				<CardVue v-for="(card, index) in player.hand" :key="index" :card="card" :index="index" :resolver="resolveCard" :isTurn="isTurn" />
+				<CardVue v-for="(card, index) in player.hand" :key="index" :card="card" :index="index" :player="player" :resolver="resolver" :isTurn="isTurn" />
 			</div>
 		</div>
 		<div class="flex flex-col">
@@ -40,20 +40,19 @@ import { computed, defineProps } from 'vue'
 
 import type { PlayPlayer } from '#c/game/Player.js'
 
-import { ResolveCard } from '#p/helpers/ResolveCard.js'
 import { emitGame } from '#p/helpers/bridge.js'
+import type { ResolveCard } from '#p/helpers/ResolveCard.js'
 
 const props = defineProps<{
 	player: PlayPlayer
+	resolver: ResolveCard
 	isTurn: boolean
 }>()
 
-const resolveCard = new ResolveCard(props.player)
-const resolvingPredicate = computed(() => resolveCard.predicate.value)
+const resolvingPredicate = computed(() => props.resolver.predicate.value)
 
 function onPlayAll() {
-	resolveCard.playAllIndex = props.player.hand.length - 1
-	resolveCard.resolveCardAt(resolveCard.playAllIndex)
+	props.resolver.startResolvingAll(props.player)
 }
 
 function onEndTurn() {

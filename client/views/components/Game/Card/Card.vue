@@ -1,7 +1,7 @@
 <template>
 	<button :class="[ card.type === CardType.STATION ? 'card-horizontal' : 'card-vertical', availableGold !== undefined ? 'for-sale' : null ]" class="card-container" :disabled="card.cost !== undefined && availableGold !== undefined && availableGold < card.cost">
 		<div class="w-full flex">
-			<CardFactions :factions="card.factions" class=" flex-col" />
+			<CardFactionsVue :factions="card.factions" class=" flex-col" />
 			<div class="flex-grow text-left">{{ card.name }}</div>
 			<ActionSegmentResource v-if="card.defense" :resource="CardResource.DEFENSE" :quantity="card.defense" :bg="card.isShield ? 'text-gray-900' : 'text-gray-400'" />
 			<div v-if="card.cost" class="cost-icon card-icon">
@@ -12,7 +12,7 @@
 			:class="played && action.activation === ActionActivation.ON_SCRAP ? undefined : 'cursor-default'"
 			@click="played && action.activation === ActionActivation.ON_SCRAP ? onDiscard(action) : undefined"
 		>
-			<CardAction :action="action" />
+			<CardActionVue :action="action" />
 		</button>
 		<div class="flex-grow" />
 		<div v-if="resolver && !played" class="w-full text-center">
@@ -22,14 +22,15 @@
 </template>
 
 <script setup lang="ts">
-import CardFactions from '#p/views/components/Game/Card/CardFactions.vue'
-import CardAction from '#p/views/components/Game/Card/CardAction.vue'
+import CardFactionsVue from '#p/views/components/Game/Card/CardFactions.vue'
+import CardActionVue from '#p/views/components/Game/Card/CardAction.vue'
 import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
 
 import { defineProps } from 'vue'
 
 import { ActionActivation, CardResource, CardType } from '#c/types/cards.js'
-import type { CardData } from '#c/types/cards.js'
+import type { CardAction, CardData } from '#c/types/cards.js'
+import type { PlayPlayer } from '#c/game/Player.js'
 
 import type { ResolveCard } from '#p/helpers/ResolveCard.js'
 
@@ -37,17 +38,18 @@ const props = defineProps<{
 	card: CardData
 	isTurn?: boolean
 	index?: number
+	player?: PlayPlayer
 	resolver?: ResolveCard
 	availableGold?: number
 	played?: boolean
 }>()
 
 function onPlay() {
-	props.resolver!.resolveCardAt(props.index!)
+	props.resolver!.resolveCardAt(props.player!, props.index!)
 }
 
-function onDiscard(action) {
-	props.resolver!.resolvePendingAction(props.index!, action)
+function onDiscard(action: CardAction) {
+	props.resolver!.resolvePendingAction(props.player!, props.index!, action)
 }
 </script>
 

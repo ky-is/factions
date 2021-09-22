@@ -5,7 +5,7 @@ import type { PRNG } from '#c/types/external.js'
 import { ActionActivation, PredicateConjunction } from '#c/types/cards.js'
 import type { CardAction, CardData, CardFaction, ActionResolution, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards.js'
 import { getStartingDeck } from '#c/cards/default.js'
-import { containsAtLeastOne, shuffle, TESTING } from '#c/utils.js'
+import { shuffle, TESTING } from '#c/utils.js'
 
 export class PlayPlayer {
 	rng: PRNG
@@ -26,7 +26,7 @@ export class PlayPlayer {
 		moveUnits: [] as ActionMoveUnit[],
 		actionDiscarded: 0,
 		fleetBonuses: [] as ActionFleetBonus[],
-		availableActions: [] as CardAction[],
+		availableCardActions: [] as [CardData, CardAction][],
 		alliances: [] as CardFaction[],
 	})
 
@@ -57,7 +57,7 @@ export class PlayPlayer {
 		this.turn.moveUnits = []
 		this.turn.actionDiscarded = 0
 		this.turn.fleetBonuses = []
-		this.turn.availableActions = []
+		this.turn.availableCardActions = []
 		this.turn.alliances = []
 	}
 
@@ -176,35 +176,17 @@ export class PlayPlayer {
 		}
 	}
 
-	private runFactionPredicate(action: CardAction, availableFactions: CardFaction[]) {
-		if (!action.factions || !action.factions.length || !containsAtLeastOne(action.factions, availableFactions)) {
-			return false
+	playPendingAction(playedCardIndex: number, cardActionIndex: number, resolutions: ActionResolution[] | undefined) {
+		const cardAction = this.turn.availableCardActions[cardActionIndex]
+		if (cardAction == null) {
+			return console.log('Action unavailable', this.turn.availableCardActions, cardActionIndex)
 		}
-		this.runPredicate(action.predicate, []) //TODO resolve
-		return true
-	}
-
-	private runUnmatchedFactionActions(availableFactions: CardFaction[]) {
-		for (let index = this.turn.availableActions.length - 1; index >= 0; index -= 1) {
-			const action = this.turn.availableActions[index]
-			if (this.runFactionPredicate(action, availableFactions)) {
-				this.turn.availableActions.splice(index, 1)
-			}
-		}
-	}
-
-	playPendingAction(playedCardIndex: number, actionIndex: number, resolutions: ActionResolution[] | undefined) {
-		const card = this.played[playedCardIndex]
-		if (card == null) {
-			return console.log('Card unavailable', this.played, playedCardIndex)
-		}
-		const action = this.turn.availableActions[actionIndex]
-		if (action == null) {
-			return console.log('Action unavailable', this.turn.availableActions, actionIndex)
-		}
+		const [card, action] = cardAction
 		this.runPredicate(action.predicate, resolutions ? [...resolutions] : []) //TODO verify shallow copy
-		this.played.splice(playedCardIndex, 1) //TODO add to scrap pile
-		this.turn.availableActions.splice(actionIndex, 1)
+		if (action.activation === ActionActivation.ON_SCRAP) {
+			this.played.splice(playedCardIndex, 1) //TODO add to scrap pile
+		}
+		this.turn.availableCardActions.splice(cardActionIndex, 1)
 	}
 
 	playCardAt(index: number, resolutions: ActionResolution[] | undefined) {
@@ -212,25 +194,13 @@ export class PlayPlayer {
 		if (card == null) {
 			return console.log('Card unavailable', this.hand, index)
 		}
-		const playedFactions = this.played.flatMap(card => card.factions).concat(this.turn.alliances)
-		const newPendingActions = []
 		for (const action of card.actions) {
 			if (action.factions && action.factions.length || action.activation === ActionActivation.ON_SCRAP) {
-				newPendingActions.push(action)
+				this.turn.availableCardActions.push([card, action])
 			} else {
 				this.runPredicate(action.predicate, resolutions ? [...resolutions] : [])
 			}
 		}
-
-		//TODO resolve
-		for (const action of newPendingActions) {
-			if (action.factions && action.factions.length) {
-				this.runFactionPredicate(action, playedFactions)
-			}
-		}
-		this.runUnmatchedFactionActions(card.factions.concat(this.turn.alliances))
-
-		this.turn.availableActions.unshift(...newPendingActions)
 		this.hand.splice(index, 1)
 		this.played.push(card)
 	}

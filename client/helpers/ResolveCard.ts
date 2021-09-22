@@ -8,17 +8,19 @@ import { containsAtLeastOne, nonEmpty } from '#c/utils.js'
 import { emitGame } from '#p/helpers/bridge.js'
 
 export class ResolveCard {
-	player: PlayPlayer
 	actions: CardAction[] = []
 	predicates: ActionPredicate[] = []
 	resolutions: ActionResolution[] = []
 	predicate = shallowRef<ActionPredicate | null>(null)
-	handIndex = shallowRef<number | null>(null)
+	activeCardIndex = shallowRef<number | null>(null)
 	actionIndex: number | null = null
 	playAllIndex = -1
 
-	constructor(player: PlayPlayer) {
-		this.player = player
+	private reset() {
+		this.resolutions = []
+		this.predicate.value = null
+		this.activeCardIndex.value = null
+		this.actionIndex = null
 	}
 
 	private resolveSegment(segment: ActionSegment) {
@@ -41,17 +43,47 @@ export class ResolveCard {
 		return true
 	}
 
-	//TODO
-	private resolveUnmatchedFactionActions(newFactions: CardFaction[]) {
-		const availableActions = this.player.turn.availableActions
-		for (let index = availableActions.length - 1; index >= 0; index -= 1) {
-			const action = availableActions[index]
-			if (nonEmpty(action.factions) && containsAtLeastOne(newFactions, action.factions.concat(this.player.turn.alliances))) {
-				if (!this.resolvePredicate(action.predicate)) {
-					return
+	resolveFactionActions(player: PlayPlayer) {
+		const availableCardActions = player.turn.availableCardActions
+		if (!availableCardActions.length) {
+			return false
+		}
+		const playedFactions = [...player.turn.alliances, ...player.played.flatMap(card => card.factions)]
+		const scores: {[faction: string]: number} = {}
+		playedFactions.forEach(faction => {
+			if (!scores[faction]) {
+				scores[faction] = 1
+			} else {
+				scores[faction] += 1
+			}
+		})
+		for (let index = availableCardActions.length - 1; index >= 0; index -= 1) {
+			const [card, action] = availableCardActions[index]
+			if (!nonEmpty(action.factions)) {
+				continue
+			}
+			const otherPlayedFactions = Object.keys(scores).filter(faction => {
+				let score = scores[faction]
+				if (card.factions.includes(faction as CardFaction)) {
+					score -= 1
+				}
+				return score > 0
+			})
+			if (containsAtLeastOne(otherPlayedFactions, action.factions)) {
+				const cardIndex = player.played.indexOf(card)
+				if (cardIndex === -1) {
+					console.log('Invalid action card index', player.played, card)
+				} else if (this.resolvePendingAction(player, cardIndex, action)) {
+					return true
 				}
 			}
 		}
+		return false
+	}
+
+	startResolvingAll(player: PlayPlayer) {
+		this.playAllIndex = player.hand.length - 1
+		this.resolveCardAt(player, this.playAllIndex)
 	}
 
 	private resolvePredicate(predicate: ActionPredicate) {
@@ -83,7 +115,7 @@ export class ResolveCard {
 		return true
 	}
 
-	resolveOr(index: number) {
+	resolveOr(player: PlayPlayer, index: number) {
 		const predicate = this.predicate.value
 		const childPredicate = predicate?.children?.[index]
 		if (!childPredicate) {
@@ -106,13 +138,18 @@ export class ResolveCard {
 		}
 		// return console.log(this.resolutions) //SAMPLE
 		if (this.actionIndex !== null) {
-			await emitGame('action', this.handIndex.value!, this.actionIndex, this.resolutions)
-			this.actionIndex = null
+			await emitGame('action', this.activeCardIndex.value!, this.actionIndex, this.resolutions)
 		} else {
-			await emitGame('play', this.handIndex.value!, this.resolutions)
+			await emitGame('play', this.activeCardIndex.value!, this.resolutions)
+		}
+		this.reset()
+	}
+
+	resumeResolving(player: PlayPlayer) {
+		if (!this.resolveFactionActions(player)) {
 			if (this.playAllIndex > 0) {
 				this.playAllIndex -= 1
-				return this.resolveCardAt(this.playAllIndex)
+				return this.resolveCardAt(player, this.playAllIndex)
 			}
 		}
 	}
@@ -140,10 +177,11 @@ export class ResolveCard {
 		return true
 	}
 
-	async resolvePendingAction(playedCardIndex: number, action: CardAction) {
-		this.handIndex.value = playedCardIndex
-		const availableActions = this.player.turn.availableActions
-		const actionIndex = availableActions.indexOf(action)
+	resolvePendingAction(player: PlayPlayer, playedCardIndex: number, action: CardAction) {
+		this.activeCardIndex.value = playedCardIndex
+		const availableCardActions = player.turn.availableCardActions
+		const actionCard = player.played[playedCardIndex]
+		const actionIndex = availableCardActions.findIndex(([checkCard, checkAction]) => actionCard === checkCard && action == checkAction)
 		if (actionIndex === -1) {
 			console.log('Invalid available action to resolve')
 			return false
@@ -151,14 +189,15 @@ export class ResolveCard {
 		this.actionIndex = actionIndex
 		this.actions.push(action)
 		this.continueResolving()
+		return true
 	}
 
-	resolveCardAt(index: number) {
-		this.handIndex.value = index
+	resolveCardAt(player: PlayPlayer, index: number) {
+		this.activeCardIndex.value = index
 		this.resolutions = []
-		const card = this.player.hand[index]
+		const card = player.hand[index]
 		if (card == null) {
-			console.log('Card unavailable', this.player.hand, index)
+			console.log('Card unavailable', player.hand, index)
 			return true
 		}
 		this.actions.push(...card.actions)
