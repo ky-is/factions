@@ -50,6 +50,7 @@ export function registerGame(game: PlayGame, resolver: ResolveCard) {
 	})
 	socket.on('factions-end', () => {
 		game.endTurn()
+		resolver.startTurn(game.currentPlayer())
 	})
 }
 

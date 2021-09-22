@@ -43,7 +43,7 @@ export class ResolveCard {
 		return true
 	}
 
-	resolveFactionActions(player: PlayPlayer) {
+	resolvePendingActions(player: PlayPlayer) {
 		const availableCardActions = player.turn.availableCardActions
 		if (!availableCardActions.length) {
 			return false
@@ -59,21 +59,24 @@ export class ResolveCard {
 		})
 		for (let index = availableCardActions.length - 1; index >= 0; index -= 1) {
 			const [card, action] = availableCardActions[index]
-			if (!nonEmpty(action.factions)) {
-				continue
-			}
-			const otherPlayedFactions = Object.keys(scores).filter(faction => {
-				let score = scores[faction]
-				if (card.factions.includes(faction as CardFaction)) {
-					score -= 1
+			const playedCardIndex = player.played.indexOf(card)
+			if (nonEmpty(action.factions)) {
+				const otherPlayedFactions = Object.keys(scores).filter(faction => {
+					let score = scores[faction]
+					if (card.factions.includes(faction as CardFaction)) {
+						score -= 1
+					}
+					return score > 0
+				})
+				if (containsAtLeastOne(otherPlayedFactions, action.factions)) {
+					if (playedCardIndex === -1) {
+						console.log('Invalid action played index', player.played, card)
+					} else if (this.resolvePendingAction(player, playedCardIndex, action)) {
+						return true
+					}
 				}
-				return score > 0
-			})
-			if (containsAtLeastOne(otherPlayedFactions, action.factions)) {
-				const playedCardIndex = player.played.indexOf(card)
-				if (playedCardIndex === -1) {
-					console.log('Invalid action played index', player.played, card)
-				} else if (this.resolvePendingAction(player, playedCardIndex, action)) {
+			} else if (action.activation !== ActionActivation.ON_SCRAP) {
+				if (this.resolvePendingAction(player, playedCardIndex, action)) {
 					return true
 				}
 			}
@@ -145,8 +148,20 @@ export class ResolveCard {
 		this.reset()
 	}
 
+	startTurn(player: PlayPlayer) {
+		for (const card of player.played) {
+			for (const action of card.actions) {
+				if (action.activation === ActionActivation.ON_SCRAP) {
+					continue
+				}
+				player.turn.availableCardActions.push([card, action])
+			}
+		}
+		this.resumeResolving(player)
+	}
+
 	resumeResolving(player: PlayPlayer) {
-		if (!this.resolveFactionActions(player)) {
+		if (!this.resolvePendingActions(player)) {
 			if (this.playAllIndex > 0) {
 				this.playAllIndex -= 1
 				return this.resolveCardAt(player, this.playAllIndex)
