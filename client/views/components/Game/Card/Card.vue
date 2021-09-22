@@ -3,7 +3,12 @@
 		<div class="w-full flex">
 			<CardFactionsVue :factions="card.factions" class=" flex-col" />
 			<div class="flex-grow text-left">{{ card.name }}</div>
-			<ActionSegmentResource v-if="card.defense" :resource="CardResource.DEFENSE" :quantity="card.defense" :bg="card.isShield ? 'text-gray-900' : 'text-gray-400'" />
+			<button v-if="card.defense"
+				:class="isOpponent ? undefined : 'cursor-default'"
+				@click="isOpponent ? onAttack() : undefined"
+			>
+				<ActionSegmentResource :resource="CardResource.DEFENSE" :quantity="card.defense" :bg="card.isShield ? 'text-gray-900' : 'text-gray-400'" />
+			</button>
 			<div v-if="card.cost" class="cost-icon card-icon">
 				<span class="text-yellow-700">{{ card.cost }}</span>
 			</div>
@@ -26,7 +31,7 @@ import CardFactionsVue from '#p/views/components/Game/Card/CardFactions.vue'
 import CardActionVue from '#p/views/components/Game/Card/CardAction.vue'
 import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentResource.vue'
 
-import { defineProps } from 'vue'
+import { defineEmits, defineProps } from 'vue'
 
 import { ActionActivation, CardResource, CardType } from '#c/types/cards.js'
 import type { CardAction, CardData } from '#c/types/cards.js'
@@ -44,12 +49,20 @@ const props = defineProps<{
 	played?: boolean
 }>()
 
+const emit = defineEmits(['attack'])
+
+const isOpponent = props.resolver === undefined && props.availableGold === undefined
+
 function onPlay() {
 	props.resolver!.resolveCardAt(props.player!, props.index!)
 }
 
 function onDiscard(action: CardAction) {
 	props.resolver!.resolvePendingAction(props.player!, props.index!, action)
+}
+
+function onAttack() {
+	emit('attack')
 }
 </script>
 

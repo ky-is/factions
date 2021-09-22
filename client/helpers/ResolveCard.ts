@@ -70,10 +70,10 @@ export class ResolveCard {
 				return score > 0
 			})
 			if (containsAtLeastOne(otherPlayedFactions, action.factions)) {
-				const cardIndex = player.played.indexOf(card)
-				if (cardIndex === -1) {
-					console.log('Invalid action card index', player.played, card)
-				} else if (this.resolvePendingAction(player, cardIndex, action)) {
+				const playedCardIndex = player.played.indexOf(card)
+				if (playedCardIndex === -1) {
+					console.log('Invalid action played index', player.played, card)
+				} else if (this.resolvePendingAction(player, playedCardIndex, action)) {
 					return true
 				}
 			}

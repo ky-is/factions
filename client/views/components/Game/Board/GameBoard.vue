@@ -1,7 +1,7 @@
 <template>
 	<div v-if="turnPlayer" class="text-large">
 		<div class="flex justify-around">
-			<OpponentPlayer v-for="player in opponentPlayers" :key="player.id" :player="player" :isTurn="turnPlayer.id === player.id" @attack="onAttack(player.index)" />
+			<OpponentPlayer v-for="player in opponentPlayers" :key="player.id" :player="player" :isTurn="turnPlayer.id === player.id" @attack="onAttack(player.index, $event)" />
 		</div>
 		<ShopBoard :deck="game.deck" :turnPlayer="turnPlayer" />
 		<div class="flex">
@@ -43,8 +43,17 @@ const turnPlayer = computed(() => game?.currentPlayer())
 const localPlayer = game?.players.find(player => player.id === state.user.id)
 const opponentPlayers = game?.players.filter(player => player.id !== state.user.id)
 
-function onAttack(playerIndex: number) {
+function onAttack(playerIndex: number, playedCardIndex?: number) {
 	const damage = turnPlayer.value?.turn.damage
-	emitGame('attack', playerIndex, damage)
+	if (playedCardIndex !== undefined) {
+		const card = game.players[playerIndex]?.played[playedCardIndex]
+		if (card == null || !card.defense) {
+			return
+		}
+		if (card.defense > damage) {
+			return window.alert('You do not have enough damage to kill this base!')
+		}
+	}
+	emitGame('attack', playerIndex, playedCardIndex, damage)
 }
 </script>

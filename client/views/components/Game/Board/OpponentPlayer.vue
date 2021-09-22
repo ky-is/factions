@@ -5,7 +5,7 @@
 				<button type="button" @click="onAttack">
 					<PlayerStats :player="player" :isTurn="isTurn" />
 				</button>
-				<CardVue v-for="(card, index) in player.played" :key="index" :card="card" class="card-small" />
+				<CardVue v-for="(card, index) in player.played" :key="index" :card="card" class="card-small" @attack="onAttack(index)" />
 				<div class="card-stack card-small card-vertical">
 					<div>{{ player.hand.length }}</div>
 					<div>Hand</div>
@@ -40,7 +40,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['attack'])
 
-function onAttack() {
-	emit('attack')
+function onAttack(playedCardIndex?: number) {
+	emit('attack', playedCardIndex)
 }
 </script>

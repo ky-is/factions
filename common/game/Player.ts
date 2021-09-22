@@ -43,12 +43,16 @@ export class PlayPlayer {
 		this.dealHand(5 - startAdvantage)
 	}
 
+	removeFromPlay(playedCardIndex: number) {
+		this.discard.push(this.played[playedCardIndex])
+		this.played.splice(playedCardIndex, 1)
+	}
+
 	endTurn() {
 		for (let index = this.played.length - 1; index >= 0; index -= 1) {
 			const card = this.played[index]
 			if (!card.defense) {
-				this.played.splice(index, 1)
-				this.discard.push(card)
+				this.removeFromPlay(index)
 			}
 		}
 		this.dealHand()
@@ -75,14 +79,27 @@ export class PlayPlayer {
 		return true
 	}
 
-	attack(target: PlayPlayer, damage: number) {
+	attack(target: PlayPlayer, playedCardIndex: number | undefined, damage: number) {
 		if (damage > this.turn.damage) {
-			console.log('Too much damage', this.turn.damage, damage)
+			console.log('Too much damage', this.turn.damage, damage, 'for', playedCardIndex)
 			if (!TESTING) {
 				return false
 			}
 		}
-		target.stats.health -= damage
+		if (playedCardIndex !== undefined) {
+			const card = target.played[playedCardIndex]
+			if (!card?.defense) {
+				console.log('Invalid card target', card, target.played, playedCardIndex)
+				return false
+			}
+			if (card.defense > damage) {
+				console.log('Insufficient damage', card.defense)
+				return false
+			}
+			target.removeFromPlay(playedCardIndex)
+		} else {
+			target.stats.health -= damage
+		}
 		this.turn.damage -= damage
 		return true
 	}
