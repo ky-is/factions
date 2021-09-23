@@ -62,6 +62,7 @@ export class PlayPlayer {
 			}
 		}
 		this.dealHand()
+		this.turn.healing = 0
 		this.turn.economy = 0
 		this.turn.damage = 0
 		this.turn.moveUnits = []
