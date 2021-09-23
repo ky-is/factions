@@ -2,7 +2,7 @@
 	<div class="flex">
 		<div class="flex flex-col">
 			<div class="flex">
-				<button type="button" @click="onAttack">
+				<button type="button" @click="onAttack(null)">
 					<PlayerStats :player="player" :isTurn="isTurn" />
 				</button>
 				<CardVue v-for="(card, index) in player.played" :key="index" :card="card" class="card-small" @attack="onAttack(index)" />
@@ -40,7 +40,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['attack'])
 
-function onAttack(playedCardIndex?: number) {
+function onAttack(playedCardIndex: number | null) {
 	emit('attack', playedCardIndex)
 }
 </script>

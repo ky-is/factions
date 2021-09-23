@@ -62,7 +62,7 @@ function onDiscard(action: CardAction) {
 }
 
 function onAttack() {
-	emit('attack')
+	emit('attack', null)
 }
 </script>
 

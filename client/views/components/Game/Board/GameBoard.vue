@@ -43,15 +43,18 @@ const turnPlayer = computed(() => game?.currentPlayer())
 const localPlayer = game?.players.find(player => player.id === state.user.id)
 const opponentPlayers = game?.players.filter(player => player.id !== state.user.id)
 
-function onAttack(playerIndex: number, playedCardIndex?: number) {
+function onAttack(playerIndex: number, playedCardIndex: number | null) {
 	const damage = turnPlayer.value?.turn.damage
-	if (playedCardIndex !== undefined) {
+	if (damage < 1) {
+		return console.log('No damage', playerIndex, playedCardIndex, damage)
+	}
+	if (playedCardIndex !== null) {
 		const card = game.players[playerIndex]?.played[playedCardIndex]
 		if (card == null || !card.defense) {
 			return
 		}
 		if (card.defense > damage) {
-			return window.alert('You do not have enough damage to kill this base!')
+			return window.alert('You do not have enough damage to kill this station!')
 		}
 	}
 	emitGame('attack', playerIndex, playedCardIndex, damage)

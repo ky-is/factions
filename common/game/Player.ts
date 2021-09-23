@@ -79,14 +79,14 @@ export class PlayPlayer {
 		return true
 	}
 
-	attack(target: PlayPlayer, playedCardIndex: number | undefined, damage: number) {
+	attack(target: PlayPlayer, playedCardIndex: number | null, damage: number) {
 		if (damage > this.turn.damage) {
 			console.log('Too much damage', this.turn.damage, damage, 'for', playedCardIndex)
 			if (!TESTING) {
 				return false
 			}
 		}
-		if (playedCardIndex !== undefined) {
+		if (playedCardIndex !== null) {
 			const card = target.played[playedCardIndex]
 			if (!card?.defense) {
 				console.log('Invalid card target', card, target.played, playedCardIndex)
