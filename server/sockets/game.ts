@@ -54,7 +54,7 @@ export function registerGame(socket: Socket) {
 			return callback({ message: turnData })
 		}
 		const [ game, play, turnPlayer ] = turnData
-		if (!play.acquireFromShopAt(shopIndex)) {
+		if (!play.acquireFromShopAt(turnPlayer, shopIndex)) {
 			return callback({ message: 'Unable to purchase' })
 		}
 		game.recordPlay(callback, 'buy', shopIndex)

@@ -30,13 +30,12 @@ export class PlayGame {
 		return this.players[this.turnIndex.value % this.players.length]
 	}
 
-	acquireFromShopAt(shopIndex: number | null) {
+	acquireFromShopAt(player: PlayPlayer, shopIndex: number | null) {
 		const card = shopIndex === null ? this.deck.pulsars[0] : this.deck.shop[shopIndex]
 		if (card == null) {
 			console.log('Invalid card buy', shopIndex, shopIndex === null ? this.deck.pulsars : this.deck.shop)
 			return false
 		}
-		const player = this.currentPlayer()
 		if (!player.buy(card)) {
 			console.log('Unable to purchase', player, shopIndex, card)
 			return false

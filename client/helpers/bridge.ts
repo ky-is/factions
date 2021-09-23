@@ -42,7 +42,7 @@ export function registerGame(game: PlayGame, resolver: ResolveCard) {
 		resolver.resumeResolving(player)
 	})
 	socket.on('factions-buy', (shopIndex: number | null) => {
-		game.acquireFromShopAt(shopIndex)
+		game.acquireFromShopAt(game.currentPlayer(), shopIndex)
 	})
 	socket.on('factions-attack', (playerIndex: number, playedCardIndex: number | undefined, damage: number) => {
 		const target = game.players[playerIndex]

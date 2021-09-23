@@ -43,7 +43,7 @@ export class PlayPlayer {
 		this.dealHand(5 - startAdvantage)
 	}
 
-	removeFromPlay(playedCardIndex: number) {
+	private removeFromPlay(playedCardIndex: number) {
 		this.discard.push(this.played[playedCardIndex])
 		this.played.splice(playedCardIndex, 1)
 	}
@@ -104,7 +104,7 @@ export class PlayPlayer {
 		return true
 	}
 
-	dealHand(size?: number) {
+	private dealHand(size?: number) {
 		shuffle(this.rng, this.deck)
 		const requestedNumberOfCards = size ?? 5
 		const remainingCurrentCount = this.deck.length
