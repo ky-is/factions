@@ -5,7 +5,7 @@
 		</div>
 		<ShopBoard :deck="game.deck" :turnPlayer="turnPlayer" />
 		<div class="flex">
-			<MainPlayer v-if="localPlayer" :player="localPlayer" :resolver="resolver" :isTurn="turnPlayer.id === localPlayer.id" />
+			<MainPlayer v-if="localPlayer && resolver" :player="localPlayer" :resolver="resolver" :isTurn="turnPlayer.id === localPlayer.id" />
 		</div>
 	</div>
 </template>
@@ -33,15 +33,16 @@ const props = defineProps<{
 }>()
 
 const game = new PlayGame(props.data, props.cards) //TODO computed watch
-const resolver = new ResolveCard()
-
-onBeforeMount(() => registerGame(game, resolver))
-onBeforeUnmount(deregisterGame)
 
 const turnPlayer = computed(() => game?.currentPlayer())
 
 const localPlayer = game?.players.find(player => player.id === state.user.id)
 const opponentPlayers = game?.players.filter(player => player.id !== state.user.id)
+
+const resolver = localPlayer && new ResolveCard(localPlayer)
+
+onBeforeMount(() => resolver != null && localPlayer && registerGame(game, resolver, localPlayer))
+onBeforeUnmount(deregisterGame)
 
 function onAttack(playerIndex: number, playedCardIndex: number | null) {
 	const damage = turnPlayer.value?.turn.damage

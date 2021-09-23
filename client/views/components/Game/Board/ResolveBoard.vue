@@ -22,17 +22,15 @@ import ActionPredicateVue from '#p/views/components/Game/Card/ActionPredicate.vu
 import { defineProps } from 'vue'
 
 import type { ActionPredicate } from '#c/types/cards.js'
-import type { PlayPlayer } from '#c/game/Player.js'
 
 import type { ResolveCard } from '#p/helpers/ResolveCard.js'
 
 const props = defineProps<{
-	player: PlayPlayer
 	resolver: ResolveCard
 	resolving: ActionPredicate
 }>()
 
 function onResolve(index: number) {
-	props.resolver.resolveOr(props.player, index)
+	props.resolver.resolveOr(index)
 }
 </script>

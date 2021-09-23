@@ -54,11 +54,11 @@ const emit = defineEmits(['attack'])
 const isOpponent = props.resolver === undefined && props.availableGold === undefined
 
 function onPlay() {
-	props.resolver!.resolveCardAt(props.player!, props.index!)
+	props.resolver!.resolveCardAt(props.index!)
 }
 
 function onDiscard(action: CardAction) {
-	props.resolver!.resolvePendingAction(props.player!, props.index!, action)
+	props.resolver!.resolvePendingAction(props.index!, action)
 }
 
 function onAttack() {

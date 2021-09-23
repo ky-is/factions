@@ -48,6 +48,12 @@ export class PlayPlayer {
 		this.played.splice(playedCardIndex, 1)
 	}
 
+	startTurn() {
+		this.played.forEach(card => {
+			card.actions.forEach(action => this.turn.availableCardActions.push([card, action]))
+		})
+	}
+
 	endTurn() {
 		for (let index = this.played.length - 1; index >= 0; index -= 1) {
 			const card = this.played[index]

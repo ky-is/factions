@@ -3,6 +3,7 @@ import type { Router } from 'vue-router'
 import type { ActionResolution } from '#c/types/cards.js'
 import type { SocketError } from '#c/types/socket.js'
 import type { PlayGame } from '#c/game/Game.js'
+import type { PlayPlayer } from '#c/game/Player.js'
 
 import { socket } from '#p/models/api.js'
 import type { ResolveCard } from '#p/helpers/ResolveCard.js'
@@ -30,16 +31,20 @@ export function emitGame(action: string, ...params: any[]) {
 	})
 }
 
-export function registerGame(game: PlayGame, resolver: ResolveCard) {
+export function registerGame(game: PlayGame, resolver: ResolveCard, localPlayer: PlayPlayer) {
 	socket.on('factions-play', (handCardIndex: number, resolutions: ActionResolution[]) => {
 		const player = game.currentPlayer()
 		player.playCardAt(handCardIndex, resolutions)
-		resolver.resumeResolving(player)
+		if (player === localPlayer) {
+			resolver.resumeResolving()
+		}
 	})
 	socket.on('factions-action', (playedCardIndex: number, cardActionIndex: number, resolutions: ActionResolution[]) => {
 		const player = game.currentPlayer()
 		player.playPendingAction(playedCardIndex, cardActionIndex, resolutions)
-		resolver.resumeResolving(player)
+		if (player === localPlayer) {
+			resolver.resumeResolving()
+		}
 	})
 	socket.on('factions-buy', (shopIndex: number | null) => {
 		game.acquireFromShopAt(game.currentPlayer(), shopIndex)
@@ -50,7 +55,12 @@ export function registerGame(game: PlayGame, resolver: ResolveCard) {
 	})
 	socket.on('factions-end', () => {
 		game.endTurn()
-		resolver.startTurn(game.currentPlayer())
+
+		const player = game.currentPlayer()
+		player.startTurn()
+		if (player === localPlayer) {
+			resolver.resumeResolving()
+		}
 	})
 }
 
