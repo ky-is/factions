@@ -1,5 +1,5 @@
 <template>
-	<div v-if="resolving" class=" absolute inset-0  flex flex-col justify-center items-center">
+	<div v-if="resolving" class="absolute inset-0 z-20  flex flex-col justify-center items-center">
 		<div v-if="resolving.children" class="text-center p-8 space-y-4 bg-white shadow-xl rounded-xl">
 			Choose an option:
 			<div class="space-x-4  flex">

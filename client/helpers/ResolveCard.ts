@@ -30,22 +30,31 @@ export class ResolveCard {
 
 	private resolveSegment(segment: ActionSegment) {
 		if (segment.acquire) {
-			console.log(segment)
 			return false
 		}
 		if (segment.copy) {
-			console.log(segment)
 			return false
 		}
 		if (segment.destroyStations) {
-			console.log(segment)
 			return false
 		}
 		if (segment.discard) {
-			console.log(segment)
 			return false
 		}
 		return true
+	}
+
+	private getPlayedFactionCounts() {
+		const playedFactions = [...this.player.turn.alliances, ...this.player.played.flatMap(card => card.factions)]
+		const playedFactionCounts: {[faction: string]: number} = {}
+		playedFactions.forEach(faction => {
+			if (!playedFactionCounts[faction]) {
+				playedFactionCounts[faction] = 1
+			} else {
+				playedFactionCounts[faction] += 1
+			}
+		})
+		return playedFactionCounts
 	}
 
 	private resolvePendingActions() {
@@ -53,25 +62,17 @@ export class ResolveCard {
 		if (!availableCardActions.length) {
 			return false
 		}
-		const playedFactions = [...this.player.turn.alliances, ...this.player.played.flatMap(card => card.factions)]
-		const scores: {[faction: string]: number} = {}
-		playedFactions.forEach(faction => {
-			if (!scores[faction]) {
-				scores[faction] = 1
-			} else {
-				scores[faction] += 1
-			}
-		})
+		const playedFactionCounts = this.getPlayedFactionCounts()
 		for (let index = availableCardActions.length - 1; index >= 0; index -= 1) {
 			const [card, action] = availableCardActions[index]
 			const playedCardIndex = this.player.played.indexOf(card)
 			if (nonEmpty(action.factions)) {
-				const otherPlayedFactions = Object.keys(scores).filter(faction => {
-					let score = scores[faction]
+				const otherPlayedFactions = Object.keys(playedFactionCounts).filter(faction => {
+					let factionCount = playedFactionCounts[faction]
 					if (card.factions.includes(faction as CardFaction)) {
-						score -= 1
+						factionCount -= 1
 					}
-					return score > 0
+					return factionCount > 0
 				})
 				if (containsAtLeastOne(otherPlayedFactions, action.factions)) {
 					if (playedCardIndex === -1) {
@@ -113,7 +114,6 @@ export class ResolveCard {
 			while (predicate.pendingSegments.length) {
 				const segment = predicate.pendingSegments[0]
 				if (!this.resolveSegment(segment)) {
-					console.log('Unresolved segment', segment)
 					return false
 				}
 				predicate.pendingSegments.shift()

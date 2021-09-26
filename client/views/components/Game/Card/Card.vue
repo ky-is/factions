@@ -1,7 +1,7 @@
 <template>
 	<button :class="[ card.type === CardType.STATION ? 'card-horizontal' : 'card-vertical', availableGold !== undefined ? 'for-sale' : null ]" class="card-container" :disabled="card.cost !== undefined && availableGold !== undefined && availableGold < card.cost">
 		<div class="w-full flex">
-			<CardFactionsVue :factions="card.factions" class=" flex-col" />
+			<CardFactionsVue :factions="card.factions" class="flex-col" />
 			<div class="flex-grow text-left">{{ card.name }}</div>
 			<button v-if="card.defense"
 				:class="isOpponent ? undefined : 'cursor-default'"
