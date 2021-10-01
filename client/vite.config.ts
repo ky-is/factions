@@ -7,6 +7,7 @@ import PluginTSJSImport from './vitePluginTSJSImport'
 export default {
 	build: {
 		outDir: '../~$dist/public',
+		reportCompressedSize: false,
 	},
 	server: {
 		port: 3100,
