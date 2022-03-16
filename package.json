@@ -49,7 +49,6 @@
 			]
 		},
 		"rules": {
-			"@typescript-eslint/strict-boolean-expressions": "error"
 		}
 	},
 	"eslintIgnore": [
