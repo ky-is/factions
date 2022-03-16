@@ -22,7 +22,7 @@ export function authorizeUser(socket: Socket, userData: UserData) {
 
 export function registerUser(socket: Socket) {
 	const user = socket.data.user as SocketUser
-	user.game?.emitLobbyStatus(socket)
+	user.game?.emitLobbyStatus(false, socket)
 	socket.on('disconnect', () => {
 		user.leaveGame()
 		user.sockets.delete(socket)

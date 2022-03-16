@@ -41,7 +41,7 @@ export function registerLobby(socket: Socket) {
 	socket.on('lobby-autojoin', () => {
 		const user = socket.data.user as SocketUser
 		if (user.game) {
-			user.game.emitLobbyStatus(socket)
+			user.game.emitLobbyStatus(false, socket)
 			return console.log('ERR: User already in game', user.id, user.game.id)
 		}
 		const game = getAvailableGame()
@@ -54,10 +54,26 @@ export function registerLobby(socket: Socket) {
 	socket.on('lobby-create', () => {
 		const user = socket.data.user as SocketUser
 		if (user.game) {
-			user.game.emitLobbyStatus(socket)
+			user.game.emitLobbyStatus(false, socket)
 			return console.log('ERR: User already in game', user.id, user.game.id)
 		}
 		new Game('factions', 2, user, false)
+	})
+	socket.on('lobby-tsv', (tsvText: string) => {
+		const user = socket.data.user as SocketUser
+		const game = user.game
+		if (!game) {
+			return console.log('ERR: Unknown game tsv', user.id, game)
+		}
+		if (!isGameHost(user.game, user)) {
+			return console.log('ERR: Only the host set cards', user.id, game.host)
+		}
+		const cardsText = tsvText.replaceAll(/\n /g, ' ').trim()
+		if (!cardsText.length) {
+			return console.log('ERR: Empty cards', tsvText)
+		}
+		game.cardsText = cardsText
+		game.emitLobbyStatus(false)
 	})
 	socket.on('lobby-start', () => {
 		const user = socket.data.user as SocketUser
@@ -71,6 +87,8 @@ export function registerLobby(socket: Socket) {
 		if (!isGameFull(game)) {
 			return console.log('ERR: Lobby is not full', user.id, game.id)
 		}
-		game.start()
+		if (!game.start()) {
+			return console.log('ERR: Game not ready', user.id, game.id)
+		}
 	})
 }

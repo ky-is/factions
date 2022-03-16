@@ -17,6 +17,8 @@ export interface GameData {
 	mode?: string
 	size: number
 	host: string
+	hasCards: boolean
+	cards: string | undefined
 	players: PlayerData[]
 	started: boolean
 	finished: boolean

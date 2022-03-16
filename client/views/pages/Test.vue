@@ -20,7 +20,7 @@ const { state } = useStore()
 const cards = shallowRef<CardData[] | null>(null)
 const data = shallowRef<GameData | null>(null)
 
-const saved: string = storage.get('TEST')
+const saved: string = storage.get('TSV')
 if (saved) {
 	updateDeck(saved)
 }
@@ -46,7 +46,7 @@ function onChange(event: Event) {
 
 async function handleFiles(files: FileList) {
 	const fileText = await files[0].text()
-	storage.set('TEST', fileText)
+	storage.set('TSV', fileText)
 	updateDeck(fileText)
 }
 

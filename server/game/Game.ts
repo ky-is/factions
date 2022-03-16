@@ -1,4 +1,3 @@
-import { sampleCards } from '#c/cards/parseSample.js'
 import { TESTING } from '#c/utils.js'
 
 import type { GameData } from '#c/types/data.js'
@@ -9,6 +8,7 @@ import { isGameFull } from '#c/game/utils.js'
 import { emit } from '#s/helpers/io.js'
 import type { EmitTarget } from '#s/helpers/io.js'
 import type { SocketUser } from '#s/sockets/SocketUser.js'
+import { loadCards } from '#c/cards/parse.js'
 
 let gameNumber = 0
 
@@ -23,7 +23,7 @@ export function getAvailableGame() {
 }
 
 export function emitLobbyGames(target?: EmitTarget) {
-	emit(target ?? 'lobby', 'lobby-games', games.map(game => game.lobbyData()))
+	emit(target ?? 'lobby', 'lobby-games', games.map(game => game.lobbyData(false)))
 }
 
 export class Game {
@@ -33,6 +33,7 @@ export class Game {
 	host: string
 	type: string
 	mode?: string
+	cardsText?: string
 	autostart: boolean
 	players: SocketUser[] = []
 	play?: PlayGame
@@ -54,8 +55,8 @@ export class Game {
 	emit(event: string, target: EmitTarget | undefined, ...data: any[]) {
 		emit(target ?? this.id, event, ...data)
 	}
-	emitLobbyStatus(target?: EmitTarget) {
-		this.emit('lobby-status', target, this.lobbyData())
+	emitLobbyStatus(withCards: boolean, target?: EmitTarget) {
+		this.emit('lobby-status', target, this.lobbyData(withCards))
 	}
 
 	recordPlay(callback: (error?: SocketError) => void, event: string, ...data: any[]) {
@@ -72,10 +73,8 @@ export class Game {
 		this.players.push(user)
 		user.game = this
 		user.join(this.id)
-		if (this.autostart && isGameFull(this)) {
-			this.start()
-		} else {
-			this.emitLobbyStatus()
+		if (this.autostart && this.cardsText != null && isGameFull(this) && !this.start()) {
+			this.emitLobbyStatus(false)
 		}
 	}
 
@@ -86,7 +85,7 @@ export class Game {
 			user.game = null
 			this.players = this.players.filter(player => player !== user)
 			user.leave(this.id)
-			this.emitLobbyStatus()
+			this.emitLobbyStatus(false)
 
 			if (!this.players.length) {
 				console.log('destroy game', this.id)
@@ -99,20 +98,26 @@ export class Game {
 	}
 
 	start() {
-		this.play = new PlayGame(this.lobbyData(), sampleCards)
-		this.emitLobbyStatus()
+		if (this.cardsText == null) {
+			return false
+		}
+		this.play = new PlayGame(this.lobbyData(true), loadCards(this.cardsText))
+		this.emitLobbyStatus(true)
+		return true
 	}
 
-	lobbyData(): GameData {
+	lobbyData(withCards: boolean): GameData {
 		return {
 			id: this.id,
 			title: this.title,
 			type: this.type,
 			size: this.size,
 			host: this.host,
+			hasCards: this.cardsText != null,
+			cards: withCards ? this.cardsText : undefined,
+			players: this.players.map(player => ({ id: player.id, name: player.name, connected: !!player.sockets.size })),
 			started: !!this.play,
 			finished: this.finished,
-			players: this.players.map(player => ({ id: player.id, name: player.name, connected: !!player.sockets.size })),
 		}
 	}
 }
