@@ -18,7 +18,7 @@ export const state = reactive({
 		name: storage.get('user.name'),
 		sid: storage.get('user.sid'),
 	},
-	game: null as GameData | null,
+	gameData: null as GameData | null,
 	users: [] as UserData[],
 })
 
@@ -92,7 +92,7 @@ export const commit = {
 	// Game
 
 	joinGame(game: GameData | null, router: Router) {
-		state.game = game
+		state.gameData = game
 		if (game && game.started) {
 			console.log('Join started', game.id)
 			router.push({ name: 'Game', params: { id: game.id } })
@@ -101,20 +101,11 @@ export const commit = {
 
 	leaveGameLobby(router: Router) {
 		ioLobbyJoin(router, true)
-		state.game = null
+		state.gameData = null
 		if (state.previousRoute?.name === 'Lobby' && !nonEmpty(state.previousRoute.params.id)) {
 			router.back()
 		} else {
 			router.replace({ name: 'Lobby' })
 		}
 	},
-}
-
-const store = {
-	state: TESTING ? readonly(state) : state,
-	commit,
-}
-
-export function useStore() {
-	return store
 }

@@ -5,9 +5,7 @@
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
 
-import { useStore } from '#p/models/store.js'
-
-const { state } = useStore()
+import { state } from '#p/models/store.js'
 
 const props = defineProps<{
 	id: string

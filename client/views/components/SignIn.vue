@@ -28,9 +28,7 @@ import { computed, ref } from 'vue'
 
 import type { UserData } from '#c/types/data.js'
 
-import { useStore } from '#p/models/store.js'
-
-const { commit, state } = useStore()
+import { state, commit } from '#p/models/store.js'
 
 const inputEmail = ref(state.user.email)
 const inputName = ref(state.user.name)
@@ -43,7 +41,7 @@ const isCheckingEmail = computed(() => {
 	const user = state.user as UserData
 	return !user.email || emailExists.value === undefined
 })
-const isNewAccount = computed(() => emailExists.value === false)
+const isNewAccount = computed(() => !emailExists.value)
 
 function onCancel() {
 	inputEmail.value = ''

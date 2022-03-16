@@ -6,9 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from '#p/models/store.js'
-
-const { state } = useStore()
+import { state } from '#p/models/store.js'
 
 const name = state.user.name
 </script>

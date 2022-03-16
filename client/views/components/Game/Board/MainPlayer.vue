@@ -1,6 +1,6 @@
 <template>
 	<div class="flex">
-		<ResolveBoardVue v-if="resolvingPredicate" :resolving="resolvingPredicate" :resolver="resolver" />
+		<ResolveBoardVue v-if="resolver.predicate" :resolving="resolver.predicate.value!" :resolver="resolver" />
 		<div class="flex flex-col">
 			<div class="flex">
 				<PlayerStats :player="player" :isTurn="isTurn" />
@@ -48,8 +48,6 @@ const props = defineProps<{
 	resolver: ResolveCard
 	isTurn: boolean
 }>()
-
-const resolvingPredicate = computed(() => props.resolver.predicate.value)
 
 function onPlayAll() {
 	props.resolver.startResolvingAll()

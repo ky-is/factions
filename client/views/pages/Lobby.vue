@@ -38,13 +38,12 @@ import { isGameFull, isGameHost } from '#c/game/utils.js'
 import { ioLobbyJoin } from '#p/helpers/bridge.js'
 import { socket } from '#p/models/api.js'
 import storage from '#p/models/storage.js'
-import { commit, useStore } from '#p/models/store.js'
+import { commit, state } from '#p/models/store.js'
 
 const router = useRouter()
 
-const { state } = useStore()
-const isHost = computed(() => isGameHost(state.game as GameData, state.user))
-const isFull = computed(() => isGameFull(state.game as GameData))
+const isHost = computed(() => isGameHost(state.gameData, state.user))
+const isFull = computed(() => isGameFull(state.gameData))
 
 watch(isHost, (isHost) => {
 	if (isHost) {
@@ -60,16 +59,16 @@ const props = defineProps<{
 	id?: string
 }>()
 
-const currentGame = computed(() => state.game as GameData | null)
+const currentGame = computed<GameData | null>(() => state.gameData)
 
 const lobbyGames = ref<GameData[]>([])
 
 onBeforeMount(() => {
-	ioLobbyJoin(router, props.id != null && !currentGame.value ? props.id : true)
+	ioLobbyJoin(router, props.id != null && currentGame.value == null ? props.id : true)
 	socket.on('lobby-games', (games) => {
 		lobbyGames.value = games
 	})
-	if (TESTING && !currentGame.value) {
+	if (TESTING && currentGame.value == null) {
 		socket.emit('lobby-autojoin')
 	}
 })

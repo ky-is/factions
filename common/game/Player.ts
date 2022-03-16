@@ -125,7 +125,7 @@ export class PlayPlayer {
 				this.deck.push(...this.discard.splice(0))
 				this.dealHand(requestedSecondDealCount)
 			} else {
-				console.log('No discarded cards remaming to deal')
+				console.log('No discarded cards remaining to deal')
 			}
 		}
 	}

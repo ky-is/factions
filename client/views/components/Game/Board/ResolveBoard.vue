@@ -1,6 +1,6 @@
 <template>
 	<div v-if="resolving" class="absolute inset-0 z-20  flex flex-col justify-center items-center">
-		<div v-if="resolving.children" class="text-center p-8 space-y-4 bg-white shadow-xl rounded-xl">
+		<div v-if="resolving.children" class="overlay">
 			Choose an option:
 			<div class="space-x-4  flex">
 				<template v-for="(predicate, index) in resolving.children" :key="index">
@@ -10,8 +10,11 @@
 				</template>
 			</div>
 		</div>
-		<div v-else-if="resolving.segments" class="text-center p-8 space-y-4 bg-white shadow-xl rounded-xl">
+		<div v-else-if="resolving.segments" class="overlay">
 			{{ resolving.segments[0] }}
+		</div>
+		<div v-else class="overlay">
+			{{ resolving }}
 		</div>
 	</div>
 </template>
@@ -34,3 +37,9 @@ function onResolve(index: number) {
 	props.resolver.resolveOr(index)
 }
 </script>
+
+<style lang="postcss" scoped>
+.overlay {
+	@apply text-center p-8 space-y-4 bg-white shadow-xl rounded-xl;
+}
+</style>

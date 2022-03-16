@@ -15,20 +15,18 @@ import { useRouter } from 'vue-router'
 
 import { TESTING } from '#c/utils.js'
 
-import type { GameData } from '#c/types/data.js'
 import { loadCards } from '#c/cards/parse'
 
-import { useStore } from '#p/models/store.js'
+import { state } from '#p/models/store.js'
 
 const router = useRouter()
-const { state } = useStore()
 
-const gameData = state.game as GameData | null
+const gameData = state.gameData
 
-const cards = computed(() => (state.game?.cards != null ? loadCards(state.game.cards) : []))
+const cards = computed(() => (state.gameData?.cards != null ? loadCards(state.gameData.cards) : []))
 
 onMounted(() => {
-	if (!gameData && TESTING) {
+	if (gameData != null && TESTING) {
 		router.replace({ name: 'Lobby' })
 	}
 })

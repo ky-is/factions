@@ -21,11 +21,9 @@ import { PlayGame } from '#c/game/Game'
 import type { GameData } from '#c/types/data.js'
 import type { CardData } from '#c/types/cards.js'
 
-import { useStore } from '#p/models/store.js'
+import { state } from '#p/models/store.js'
 import { registerGame, deregisterGame, emitGame } from '#p/helpers/bridge.js'
 import { ResolveCard } from '#p/helpers/ResolveCard.js'
-
-const { state } = useStore()
 
 const props = defineProps<{
 	data: GameData

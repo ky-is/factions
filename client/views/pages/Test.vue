@@ -13,9 +13,7 @@ import type { GameData } from '#c/types/data.js'
 import type { CardData } from '#c/types/cards.js'
 
 import storage from '#p/models/storage.js'
-import { useStore } from '#p/models/store.js'
-
-const { state } = useStore()
+import { state } from '#p/models/store.js'
 
 const cards = shallowRef<CardData[] | null>(null)
 const data = shallowRef<GameData | null>(null)
@@ -52,6 +50,6 @@ async function handleFiles(files: FileList) {
 
 function updateDeck(raw: string) {
 	cards.value = loadCards(raw)
-	data.value = { id: 'TEST', title: 'test', type: 'factions', size: 2, host: state.user.id, started: true, finished: false, players: [{id: state.user.id, name: 'me'}, {id: '1', name: 'oppo'}] }
+	data.value = { id: 'TEST', title: 'test', type: 'factions', size: 2, host: state.user.id, started: true, hasCards: true, cards: raw, finished: false, players: [{id: state.user.id, name: 'me'}, {id: '1', name: 'oppo'}] }
 }
 </script>
