@@ -101,7 +101,8 @@ export class ResolveCard {
 			return false
 		} else if (predicate.children) {
 			this.predicates.unshift(...predicate.children)
-			this.continueResolvingPredicates()
+			this.predicate.value = null
+			return this.continueResolvingPredicates()
 		} else if (predicate.segments) {
 			const conditional = predicate?.conditional
 			const isOptional = conditional === true
