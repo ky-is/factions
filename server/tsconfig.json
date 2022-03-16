@@ -3,7 +3,7 @@
 	"compilerOptions": {
 		"outDir": "../~$dist",
 		"lib": [
-			"es2020",
+			"ESNext",
 		],
 		"paths": {
 			"#c/*": ["../common/*"],
@@ -11,6 +11,6 @@
 		},
 	},
 	"include": [
-		"./**/*.ts"
+		"./**/*.ts",
 	],
 }
