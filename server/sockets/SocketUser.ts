@@ -8,7 +8,7 @@ import { useIO } from '#s/helpers/io.js'
 export class SocketUser {
 	id: string
 	name: string
-	to: BroadcastOperator<any>
+	to: BroadcastOperator<any, any>
 	game: Game | null = null
 	sockets = new Set<Socket>()
 

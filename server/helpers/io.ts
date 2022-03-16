@@ -45,7 +45,7 @@ export function useIO(to: string) {
 	return io.to(to)
 }
 
-export type EmitTarget = string | BroadcastOperator<any> | Socket
+export type EmitTarget = string | BroadcastOperator<any, any> | Socket
 
 export function emit(target: EmitTarget, event: string, ...data: any[]) {
 	if (target instanceof Socket) {
