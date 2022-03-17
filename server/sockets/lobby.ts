@@ -68,7 +68,7 @@ export function registerLobby(socket: Socket) {
 		if (!isGameHost(user.game, user)) {
 			return console.log('ERR: Only the host set cards', user.id, game.host)
 		}
-		const cardsText = tsvText.replaceAll(/\n /g, ' ').trim()
+		const cardsText = tsvText.replace(/\n /g, ' ').trim()
 		if (!cardsText.length) {
 			return console.log('ERR: Empty cards', tsvText)
 		}

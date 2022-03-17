@@ -1,17 +1,17 @@
-import { copySync, moveSync } from 'fs-extra'
+import fsExtra from 'fs-extra'
 import path from 'path'
 
 const DEPLOY_DIR = 'factions-server-deploy'
 
 function copy(internalPath) {
 	const destPath = path.join('..', DEPLOY_DIR, internalPath)
-	copySync(internalPath, destPath)
+	fsExtra.copySync(internalPath, destPath)
 }
 
-function move(internalPath) {
-	const destPath = path.join('..', DEPLOY_DIR, internalPath)
-	moveSync(internalPath, destPath, { overwrite: true })
-}
+// function move(internalPath) {
+// 	const destPath = path.join('..', DEPLOY_DIR, internalPath)
+// 	moveSync(internalPath, destPath, { overwrite: true })
+// }
 
 // Run
 
