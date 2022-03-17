@@ -1,7 +1,6 @@
 module.exports = {
-	mode: 'jit',
-	purge: [
-		'./**/*.{html,ts,vue}',
+	content:[
+		'./client/**/*.{html,postcss,js,ts,vue}',
 	],
 	plugins: [
 		require('@tailwindcss/forms'),
