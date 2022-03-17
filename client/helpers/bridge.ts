@@ -36,14 +36,14 @@ export function registerGame(game: PlayGame, resolver: ResolveCard, localPlayer:
 		const player = game.currentPlayer()
 		player.playCardAt(handCardIndex, resolutions)
 		if (player === localPlayer) {
-			resolver.resumeResolving()
+			return resolver.resumeResolving()
 		}
 	})
 	socket.on('factions-action', (playedCardIndex: number, cardActionIndex: number, resolutions: ActionResolution[]) => {
 		const player = game.currentPlayer()
 		player.playPendingAction(playedCardIndex, cardActionIndex, resolutions)
 		if (player === localPlayer) {
-			resolver.resumeResolving()
+			return resolver.resumeResolving()
 		}
 	})
 	socket.on('factions-buy', (shopIndex: number | null) => {
@@ -59,7 +59,7 @@ export function registerGame(game: PlayGame, resolver: ResolveCard, localPlayer:
 		const player = game.currentPlayer()
 		player.startTurn()
 		if (player === localPlayer) {
-			resolver.resumeResolving()
+			return resolver.resumeResolving()
 		}
 	})
 }

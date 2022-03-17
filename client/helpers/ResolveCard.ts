@@ -152,15 +152,21 @@ export class ResolveCard {
 			await emitGame('play', this.activeCardIndex.value!, this.resolutions)
 		}
 		this.reset()
+		return this.continueResolvingPlayAll()
+	}
+
+	continueResolvingPlayAll() {
+		if (this.playAllIndex > 0) {
+			this.playAllIndex -= 1
+			return this.resolveCardAt(this.playAllIndex)
+		}
 	}
 
 	resumeResolving() {
 		if (!this.resolvePendingActions()) {
-			if (this.playAllIndex > 0) {
-				this.playAllIndex -= 1
-				return this.resolveCardAt(this.playAllIndex)
-			}
+			return false
 		}
+		return this.continueResolvingPlayAll()
 	}
 
 	private continueResolvingPredicates() {
