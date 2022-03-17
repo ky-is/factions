@@ -17,11 +17,10 @@ import ShopBoard from '#p/views/components/Game/Board/Shop.vue'
 
 import { computed, defineProps, onBeforeMount, onBeforeUnmount } from 'vue'
 
-import { PlayGame } from '#c/game/Game'
 import type { GameData } from '#c/types/data.js'
 import type { CardData } from '#c/types/cards.js'
 
-import { state } from '#p/models/store.js'
+import { commit, getters, state } from '#p/models/store.js'
 import { registerGame, deregisterGame, emitGame } from '#p/helpers/bridge.js'
 import { ResolveCard } from '#p/helpers/ResolveCard.js'
 
@@ -30,16 +29,16 @@ const props = defineProps<{
 	cards: CardData[]
 }>()
 
-const game = new PlayGame(props.data, props.cards) //TODO computed watch
+const game = commit.createGame(props.data, props.cards)
 
 const turnPlayer = computed(() => game?.currentPlayer())
 
-const localPlayer = game?.players.find(player => player.id === state.user.id)
-const opponentPlayers = game?.players.filter(player => player.id !== state.user.id)
+const localPlayer = getters.localPlayer
+const opponentPlayers = getters.opponentPlayers
 
-const resolver = localPlayer && new ResolveCard(localPlayer)
+const resolver = localPlayer.value && new ResolveCard(localPlayer.value)
 
-onBeforeMount(() => resolver != null && localPlayer && registerGame(game, resolver, localPlayer))
+onBeforeMount(() => resolver != null && localPlayer.value && registerGame(game, resolver, localPlayer.value))
 onBeforeUnmount(deregisterGame)
 
 function onAttack(playerIndex: number, playedCardIndex: number | null) {

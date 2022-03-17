@@ -1,9 +1,11 @@
-import { reactive, readonly } from 'vue'
+import { computed, reactive } from 'vue'
 import type { Router, RouteLocationNormalized } from 'vue-router'
 
-import { nonEmpty, TESTING } from '#c/utils.js'
-
+import { PlayGame } from '#c/game/Game.js'
+import type { CardData } from '#c/types/cards.js'
+import type { PlayPlayer } from '#c/game/Player.js'
 import type { GameData, UserData, SessionData } from '#c/types/data.js'
+import { nonEmpty, TESTING } from '#c/utils.js'
 
 import { emailStatus, registerEmail, signinPasscode } from '#p/models/api.js'
 import storage from '#p/models/storage.js'
@@ -19,6 +21,7 @@ export const state = reactive({
 		sid: storage.get('user.sid'),
 	},
 	gameData: null as GameData | null,
+	game: null as PlayGame | null,
 	users: [] as UserData[],
 })
 
@@ -49,6 +52,12 @@ function processSignin({ user, session }: { user: UserData, session: SessionData
 }
 
 export const commit = {
+	createGame(data: GameData, cards: CardData[]) {
+		const game = new PlayGame(data, cards)
+		state.game = game as any
+		return game
+	},
+
 	connected(connected: boolean) {
 		state.connected = connected
 	},
@@ -108,4 +117,9 @@ export const commit = {
 			router.replace({ name: 'Lobby' })
 		}
 	},
+}
+
+export const getters = {
+	localPlayer: computed(() => state.game?.players.find(player => player.id === state.user.id) as PlayPlayer | undefined),
+	opponentPlayers: computed(() => state.game?.players.filter(player => player.id !== state.user.id) as PlayPlayer[] | undefined),
 }
