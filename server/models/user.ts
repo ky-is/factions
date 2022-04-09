@@ -1,3 +1,4 @@
+import { createTransport } from 'nodemailer'
 import type { UserPasscodeData, UserData, SessionData } from '#c/types/data.js'
 import { now, randomRange, SECONDS_IN_DAY, SECONDS_IN_MINUTE } from '#c/utils.js'
 
@@ -73,11 +74,30 @@ export async function refreshPasscode(user: UserData) {
 	}
 	const PASSCODE_LENGTH = 4
 	const passcode = randomRange(Math.pow(10, PASSCODE_LENGTH - 1), Math.pow(10, PASSCODE_LENGTH) - 1)
-	return sql`
+	await sql`
 		UPDATE users
 		SET passcode = ${passcode}, passcode_tries = 0, passcode_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
 		WHERE id = ${user.id}
 	`
+
+	const nodemailerTransporter = createTransport({
+		service: 'gmail',
+		auth: {
+			user: process.env.EMAIL_ADDRESS,
+			pass: process.env.EMAIL_PASSWORD,
+		},
+	})
+	try {
+		await nodemailerTransporter.sendMail({
+			from: process.env.EMAIL_ADDRESS,
+			to: user.email,
+			subject: `(${passcode}) Enter your Factions passcode to sign in`,
+			html: `${passcode}`,
+			text: `${passcode}`,
+		})
+	} catch (error) {
+		console.log(error)
+	}
 }
 
 export async function userForEmail(email: string) {
