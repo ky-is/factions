@@ -1,3 +1,6 @@
+import { config as dotenvConfig } from 'dotenv'
+dotenvConfig()
+
 import Fastify from 'fastify'
 import FastifyCORS from 'fastify-cors'
 
