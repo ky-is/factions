@@ -1,3 +1,3 @@
 pnpm-lock.yaml linguist-generated
 tsconfig.base.json -linguist-detectable
-**/tsconfig.json -linguist-detectable
+**/tsconfig*.json -linguist-detectable
