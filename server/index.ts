@@ -4,12 +4,12 @@ dotenvConfig()
 import Fastify from 'fastify'
 import FastifyCORS from 'fastify-cors'
 
-import { TESTING } from '#c/utils.js'
+import { TESTING } from '#c/utils'
 
-import { useUserRoutes } from '#s/controllers/users.js'
+import { useUserRoutes } from '#s/controllers/users'
 
-import { APIError } from '#s/helpers/errors.js'
-import { createIO } from '#s/helpers/io.js'
+import { APIError } from '#s/helpers/errors'
+import { createIO } from '#s/helpers/io'
 
 const clientURL = TESTING ? 'http://localhost:3100' : 'https://playfactions.netlify.app'
 

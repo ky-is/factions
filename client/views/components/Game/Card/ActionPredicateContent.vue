@@ -32,8 +32,8 @@ import CardActionConditional from '#p/views/components/Game/Card/ActionCondition
 
 import { defineAsyncComponent, defineProps } from 'vue'
 
-import { PredicateConjunction } from '#c/types/cards.js'
-import type { ActionPredicate } from '#c/types/cards.js'
+import { PredicateConjunction } from '#c/types/cards'
+import type { ActionPredicate } from '#c/types/cards'
 
 const ActionPredicateVue = defineAsyncComponent<any>(() => import('./ActionPredicate.vue'))
 

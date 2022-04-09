@@ -5,8 +5,8 @@ import './main.postcss'
 
 import App from './App.vue'
 
-import routes from '#p/models/routes.js'
-import { state } from '#p/models/store.js'
+import routes from '#p/models/routes'
+import { state } from '#p/models/store'
 
 const router = createRouter({
 	history: createWebHistory(),

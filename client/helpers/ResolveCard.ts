@@ -1,11 +1,11 @@
 import { shallowRef } from 'vue'
 
 import type { PlayPlayer } from '#c/game/Player'
-import { ActionActivation, PredicateConjunction } from '#c/types/cards.js'
-import type { ActionPredicate, ActionResolution, ActionSegment, CardAction, CardFaction } from '#c/types/cards.js'
-import { containsAtLeastOne, nonEmpty } from '#c/utils.js'
+import { ActionActivation, PredicateConjunction } from '#c/types/cards'
+import type { ActionPredicate, ActionResolution, ActionSegment, CardAction, CardFaction } from '#c/types/cards'
+import { containsAtLeastOne, nonEmpty } from '#c/utils'
 
-import { emitGame } from '#p/helpers/bridge.js'
+import { emitGame } from '#p/helpers/bridge'
 
 export class ResolveCard {
 	player: PlayPlayer

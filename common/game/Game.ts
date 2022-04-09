@@ -1,13 +1,13 @@
 import { prng_alea as seedrandom } from 'esm-seedrandom' //TODO monitoring original repo for module support
 import { shallowRef } from 'vue'
 
-import { GameDeck } from '#c/game/Deck.js'
-import { PlayPlayer } from '#c/game/Player.js'
+import { GameDeck } from '#c/game/Deck'
+import { PlayPlayer } from '#c/game/Player'
 
-import type { CardData } from '#c/types/cards.js'
-import type { GameData } from '#c/types/data.js'
-import type { PRNG } from '#c/types/external.js'
-import { TESTING } from '#c/utils.js'
+import type { CardData } from '#c/types/cards'
+import type { GameData } from '#c/types/data'
+import type { PRNG } from '#c/types/external'
+import { TESTING } from '#c/utils'
 
 export class PlayGame {
 	rng: PRNG

@@ -1,14 +1,14 @@
 import type { Socket } from 'socket.io'
 
-import { TESTING } from '#c/utils.js'
+import { TESTING } from '#c/utils'
 
-import type { ActionResolution } from '#c/types/cards.js'
-import type { SocketError } from '#c/types/socket.js'
+import type { ActionResolution } from '#c/types/cards'
+import type { SocketError } from '#c/types/socket'
 
-import type { SocketUser } from '#s/sockets/SocketUser.js'
-import type { Game } from '#s/game/Game.js'
-import type { PlayGame } from '#c/game/Game.js'
-import type { PlayPlayer } from '#c/game/Player.js'
+import type { SocketUser } from '#s/sockets/SocketUser'
+import type { Game } from '#s/game/Game'
+import type { PlayGame } from '#c/game/Game'
+import type { PlayPlayer } from '#c/game/Player'
 
 function validateTurnAction(socket: Socket, event: string, ...data: any[]): string | [Game, PlayGame, PlayPlayer] {
 	const user = socket.data.user as SocketUser

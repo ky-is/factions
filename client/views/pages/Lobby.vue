@@ -40,15 +40,15 @@
 import { defineProps, computed, ref, onBeforeMount, onBeforeUnmount, watch } from 'vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 
-import { TESTING } from '#c/utils.js'
+import { TESTING } from '#c/utils'
 
-import type { GameData } from '#c/types/data.js'
-import { isGameFull, isGameHost } from '#c/game/utils.js'
+import type { GameData } from '#c/types/data'
+import { isGameFull, isGameHost } from '#c/game/utils'
 
-import { ioLobbyJoin } from '#p/helpers/bridge.js'
-import { socket } from '#p/models/api.js'
-import storage from '#p/models/storage.js'
-import { commit, state } from '#p/models/store.js'
+import { ioLobbyJoin } from '#p/helpers/bridge'
+import { socket } from '#p/models/api'
+import storage from '#p/models/storage'
+import { commit, state } from '#p/models/store'
 import { loadCards } from '#c/cards/parse'
 
 const router = useRouter()

@@ -22,10 +22,10 @@ import CardVue from '#p/views/components/Game/Card/Card.vue'
 
 import { defineProps } from 'vue'
 
-import type { GameDeck } from '#c/game/Deck.js'
-import type { PlayPlayer } from '#c/game/Player.js'
+import type { GameDeck } from '#c/game/Deck'
+import type { PlayPlayer } from '#c/game/Player'
 
-import { emitGame } from '#p/helpers/bridge.js'
+import { emitGame } from '#p/helpers/bridge'
 
 const props = defineProps<{
 	deck: GameDeck

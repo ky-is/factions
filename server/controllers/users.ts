@@ -1,9 +1,9 @@
 import path from 'path'
 import type { FastifyInstance } from 'fastify'
 
-import { userForEmail, createUser, authUser, refreshPasscode } from '#s/models/user.js'
+import { userForEmail, createUser, authUser, refreshPasscode } from '#s/models/user'
 
-import { parseEmail, parsePasscode } from '#s/helpers/validate.js'
+import { parseEmail, parsePasscode } from '#s/helpers/validate'
 
 const baseEndpoint = '/api/user'
 

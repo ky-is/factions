@@ -1,11 +1,11 @@
 import { shallowReactive } from 'vue'
 
-import type { PlayerData } from '#c/types/data.js'
-import type { PRNG } from '#c/types/external.js'
-import { ActionActivation, PredicateConjunction } from '#c/types/cards.js'
-import type { CardAction, CardData, CardFaction, ActionResolution, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards.js'
-import { getStartingDeck } from '#c/cards/default.js'
-import { shuffle, TESTING } from '#c/utils.js'
+import type { PlayerData } from '#c/types/data'
+import type { PRNG } from '#c/types/external'
+import { ActionActivation, PredicateConjunction } from '#c/types/cards'
+import type { CardAction, CardData, CardFaction, ActionResolution, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards'
+import { getStartingDeck } from '#c/cards/default'
+import { shuffle, TESTING } from '#c/utils'
 
 export class PlayPlayer {
 	rng: PRNG

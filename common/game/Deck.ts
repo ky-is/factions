@@ -1,10 +1,10 @@
 import { shallowReactive } from 'vue'
 
-import { getPulsarsFor } from '#c/cards/default.js'
-import type { CardData } from '#c/types/cards.js'
-import type { PRNG } from '#c/types/external.js'
+import { getPulsarsFor } from '#c/cards/default'
+import type { CardData } from '#c/types/cards'
+import type { PRNG } from '#c/types/external'
 
-import { shuffle } from '#c/utils.js'
+import { shuffle } from '#c/utils'
 
 export class GameDeck {
 	cards: CardData[]

@@ -1,14 +1,14 @@
-import { TESTING } from '#c/utils.js'
+import { TESTING } from '#c/utils'
 
-import type { GameData } from '#c/types/data.js'
-import type { SocketError } from '#c/types/socket.js'
-import { PlayGame } from '#c/game/Game.js'
-import { isGameFull } from '#c/game/utils.js'
+import type { GameData } from '#c/types/data'
+import type { SocketError } from '#c/types/socket'
+import { PlayGame } from '#c/game/Game'
+import { isGameFull } from '#c/game/utils'
 
-import { emit } from '#s/helpers/io.js'
-import type { EmitTarget } from '#s/helpers/io.js'
-import type { SocketUser } from '#s/sockets/SocketUser.js'
-import { loadCards } from '#c/cards/parse.js'
+import { emit } from '#s/helpers/io'
+import type { EmitTarget } from '#s/helpers/io'
+import type { SocketUser } from '#s/sockets/SocketUser'
+import { loadCards } from '#c/cards/parse'
 
 let gameNumber = 0
 

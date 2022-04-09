@@ -1,8 +1,8 @@
 import type { Socket } from 'socket.io'
 
-import type { UserData } from '#c/types/data.js'
+import type { UserData } from '#c/types/data'
 
-import { SocketUser } from '#s/sockets/SocketUser.js'
+import { SocketUser } from '#s/sockets/SocketUser'
 
 const socketUsers = new Map<string, SocketUser>()
 

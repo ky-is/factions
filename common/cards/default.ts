@@ -1,5 +1,5 @@
-import { ActionActivation, CardType, PredicateConjunction } from '#c/types/cards.js'
-import type { CardData } from '#c/types/cards.js'
+import { ActionActivation, CardType, PredicateConjunction } from '#c/types/cards'
+import type { CardData } from '#c/types/cards'
 
 const miner: CardData = {
 	name: 'Miner',

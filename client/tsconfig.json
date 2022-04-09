@@ -1,7 +1,6 @@
 {
 	"extends": "../tsconfig.base.json",
 	"compilerOptions": {
-		"noEmit": true,
 		"lib": [
 			"DOM",
 		],
@@ -10,4 +9,9 @@
 			"#p/*": ["./*"],
 		},
 	},
+	"include": [
+		"./**/*.ts",
+		"./**/*.vue",
+		"../common/**/*.ts",
+	],
 }

@@ -24,9 +24,9 @@ import ActionPredicateVue from '#p/views/components/Game/Card/ActionPredicate.vu
 
 import { defineProps } from 'vue'
 
-import type { ActionPredicate } from '#c/types/cards.js'
+import type { ActionPredicate } from '#c/types/cards'
 
-import type { ResolveCard } from '#p/helpers/ResolveCard.js'
+import type { ResolveCard } from '#p/helpers/ResolveCard'
 
 const props = defineProps<{
 	resolver: ResolveCard

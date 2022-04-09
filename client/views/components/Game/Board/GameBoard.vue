@@ -17,12 +17,12 @@ import ShopBoard from '#p/views/components/Game/Board/Shop.vue'
 
 import { computed, defineProps, onBeforeMount, onBeforeUnmount } from 'vue'
 
-import type { GameData } from '#c/types/data.js'
-import type { CardData } from '#c/types/cards.js'
+import type { GameData } from '#c/types/data'
+import type { CardData } from '#c/types/cards'
 
-import { commit, getters, state } from '#p/models/store.js'
-import { registerGame, deregisterGame, emitGame } from '#p/helpers/bridge.js'
-import { ResolveCard } from '#p/helpers/ResolveCard.js'
+import { commit, getters, state } from '#p/models/store'
+import { registerGame, deregisterGame, emitGame } from '#p/helpers/bridge'
+import { ResolveCard } from '#p/helpers/ResolveCard'
 
 const props = defineProps<{
 	data: GameData

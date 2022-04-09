@@ -1,15 +1,15 @@
 import { computed, reactive } from 'vue'
 import type { Router, RouteLocationNormalized } from 'vue-router'
 
-import { PlayGame } from '#c/game/Game.js'
-import type { CardData } from '#c/types/cards.js'
-import type { PlayPlayer } from '#c/game/Player.js'
-import type { GameData, UserData, SessionData } from '#c/types/data.js'
-import { nonEmpty, TESTING } from '#c/utils.js'
+import { PlayGame } from '#c/game/Game'
+import type { CardData } from '#c/types/cards'
+import type { PlayPlayer } from '#c/game/Player'
+import type { GameData, UserData, SessionData } from '#c/types/data'
+import { nonEmpty, TESTING } from '#c/utils'
 
-import { emailStatus, registerEmail, signinPasscode } from '#p/models/api.js'
-import storage from '#p/models/storage.js'
-import { ioLobbyJoin } from '#p/helpers/bridge.js'
+import { emailStatus, registerEmail, signinPasscode } from '#p/models/api'
+import storage from '#p/models/storage'
+import { ioLobbyJoin } from '#p/helpers/bridge'
 
 export const state = reactive({
 	connected: false,

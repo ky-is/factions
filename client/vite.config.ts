@@ -1,11 +1,10 @@
-import path from 'path'
-// import { defineConfig } from 'vite'
+import { defineConfig } from 'vite'
 
-import PluginVue from '@vitejs/plugin-vue'
-import PluginTSJSImport from './vitePluginTSJSImport'
+import tsconfigPaths from 'vite-tsconfig-paths'
+import vue from '@vitejs/plugin-vue'
 
-// export default defineConfig({ //TODO breaks on Netlify
-export default {
+export default defineConfig({
+	root: 'client',
 	build: {
 		outDir: '../~$dist/public',
 		reportCompressedSize: false,
@@ -22,15 +21,13 @@ export default {
 	resolve: {
 		alias: {
 			'socket.io-client': 'socket.io-client/dist/socket.io.js',
-			'#c/': path.join(path.resolve(), 'common', path.sep),
-			'#p/': path.join(path.resolve(), 'client', path.sep),
 		},
 	},
 	define: {
 		__VUE_OPTIONS_API__: false,
 	},
 	plugins: [
-		PluginTSJSImport(),
-		PluginVue(),
+		tsconfigPaths({ loose: true }),
+		vue(),
 	],
-}
+})

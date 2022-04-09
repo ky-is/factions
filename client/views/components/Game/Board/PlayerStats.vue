@@ -12,8 +12,8 @@ import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentRe
 
 import { defineProps } from 'vue'
 
-import { CardResource } from '#c/types/cards.js'
-import type { PlayPlayer } from '#c/game/Player.js'
+import { CardResource } from '#c/types/cards'
+import type { PlayPlayer } from '#c/game/Player'
 
 const props = defineProps<{
 	player: PlayPlayer

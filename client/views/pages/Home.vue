@@ -6,7 +6,7 @@
 import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { state } from '#p/models/store.js'
+import { state } from '#p/models/store'
 
 const isConnected = computed(() => state.connected)
 

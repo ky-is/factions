@@ -1,6 +1,6 @@
-import { ActionActivation, CardResource, CardFaction, CardType, PredicateConjunction, CardSource, CardAcquisition, CardDestination, PREVIOUS_AMOUNT, ActionActivationPredicate } from '#c/types/cards.js'
-import type { CardAction, CardData, CardInt, ActionSegment, ActionPredicate, CardAmountMoreLess, ActionCondition } from '#c/types/cards.js'
-import { nonEmpty } from '#c/utils.js'
+import { ActionActivation, CardResource, CardFaction, CardType, PredicateConjunction, CardSource, CardAcquisition, CardDestination, PREVIOUS_AMOUNT, ActionActivationPredicate } from '#c/types/cards'
+import type { CardAction, CardData, CardInt, ActionSegment, ActionPredicate, CardAmountMoreLess, ActionCondition } from '#c/types/cards'
+import { nonEmpty } from '#c/utils'
 
 const translateFactions: Record<string, CardFaction> = {
 	'green': CardFaction.GREEN,

@@ -1,9 +1,9 @@
 import { createTransport } from 'nodemailer'
-import type { UserPasscodeData, UserData, SessionData } from '#c/types/data.js'
-import { now, randomRange, SECONDS_IN_DAY, SECONDS_IN_MINUTE } from '#c/utils.js'
+import type { UserPasscodeData, UserData, SessionData } from '#c/types/data'
+import { now, randomRange, SECONDS_IN_DAY, SECONDS_IN_MINUTE } from '#c/utils'
 
-import { APIError } from '#s/helpers/errors.js'
-import sql from '#s/helpers/sql.js'
+import { APIError } from '#s/helpers/errors'
+import sql from '#s/helpers/sql'
 
 const sessionDataColumns = sql('id', 'user_id')
 const userDataColumns = sql('id', 'name', 'email')
@@ -18,6 +18,9 @@ async function newSessionFor(userID: string) {
 }
 
 export async function authUser(email: string, passcode: string) {
+	if (!email || !passcode) {
+		throw new APIError('Invalid sign in.', true)
+	}
 	const [ passcodeUser ] = await sql<[UserPasscodeData?]>`
 		SELECT passcode, passcode_tries, EXTRACT(EPOCH FROM passcode_at)::int AS passcode_at
 		FROM users

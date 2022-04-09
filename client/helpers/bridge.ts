@@ -1,13 +1,13 @@
 import type { Router } from 'vue-router'
 
-import type { ActionResolution } from '#c/types/cards.js'
-import type { SocketError } from '#c/types/socket.js'
-import type { PlayGame } from '#c/game/Game.js'
-import type { PlayPlayer } from '#c/game/Player.js'
+import type { ActionResolution } from '#c/types/cards'
+import type { SocketError } from '#c/types/socket'
+import type { PlayGame } from '#c/game/Game'
+import type { PlayPlayer } from '#c/game/Player'
 
-import { socket } from '#p/models/api.js'
-import type { ResolveCard } from '#p/helpers/ResolveCard.js'
-import { state } from '#p/models/store.js'
+import { socket } from '#p/models/api'
+import type { ResolveCard } from '#p/helpers/ResolveCard'
+import { state } from '#p/models/store'
 
 function routeToLobby(router: Router, gid: string | undefined) {
 	let previousGID: string | undefined = state.previousRoute?.params.id as string

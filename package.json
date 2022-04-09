@@ -9,11 +9,11 @@
 	},
 	"scripts": {
 		"client:dev": "vite client",
-		"server:run": "tsc --project server/tsconfig.json && node './~$dist/server/index.js'",
+		"server:run": "tsc --project server/tsconfig.json && npm run start",
 		"client:build": "vite build client --emptyOutDir",
 		"server:build": "tsc --project server/tsconfig.json",
 		"server:deploy": "git -C ../factions-server-deploy reset --hard && tsc --project server/tsconfig.json && node build/deploy && echo `date` && git -C ../factions-server-deploy add . && git -C ../factions-server-deploy commit -m \"🚀\" && git -C ../factions-server-deploy push dokku main && echo `date`",
-		"start": "node './~$dist/server/index.js'"
+		"start": "node --es-module-specifier-resolution=node './~$dist/server/index.js'"
 	},
 	"dependencies": {
 		"dotenv": "^16.0.0",
@@ -22,8 +22,7 @@
 		"fastify-cors": "^6.0.3",
 		"nodemailer": "^6.7.3",
 		"postgres": "^2.0.0-beta.11",
-		"socket.io": "^4.4.1",
-		"vue": "^3.2.31"
+		"socket.io": "^4.4.1"
 	},
 	"devDependencies": {
 		"@ky-is/eslint-config": "^2.4.0",
@@ -31,8 +30,6 @@
 		"@types/node": "^16.11.26",
 		"@types/nodemailer": "^6.4.4",
 		"@types/seedrandom": "^3.0.2",
-		"@typescript-eslint/eslint-plugin": "^5.18.0",
-		"@typescript-eslint/parser": "^5.18.0",
 		"@vitejs/plugin-vue": "^2.3.1",
 		"@vue/compiler-sfc": "^3.2.31",
 		"@vue/eslint-config-typescript": "^10.0.0",
@@ -45,6 +42,8 @@
 		"tailwindcss": "^3.0.23",
 		"typescript": "^4.6.3",
 		"vite": "^2.9.1",
+		"vite-tsconfig-paths": "^3.4.1",
+		"vue": "^3.2.31",
 		"vue-router": "^4.0.14"
 	},
 	"eslintConfig": {
@@ -55,7 +54,9 @@
 				"tsconfig.eslint.json"
 			]
 		},
-		"rules": {}
+		"rules": {
+			"@typescript-eslint/strict-boolean-expressions": "off"
+		}
 	},
 	"eslintIgnore": [
 		"~$dist"

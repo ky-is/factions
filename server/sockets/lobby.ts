@@ -1,11 +1,11 @@
 import type { Socket } from 'socket.io'
 
-import { isGameFull, isGameHost } from '#c/game/utils.js'
-import type { SocketError } from '#c/types/socket.js'
+import { isGameFull, isGameHost } from '#c/game/utils'
+import type { SocketError } from '#c/types/socket'
 
-import { Game, getGame, emitLobbyGames, getAvailableGame } from '#s/game/Game.js'
+import { Game, getGame, emitLobbyGames, getAvailableGame } from '#s/game/Game'
 
-import type { SocketUser } from '#s/sockets/SocketUser.js'
+import type { SocketUser } from '#s/sockets/SocketUser'
 
 function joinMainLobby(socket: Socket) {
 	socket.join('lobby')

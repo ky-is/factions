@@ -9,7 +9,7 @@ import CardFactionVue from '#p/views/components/Game/Card/CardFaction.vue'
 
 import { defineProps } from 'vue'
 
-import type { CardFaction } from '#c/types/cards.js'
+import type { CardFaction } from '#c/types/cards'
 
 defineProps<{
 	factions: CardFaction[]

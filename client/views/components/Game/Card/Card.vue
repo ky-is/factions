@@ -33,11 +33,11 @@ import ActionSegmentResource from '#p/views/components/Game/Card/ActionSegmentRe
 
 import { defineEmits, defineProps } from 'vue'
 
-import { ActionActivation, CardResource, CardType } from '#c/types/cards.js'
-import type { CardAction, CardData } from '#c/types/cards.js'
-import type { PlayPlayer } from '#c/game/Player.js'
+import { ActionActivation, CardResource, CardType } from '#c/types/cards'
+import type { CardAction, CardData } from '#c/types/cards'
+import type { PlayPlayer } from '#c/game/Player'
 
-import type { ResolveCard } from '#p/helpers/ResolveCard.js'
+import type { ResolveCard } from '#p/helpers/ResolveCard'
 
 const props = defineProps<{
 	card: CardData

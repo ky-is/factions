@@ -13,11 +13,11 @@ import GameBoard from '#p/views/components/Game/Board/GameBoard.vue'
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { TESTING } from '#c/utils.js'
+import { TESTING } from '#c/utils'
 
 import { loadCards } from '#c/cards/parse'
 
-import { state } from '#p/models/store.js'
+import { state } from '#p/models/store'
 
 const router = useRouter()
 

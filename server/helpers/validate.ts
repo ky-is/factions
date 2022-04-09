@@ -1,6 +1,6 @@
-import { nonEmpty } from '#c/utils.js'
+import { nonEmpty } from '#c/utils'
 
-import { APIError } from '#s/helpers/errors.js'
+import { APIError } from '#s/helpers/errors'
 
 const REGEX_EMAIL = /^\S+@\S+\.\S+$/
 const REGEX_PASSCODE = /^\d{4}$/

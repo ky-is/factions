@@ -38,10 +38,10 @@ import CardVue from '#p/views/components/Game/Card/Card.vue'
 
 import { computed, defineProps } from 'vue'
 
-import type { PlayPlayer } from '#c/game/Player.js'
+import type { PlayPlayer } from '#c/game/Player'
 
-import { emitGame } from '#p/helpers/bridge.js'
-import type { ResolveCard } from '#p/helpers/ResolveCard.js'
+import { emitGame } from '#p/helpers/bridge'
+import type { ResolveCard } from '#p/helpers/ResolveCard'
 
 const props = defineProps<{
 	player: PlayPlayer

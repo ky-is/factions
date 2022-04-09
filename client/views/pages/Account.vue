@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { state } from '#p/models/store.js'
+import { state } from '#p/models/store'
 
 const name = state.user.name
 </script>

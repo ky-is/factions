@@ -3,12 +3,12 @@ import { Socket } from 'socket.io'
 import type { BroadcastOperator } from 'socket.io'
 import type { FastifyInstance } from 'fastify'
 
-import { registerLobby } from '#s/sockets/lobby.js'
-import { registerGame } from '#s/sockets/game.js'
-import { authorizeUser, registerUser } from '#s/sockets/user.js'
+import { registerLobby } from '#s/sockets/lobby'
+import { registerGame } from '#s/sockets/game'
+import { authorizeUser, registerUser } from '#s/sockets/user'
 
-import { APIError } from '#s/helpers/errors.js'
-import { getUserForSession } from '#s/models/user.js'
+import { APIError } from '#s/helpers/errors'
+import { getUserForSession } from '#s/models/user'
 
 let io: Server
 
