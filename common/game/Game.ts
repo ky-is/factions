@@ -21,8 +21,8 @@ export class PlayGame {
 		this.deck = new GameDeck(this.rng, gameData.players.length, cards)
 		this.players = gameData.players.map((playerData, index) => new PlayPlayer(this.rng, index, playerData, gameData.players.length))
 		if (TESTING) { //SAMPLE
-			const card = cards[1]
-			this.players[0].hand.push(card, card)
+			const cardIndex = 2
+			this.players[0].hand.push(cards[cardIndex], cards[cardIndex + 1])
 		}
 	}
 

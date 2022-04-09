@@ -46,8 +46,8 @@ export function useUserRoutes(server: FastifyInstance) {
 		handler: async (request, reply) => {
 			const email = parseEmail(request.params)
 			const { name } = request.body as { name: string }
-			const userAndSesssion = await createUser(email, name)
-			return userAndSesssion
+			const userAndSession = await createUser(email, name)
+			return userAndSession
 		},
 	})
 
@@ -69,8 +69,8 @@ export function useUserRoutes(server: FastifyInstance) {
 		handler: async (request, reply) => {
 			const email = parseEmail(request.params)
 			const passcode = parsePasscode(request.body)
-			const userAndSesssion = await authUser(email, passcode)
-			return userAndSesssion
+			const userAndSession = await authUser(email, passcode)
+			return userAndSession
 		},
 	})
 }
