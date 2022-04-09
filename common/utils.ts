@@ -1,4 +1,4 @@
-import type { PRNG } from '#c/types/external'
+import type RandSeed from 'rand-seed'
 
 export const TESTING = process.env.NODE_ENV !== 'production'
 
@@ -39,15 +39,15 @@ export function containsAtLeastOne<T>(entries: T[], comparison: T[]) {
 
 // Random
 
-function randomIndex(rng: PRNG, length: number) {
-	return Math.floor(rng() * length)
+function randomIndex(rng: RandSeed, length: number) {
+	return Math.floor(rng.next() * length)
 }
 
 export function randomRange(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min)) + min
 }
 
-export function shuffle<T>(rng: PRNG, array: T[]) {
+export function shuffle<T>(rng: RandSeed, array: T[]) {
 	for (let i = array.length - 1; i > 0; i -= 1) {
 		const j = randomIndex(rng, i + 1)
 		const temp = array[i]
@@ -57,7 +57,7 @@ export function shuffle<T>(rng: PRNG, array: T[]) {
 	return array
 }
 
-export function randomItem<T>(rng: PRNG, array: T[]) {
+export function randomItem<T>(rng: RandSeed, array: T[]) {
 	const length = array.length
 	return length ? array[randomIndex(rng, length)] : null
 }

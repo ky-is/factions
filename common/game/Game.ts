@@ -1,4 +1,4 @@
-import { prng_alea as seedrandom } from 'esm-seedrandom' //TODO monitoring original repo for module support
+import RandSeed, { PRNG } from 'rand-seed'
 import { shallowRef } from 'vue'
 
 import { GameDeck } from '#c/game/Deck'
@@ -6,18 +6,18 @@ import { PlayPlayer } from '#c/game/Player'
 
 import type { CardData } from '#c/types/cards'
 import type { GameData } from '#c/types/data'
-import type { PRNG } from '#c/types/external'
+
 import { TESTING } from '#c/utils'
 
 export class PlayGame {
-	rng: PRNG
+	rng: RandSeed
 	deck: GameDeck
 	players: PlayPlayer[]
 	turnIndex = shallowRef(0)
 	moves: [string, any[]][] = []
 
 	constructor(gameData: GameData, cards: CardData[]) {
-		this.rng = seedrandom(gameData.id)
+		this.rng = new RandSeed(gameData.id, PRNG.mulberry32)
 		this.deck = new GameDeck(this.rng, gameData.players.length, cards)
 		this.players = gameData.players.map((playerData, index) => new PlayPlayer(this.rng, index, playerData, gameData.players.length))
 		if (TESTING) { //SAMPLE

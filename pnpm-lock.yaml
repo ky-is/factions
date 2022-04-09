@@ -20,6 +20,7 @@ specifiers:
   nodemailer: ^6.7.3
   postcss: ^8.4.12
   postgres: ^2.0.0-beta.11
+  rand-seed: ^1.0.1
   socket.io: ^4.4.1
   socket.io-client: ^4.4.1
   tailwindcss: ^3.0.23
@@ -36,6 +37,7 @@ dependencies:
   fastify-cors: 6.0.3
   nodemailer: 6.7.3
   postgres: 2.0.0-beta.11
+  rand-seed: 1.0.1
   socket.io: 4.4.1
 
 devDependencies:
@@ -1901,6 +1903,10 @@ packages:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
     dev: true
+
+  /rand-seed/1.0.1:
+    resolution: {integrity: sha512-g7uUh6C01OTozmt/ZqmzY8dTPW06je4aEiVp/8Hv213vMySW4usQFMvNiaDp5Vw0i7oZYl0zpao2YuUvvSjIkA==}
+    dev: false
 
   /readdirp/3.6.0:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}

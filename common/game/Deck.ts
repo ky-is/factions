@@ -1,8 +1,8 @@
+import type RandSeed from 'rand-seed'
 import { shallowReactive } from 'vue'
 
 import { getPulsarsFor } from '#c/cards/default'
 import type { CardData } from '#c/types/cards'
-import type { PRNG } from '#c/types/external'
 
 import { shuffle } from '#c/utils'
 
@@ -12,7 +12,7 @@ export class GameDeck {
 	pulsars: CardData[]
 	scrap: CardData[] = shallowReactive([])
 
-	constructor(rng: PRNG, playerCount: number, cards: CardData[]) {
+	constructor(rng: RandSeed, playerCount: number, cards: CardData[]) {
 		this.cards = shallowReactive(shuffle(rng, cards))
 		this.shop = shallowReactive(this.deal(5))
 		this.pulsars = shallowReactive(getPulsarsFor(playerCount))

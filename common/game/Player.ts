@@ -1,14 +1,14 @@
+import type RandSeed from 'rand-seed'
 import { shallowReactive } from 'vue'
 
 import type { PlayerData } from '#c/types/data'
-import type { PRNG } from '#c/types/external'
 import { ActionActivation, PredicateConjunction } from '#c/types/cards'
 import type { CardAction, CardData, CardFaction, ActionResolution, ActionPredicate, ActionSegment, ActionFleetBonus, ActionMoveUnit } from '#c/types/cards'
 import { getStartingDeck } from '#c/cards/default'
 import { shuffle, TESTING } from '#c/utils'
 
 export class PlayPlayer {
-	rng: PRNG
+	rng: RandSeed
 	index: number
 	id: string
 	name: string
@@ -30,7 +30,7 @@ export class PlayPlayer {
 		alliances: [] as CardFaction[],
 	})
 
-	constructor(rng: PRNG, index: number, { id, name }: PlayerData, numberOfPlayers: number) {
+	constructor(rng: RandSeed, index: number, { id, name }: PlayerData, numberOfPlayers: number) {
 		this.rng = rng
 		this.index = index
 		this.id = id
