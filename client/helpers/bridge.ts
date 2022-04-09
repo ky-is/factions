@@ -7,13 +7,26 @@ import type { PlayPlayer } from '#c/game/Player.js'
 
 import { socket } from '#p/models/api.js'
 import type { ResolveCard } from '#p/helpers/ResolveCard.js'
+import { state } from '#p/models/store.js'
+
+function routeToLobby(router: Router, gid: string | undefined) {
+	let previousGID: string | undefined = state.previousRoute?.params.id as string
+	if (!previousGID?.length) {
+		previousGID = undefined
+	}
+	if (state.previousRoute?.name === 'Lobby' && previousGID == gid) {
+		router.back()
+	} else {
+		router.replace({ name: 'Lobby', params: { id: gid } })
+	}
+}
 
 export function ioLobbyJoin(router: Router, status: boolean | string) {
-	socket.emit('lobby-join', status, (error?: SocketError) => {
+	socket.emit('lobby-join', status, ({ gid, error }: { gid?: string, error?: SocketError }) => {
 		if (error) {
 			console.log('lobby-join', error.message)
-			router.replace({ name: 'Lobby' })
 		}
+		routeToLobby(router, gid)
 	})
 }
 

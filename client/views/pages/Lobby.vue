@@ -1,34 +1,44 @@
 <template>
 	<h2>Lobby</h2>
-	<template v-if="currentGame">
-		<h3>{{ currentGame.title }}</h3>
-		<div>{{ currentGame.players.length }} / {{ currentGame.size }}</div>
-		<div v-for="player in currentGame.players" :key="player.id">
-			{{ player.name }}
-		</div>
-		<div v-if="isHost" class="my-2">
-			{{ currentGame.hasCards ? '✅' : (loadingCards ? '🟡' : '⚠️') }}
-			<input type="file" @dragover.prevent="onFileDragOver" @drop.prevent="onFileDrop" @change.prevent="onFileChange">
-		</div>
-		<button v-if="isHost && currentGame.hasCards" class="button-primary" :disabled="!isFull" @click="onStart">Start</button>
-		<button class="button-secondary" @click="onLeave">Leave</button>
-	</template>
-	<template v-else>
-		<div v-for="lobbyGame in lobbyGames" :key="lobbyGame.id">
-			<h3>{{ lobbyGame.title }}</h3>
-			<div>{{ lobbyGame.players.length }} / {{ lobbyGame.size }}</div>
-			<span v-for="player in lobbyGame.players" :key="player.id" class="player-name">
+	<template v-if="id">
+		<template v-if="currentGame">
+			<h3>{{ currentGame.title }}</h3>
+			<div>{{ currentGame.players.length }} / {{ currentGame.size }}</div>
+			<div v-for="player in currentGame.players" :key="player.id">
 				{{ player.name }}
-			</span>
-			<button v-if="!lobbyGame.started" class="button-primary" :disabled="isGameFull(lobbyGame)" @click="onJoin(lobbyGame)">Join</button>
-		</div>
-		<button class="button-primary" @click="onCreate">Create game</button>
+			</div>
+			<div v-if="isHost" class="my-2">
+				{{ currentGame.hasCards ? '✅' : (loadingCards ? '🟡' : '⚠️') }}
+				<input type="file" @dragover.prevent="onFileDragOver" @drop.prevent="onFileDrop" @change.prevent="onFileChange">
+			</div>
+			<button v-if="isHost && currentGame.hasCards" class="button-primary" :disabled="!isFull" @click="onStart">Start</button>
+			<button class="button-secondary" @click="onLeave">Leave</button>
+		</template>
+		<template v-else>
+			Loading...
+			{{ state.gameData }}
+		</template>
 	</template>
+	<div v-else class="mt-4 space-y-4">
+		<hr>
+		<template v-for="lobbyGame in lobbyGames" :key="lobbyGame.id">
+			<div>
+				<h3>{{ lobbyGame.title }}</h3>
+				<div>{{ lobbyGame.players.length }} / {{ lobbyGame.size }}</div>
+				<span v-for="player in lobbyGame.players" :key="player.id" class="player-name">
+					{{ player.name }}
+				</span>
+				<button v-if="!lobbyGame.started" class="button-primary" :disabled="isGameFull(lobbyGame)" @click="onJoin(lobbyGame)">Join</button>
+			</div>
+			<hr>
+		</template>
+		<button class="button-primary" @click="onCreate">Create game</button>
+	</div>
 </template>
 
 <script setup lang="ts">
 import { defineProps, computed, ref, onBeforeMount, onBeforeUnmount, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 
 import { TESTING } from '#c/utils.js'
 
@@ -39,6 +49,7 @@ import { ioLobbyJoin } from '#p/helpers/bridge.js'
 import { socket } from '#p/models/api.js'
 import storage from '#p/models/storage.js'
 import { commit, state } from '#p/models/store.js'
+import { loadCards } from '#c/cards/parse'
 
 const router = useRouter()
 
@@ -64,21 +75,36 @@ const currentGame = computed<GameData | null>(() => state.gameData)
 const lobbyGames = ref<GameData[]>([])
 
 onBeforeMount(() => {
-	ioLobbyJoin(router, props.id != null && currentGame.value == null ? props.id : true)
+	ioLobbyJoin(router, props.id != null && props.id.length ? props.id : true)
 	socket.on('lobby-games', (games) => {
 		lobbyGames.value = games
 	})
-	if (TESTING && currentGame.value == null) {
-		socket.emit('lobby-autojoin')
-	}
+	// if (TESTING && currentGame.value == null && !props.id) {
+	// if (TESTING && currentGame.value == null && !props.id) {
+	// 	socket.emit('lobby-autojoin')
+	// }
 })
 onBeforeUnmount(() => {
-	ioLobbyJoin(router, false)
 	socket.off('lobby-games')
 })
 
+onBeforeRouteLeave((to, from, next) => {
+	if (from.name === 'Lobby' && state.gameData != null && from.params.id === state.gameData.id && to.params.id !== state.gameData.id) {
+		console.log('Leave lobby', from.params.id, to.params.id, state.gameData.id)
+		commit.leaveGameLobby(router)
+	}
+	next()
+})
+
 function onCreate() {
-	socket.emit('lobby-create')
+	socket.emit('lobby-create', ({ gid, error }: { gid?: string, error?: string }) => {
+		if (error) {
+			console.log(error)
+		}
+		if (gid?.length) {
+			router.replace({ name: 'Lobby', params: { id: gid } })
+		}
+	})
 }
 
 function onJoin(game: GameData) {
@@ -124,7 +150,11 @@ async function handleFiles(files: FileList) {
 
 function updateDeck(raw: string) {
 	loadingCards.value = true
-	socket.emit('lobby-tsv', raw)
+	if (loadCards(raw).length) {
+		socket.emit('lobby-tsv', raw)
+	} else {
+		storage.remove('TSV')
+	}
 }
 </script>
 

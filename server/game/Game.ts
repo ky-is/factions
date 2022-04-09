@@ -65,36 +65,49 @@ export class Game {
 		callback()
 	}
 
+	hasPlayer(user: SocketUser) {
+		return this.players.some(player => player.id === user.id)
+	}
+
 	join(user: SocketUser) {
-		if (this.players.includes(user)) {
-			return console.log('ERR: already joined', user.id, this.id)
+		if (!this.hasPlayer(user)) {
+			this.players.push(user)
 		}
-		console.log('join game', user.name, this.id)
-		this.players.push(user)
 		user.game = this
 		user.join(this.id)
-		if (this.autostart && this.cardsText != null && isGameFull(this) && !this.start()) {
+		if (!this.autostart || this.cardsText == null || !isGameFull(this) || !this.start()) {
 			this.emitLobbyStatus(false)
 		}
 	}
 
+	destroy() {
+		console.log('destroy game', this.id)
+		games.splice(games.indexOf(this), 1)
+		emitLobbyGames()
+	}
 	leave(user: SocketUser) {
-		if (!TESTING && this.play) {
-			//TODO
-		} else {
-			user.game = null
-			this.players = this.players.filter(player => player !== user)
-			user.leave(this.id)
-			this.emitLobbyStatus(false)
-
-			if (!this.players.length) {
-				console.log('destroy game', this.id)
-				games.splice(games.indexOf(this), 1)
+		let destroying = false
+		if (this.play) {
+			if (!this.players.some(player => player.id !== user.id && player.sockets.size)) {
+				//TODO make the last player the winner after a set amount of time
+				destroying = true
 			} else {
-				console.log('leave game', user.name, this.id)
+				return false
 			}
-			emitLobbyGames()
 		}
+		user.leave(this.id)
+		user.game = null
+		if (!destroying) {
+			this.players = this.players.filter(player => player.id !== user.id)
+			destroying = !this.players.length
+		}
+		if (destroying) {
+			this.destroy()
+			emitLobbyGames()
+		} else {
+			this.emitLobbyStatus(false)
+		}
+		return true
 	}
 
 	start() {

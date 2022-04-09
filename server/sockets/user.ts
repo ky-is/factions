@@ -24,7 +24,7 @@ export function registerUser(socket: Socket) {
 	const user = socket.data.user as SocketUser
 	user.game?.emitLobbyStatus(false, socket)
 	socket.on('disconnect', () => {
-		user.leaveGame()
+		user.attemptToLeaveGame()
 		user.sockets.delete(socket)
 		if (!user.sockets.size) {
 			socketUsers.delete(user.id)

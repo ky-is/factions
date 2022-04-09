@@ -41,13 +41,6 @@ watchEffect(() => {
 	}
 })
 
-// Leave lobby on navigation
-router.beforeEach((to, from) => {
-	if (from.name === 'Lobby' && state.gameData != null && from.params.id === state.gameData.id && to.params.id !== state.gameData.id) {
-		commit.leaveGameLobby(router)
-	}
-})
-
 // Listen to lobby
 onBeforeMount(() => {
 	socket.on('lobby-status', (game: GameData) => {

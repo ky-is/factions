@@ -7,39 +7,59 @@ import { Game, getGame, emitLobbyGames, getAvailableGame } from '#s/game/Game.js
 
 import type { SocketUser } from '#s/sockets/SocketUser.js'
 
+function joinMainLobby(socket: Socket) {
+	socket.join('lobby')
+	emitLobbyGames(socket)
+}
+
 export function registerLobby(socket: Socket) {
-	socket.on('lobby-join', (joining: boolean | string, callback: (error?: SocketError) => void) => {
-		if (joining !== false) {
-			emitLobbyGames(socket)
-			const user = socket.data.user as SocketUser
-			if (joining === true) {
-				if (user.game && !user.game.play) {
-					user.leaveGame()
-					socket.join('lobby')
-				}
-			} else if (typeof joining === 'string') {
-				const game = getGame(joining)
-				let error: string
-				if (!game) {
-					error = 'Game does not exist'
-				} else if (game.play) {
-					error = 'Game already started'
-				} else if (isGameFull(game)) {
-					error = 'Game is full'
+	socket.on('lobby-join', (joining: boolean | string, callback: (any: any) => void) => {
+		console.log('lobby-join', joining)
+		const user = socket.data.user as SocketUser
+		if (joining === false) {
+			user.attemptToLeaveGame()
+			socket.leave('lobby')
+			return callback({})
+		} else if (joining === true) {
+			if (user.game) {
+				let gid
+				if (user.attemptToLeaveGame()) {
+					joinMainLobby(socket)
+					gid = undefined
 				} else {
-					socket.leave('lobby')
-					game.join(user)
-					return
+					gid = user.game.id
 				}
-				socket.join('lobby')
-				return callback({ message: error })
+				return callback({ gid })
+			} else {
+				joinMainLobby(socket)
 			}
 		} else {
-			socket.leave('lobby')
+			const game = getGame(joining)
+			let error: string | undefined
+			if (!game) {
+				error = 'Game does not exist'
+				user.attemptToLeaveGame()
+			} else {
+				if (!game.hasPlayer(user)) {
+					if (game.play) {
+						error = 'Game already started'
+					} else if (isGameFull(game)) {
+						error = 'Game is full'
+					}
+				}
+				if (!error) {
+					socket.leave('lobby')
+					game.join(user)
+					return callback({ gid: game.id })
+				}
+			}
+			joinMainLobby(socket)
+			return callback({ message: error })
 		}
 	})
 	socket.on('lobby-autojoin', () => {
 		const user = socket.data.user as SocketUser
+		console.log('lobby-autojoin', user.game?.id)
 		if (user.game) {
 			user.game.emitLobbyStatus(false, socket)
 			return console.log('ERR: User already in game', user.id, user.game.id)
@@ -51,11 +71,13 @@ export function registerLobby(socket: Socket) {
 			new Game('factions', 2, user, true)
 		}
 	})
-	socket.on('lobby-create', () => {
+	socket.on('lobby-create', (callback: (any: any) => void) => {
 		const user = socket.data.user as SocketUser
+		console.log('lobby-create', user.game?.id)
 		if (user.game) {
 			user.game.emitLobbyStatus(false, socket)
-			return console.log('ERR: User already in game', user.id, user.game.id)
+			console.log('ERR: User already in game', user.id, user.game.id)
+			return callback({ error: `ERR: User already in game ${user.id} ${user.game.id}` })
 		}
 		new Game('factions', 2, user, false)
 	})

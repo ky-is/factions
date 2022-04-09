@@ -30,11 +30,12 @@ export class SocketUser {
 		})
 	}
 
-	leaveGame() {
+	attemptToLeaveGame() {
 		if (!this.game) {
-			return
+			return true
 		}
-		this.game.leave(this)
-		// this.to.emit('lobby-left')
+		const result = this.game.leave(this)
+		// this.to.emit('lobby-left') //TODO
+		return result
 	}
 }

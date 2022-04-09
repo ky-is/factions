@@ -18,14 +18,15 @@ async function newSessionFor(userID: string) {
 
 export async function authUser(email: string, passcode: string) {
 	const [ passcodeUser ] = await sql<[UserPasscodeData?]>`
-		SELECT passcode, passcode_tries, EXTRACT(EPOCH FROM passcode_at) AS passcode_at
+		SELECT passcode, passcode_tries, EXTRACT(EPOCH FROM passcode_at)::int AS passcode_at
 		FROM users
 		WHERE email = ${email} AND passcode IS NOT NULL
 	`
 	if (!passcodeUser) {
 		throw new APIError('Invalid account for authorization.', true)
 	}
-	if (passcodeUser.passcode_at != null && passcodeUser.passcode_at + SECONDS_IN_DAY < now()) {
+	if (passcodeUser.passcode_at != null && now() > passcodeUser.passcode_at + SECONDS_IN_DAY) {
+		console.log(now(), passcodeUser.passcode_at, typeof passcodeUser.passcode_at, passcodeUser.passcode_at + SECONDS_IN_DAY)
 		throw new APIError('Passcode expired, please try signing in again.', true)
 	}
 	if (passcodeUser.passcode_tries > 3) {

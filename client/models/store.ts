@@ -81,8 +81,12 @@ export const commit = {
 	async registerEmail(email: string, name: string) {
 		try {
 			const response = await registerEmail(email, name)
-			console.log(response)
-			processSignin(response)
+			if (response.cancel) {
+				console.log(response.message)
+			} else {
+				console.log(response)
+				processSignin(response)
+			}
 		} catch (error) {
 			console.log(error)
 		}
@@ -102,20 +106,18 @@ export const commit = {
 
 	joinGame(game: GameData | null, router: Router) {
 		state.gameData = game
-		if (game && game.started) {
-			console.log('Join started', game.id)
-			router.push({ name: 'Game', params: { id: game.id } })
+		if (game) {
+			if (game.started) {
+				router.push({ name: 'Game', params: { id: game.id } })
+			} else {
+				router.push({ name: 'Lobby', params: { id: game.id } })
+			}
 		}
 	},
 
 	leaveGameLobby(router: Router) {
-		ioLobbyJoin(router, true)
 		state.gameData = null
-		if (state.previousRoute?.name === 'Lobby' && !nonEmpty(state.previousRoute.params.id)) {
-			router.back()
-		} else {
-			router.replace({ name: 'Lobby' })
-		}
+		ioLobbyJoin(router, true)
 	},
 }
 

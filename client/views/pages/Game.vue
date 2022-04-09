@@ -26,7 +26,7 @@ const gameData = state.gameData
 const cards = computed(() => (state.gameData?.cards != null ? loadCards(state.gameData.cards) : []))
 
 onMounted(() => {
-	if (gameData != null && TESTING) {
+	if (TESTING && gameData == null) {
 		router.replace({ name: 'Lobby' })
 	}
 })

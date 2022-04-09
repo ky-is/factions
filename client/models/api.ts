@@ -66,7 +66,7 @@ export function emailStatus(email: string) {
 	return ajax<UserSessionResponse>([ 'user', 'email', email ])
 }
 
-type SigninResponse = { user: UserData, session: SessionData }
+type SigninResponse = { user: UserData, session: SessionData, message?: string, cancel?: boolean }
 
 export function registerEmail(email: string, name: string) {
 	return ajax<SigninResponse>([ 'user', 'register', email ], { name })
