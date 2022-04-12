@@ -1,6 +1,6 @@
 <template>
-	<input type="file" @dragover.prevent="onDragOver" @drop.prevent="onDrop" @change.prevent="onChange">
-	<GameBoard v-if="data && cards" :data="data" :cards="cards" />
+<input type="file" @dragover.prevent="onDragOver" @drop.prevent="onDrop" @change.prevent="onChange">
+<GameBoard v-if="data && cards" :data="data" :cards="cards" />
 </template>
 
 <script setup lang="ts">

@@ -24,10 +24,6 @@ export interface GameData {
 	finished: boolean
 }
 
-export interface SessionData {
-	id: string
-}
-
 export interface UserPasscodeData {
 	passcode: string
 	passcode_tries: number

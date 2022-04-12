@@ -1,13 +1,13 @@
 <template>
-	<div v-if="turnPlayer" class="text-large">
-		<div class="flex justify-around">
-			<OpponentPlayer v-for="player in opponentPlayers" :key="player.id" :player="player" :isTurn="turnPlayer.id === player.id" @attack="onAttack(player.index, $event)" />
-		</div>
-		<ShopBoard :deck="game.deck" :turnPlayer="turnPlayer" />
-		<div class="flex">
-			<MainPlayer v-if="localPlayer && resolver" :player="localPlayer" :resolver="resolver" :isTurn="turnPlayer.id === localPlayer.id" />
-		</div>
+<div v-if="turnPlayer" class="text-large">
+	<div class="flex justify-around">
+		<OpponentPlayer v-for="player in opponentPlayers" :key="player.id" :player="player" :isTurn="turnPlayer.id === player.id" @attack="onAttack(player.index, $event)" />
 	</div>
+	<ShopBoard :deck="game.deck" :turnPlayer="turnPlayer" />
+	<div class="flex">
+		<MainPlayer v-if="localPlayer && resolver" :player="localPlayer" :resolver="resolver" :isTurn="turnPlayer.id === localPlayer.id" />
+	</div>
+</div>
 </template>
 
 <script setup lang="ts">

@@ -1,26 +1,30 @@
 <template>
-	<div v-if="resolving" class="absolute inset-0 z-20  flex flex-col justify-center items-center">
-		<div v-if="resolving.children" class="overlay">
-			Choose an option:
-			<div class="space-x-4  flex">
-				<template v-for="(predicate, index) in resolving.children" :key="index">
-					<button class="w-32 h-32 rounded-lg border-2" @click="onResolve(index)">
-						<ActionPredicateVue :predicate="predicate" />
-					</button>
-				</template>
-			</div>
-		</div>
-		<div v-else-if="resolving.segments" class="overlay">
-			{{ resolving.segments[0] }}
-		</div>
-		<div v-else class="overlay">
-			{{ resolving }}
+<div v-if="resolving" class="absolute inset-0 z-20  flex flex-col justify-center items-center">
+	<div v-if="resolving.children" class="overlay">
+		Choose an option:
+		<div class="space-x-4  flex">
+			<template v-for="(predicate, index) in resolving.children" :key="index">
+				<button class="w-32 h-32 rounded-lg border-2" @click="onResolve(index)">
+					<ActionPredicateVue :predicate="predicate" />
+				</button>
+			</template>
 		</div>
 	</div>
+	<div v-else-if="resolving.segments" class="overlay">
+		<ResolveDiscardVue v-if="resolving.segments[0].discard" :resolver="resolver" :discard="resolving.segments[0].discard" />
+		<template v-else>
+			{{ resolving.segments[0] }}
+		</template>
+	</div>
+	<div v-else class="overlay">
+		{{ resolving }}
+	</div>
+</div>
 </template>
 
 <script setup lang="ts">
 import ActionPredicateVue from '#p/views/components/Game/Card/ActionPredicate.vue'
+import ResolveDiscardVue from '#p/views/components/Game/Board/ResolveDiscard.vue'
 
 import { defineProps } from 'vue'
 

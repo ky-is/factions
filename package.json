@@ -9,11 +9,12 @@
 	},
 	"scripts": {
 		"client:dev": "vite client",
-		"server:run": "tsc --project server/tsconfig.json && npm run start",
+		"server:run": "npm run server:build && npm run start",
 		"client:build": "vite build client --emptyOutDir",
 		"server:build": "tsc --project server/tsconfig.json",
-		"server:deploy": "git -C ../factions-server-deploy reset --hard && tsc --project server/tsconfig.json && node build/deploy && echo `date` && git -C ../factions-server-deploy add . && git -C ../factions-server-deploy commit -m \"🚀\" && git -C ../factions-server-deploy push dokku main && echo `date`",
-		"start": "node --es-module-specifier-resolution=node './~$dist/server/index.js'"
+		"server:deploy": "git -C ../factions-server-deploy reset --hard && npm run server:build && node build/deploy && echo `date` && git -C ../factions-server-deploy add . && git -C ../factions-server-deploy commit -m \"🚀\" && git -C ../factions-server-deploy push dokku main && echo `date`",
+		"start": "node --es-module-specifier-resolution=node './~$dist/server/index.js'",
+		"lint": "eslint './**/*.{ts,vue}' && vue-tsc --noEmit -p ./client/tsconfig.json"
 	},
 	"dependencies": {
 		"dotenv": "^16.0.0",
@@ -25,12 +26,14 @@
 		"socket.io": "^4.4.1"
 	},
 	"devDependencies": {
-		"@ky-is/eslint-config": "^2.4.0",
+		"@ky-is/eslint-config": "^2.5.1",
 		"@tailwindcss/forms": "^0.5.0",
 		"@types/node": "^16.11.26",
 		"@types/nodemailer": "^6.4.4",
+		"@typescript-eslint/eslint-plugin": "^5.19.0",
+		"@typescript-eslint/parser": "^5.19.0",
 		"@vitejs/plugin-vue": "^2.3.1",
-		"@vue/compiler-sfc": "^3.2.31",
+		"@vue/compiler-sfc": "^3.2.32",
 		"@vue/eslint-config-typescript": "^10.0.0",
 		"autoprefixer": "^10.4.4",
 		"eslint": "^8.13.0",
@@ -38,21 +41,17 @@
 		"fs-extra": "^10.0.1",
 		"postcss": "^8.4.12",
 		"socket.io-client": "^4.4.1",
-		"tailwindcss": "^3.0.23",
+		"tailwindcss": "^3.0.24",
 		"typescript": "^4.6.3",
 		"vite": "^2.9.1",
 		"vite-tsconfig-paths": "^3.4.1",
-		"vue": "^3.2.31",
-		"vue-router": "^4.0.14"
+		"vue": "^3.2.32",
+		"vue-eslint-parser": "^8.3.0",
+		"vue-router": "^4.0.14",
+		"vue-tsc": "^0.34.6"
 	},
 	"eslintConfig": {
 		"extends": "@ky-is/eslint-config/vue-typescript",
-		"parserOptions": {
-			"sourceType": "module",
-			"project": [
-				"tsconfig.eslint.json"
-			]
-		},
 		"rules": {
 			"@typescript-eslint/strict-boolean-expressions": "off"
 		}

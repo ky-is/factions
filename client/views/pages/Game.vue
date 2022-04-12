@@ -1,10 +1,10 @@
 <template>
-	<div class="text-large">
-		<template v-if="!gameData">
-			Unknown game
-		</template>
-		<GameBoard v-else :data="gameData" :cards="cards" />
-	</div>
+<div class="text-large">
+	<template v-if="!gameData">
+		Unknown game
+	</template>
+	<GameBoard v-else :data="gameData" :cards="cards" />
+</div>
 </template>
 
 <script setup lang="ts">

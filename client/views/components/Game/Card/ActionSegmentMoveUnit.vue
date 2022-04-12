@@ -1,5 +1,5 @@
 <template>
-	Put {{ isNextAcquired ? 'the next' : '' }} {{ moveUnit.type }} {{ moveUnit.amount > 1 ? moveUnit.amount : null }} {{ moveUnit.type }} {{ isNextAcquired ? 'you acquire' : 'from your discard pile' }} {{ destinationDesc }}
+Put {{ isNextAcquired ? 'the next' : '' }} {{ moveUnit.type }} {{ moveUnit.amount > 1 ? moveUnit.amount : null }} {{ moveUnit.type }} {{ isNextAcquired ? 'you acquire' : 'from your discard pile' }} {{ destinationDesc }}
 </template>
 
 <script setup lang="ts">

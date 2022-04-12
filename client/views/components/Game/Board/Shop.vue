@@ -1,20 +1,20 @@
 <template>
-	<div class="game-container  flex">
-		<div class="flex">
-			<CardVue v-for="(card, index) in deck.shop" :key="index" :card="card" :availableGold="turnPlayer.turn.economy" @click="onPurchase(index)" />
+<div class="game-container  flex">
+	<div class="flex">
+		<CardVue v-for="(card, index) in deck.shop" :key="index" :card="card" :availableGold="turnPlayer.turn.economy" @click="onPurchase(index)" />
+	</div>
+	<div class="flex flex-col">
+		<CardVue :card="deck.pulsars[0]" class="card-small" :availableGold="turnPlayer.turn.economy" @click="onPurchase(null)" />
+		<div class="card-stack card-small card-horizontal">
+			<div>{{ deck.cards.length }}</div>
+			<div>Deck</div>
 		</div>
-		<div class="flex flex-col">
-			<CardVue :card="deck.pulsars[0]" class="card-small" :availableGold="turnPlayer.turn.economy" @click="onPurchase(null)" />
-			<div class="card-stack card-small card-horizontal">
-				<div>{{ deck.cards.length }}</div>
-				<div>Deck</div>
-			</div>
-			<div class="card-stack card-small card-horizontal">
-				<div>{{ deck.scrap.length }}</div>
-				<div>Scrap</div>
-			</div>
+		<div class="card-stack card-small card-horizontal">
+			<div>{{ deck.scrap.length }}</div>
+			<div>Scrap</div>
 		</div>
 	</div>
+</div>
 </template>
 
 <script setup lang="ts">

@@ -1,7 +1,7 @@
 <template>
-	<div class="card-icon  text-largest" :class="[ backgroundColor, faction.toLowerCase() ]">
-		<div class="icon">{{ icon }}</div>
-	</div>
+<div class="card-icon  text-largest" :class="[ backgroundColor, faction.toLowerCase() ]">
+	<div class="icon">{{ icon }}</div>
+</div>
 </template>
 
 <script setup lang="ts">

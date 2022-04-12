@@ -1,11 +1,11 @@
 <template>
-	<template v-if="quantity === -1">
-		{{ resource === CardResource.DRAW ? 'draw' : 'gain' }} that many {{ resource }}s
-	</template>
-	<div v-else class="resource-icon" :class="resource" :title="`${quantity} ${resource}`">
-		<span class="background" :class="bg">{{ background }}</span>
-		<span class="quantity">{{ quantity }}</span>
-	</div>
+<template v-if="quantity === -1">
+	{{ resource === CardResource.DRAW ? 'draw' : 'gain' }} that many {{ resource }}s
+</template>
+<div v-else class="resource-icon" :class="resource" :title="`${quantity} ${resource}`">
+	<span class="background" :class="bg">{{ background }}</span>
+	<span class="quantity">{{ quantity }}</span>
+</div>
 </template>
 
 <script setup lang="ts">

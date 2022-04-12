@@ -1,5 +1,5 @@
 <template>
-	<time :datetime="date.toISOString()" class="italic">{{ date.toLocaleString() }}</time>
+<time :datetime="date.toISOString()" class="italic">{{ date.toLocaleString() }}</time>
 </template>
 
 <script setup lang="ts">

@@ -1,39 +1,39 @@
 <template>
-	<h2>Lobby</h2>
-	<template v-if="id">
-		<template v-if="currentGame">
-			<h3>{{ currentGame.title }}</h3>
-			<div>{{ currentGame.players.length }} / {{ currentGame.size }}</div>
-			<div v-for="player in currentGame.players" :key="player.id">
-				{{ player.name }}
-			</div>
-			<div v-if="isHost" class="my-2">
-				{{ currentGame.hasCards ? '✅' : (loadingCards ? '🟡' : '⚠️') }}
-				<input type="file" @dragover.prevent="onFileDragOver" @drop.prevent="onFileDrop" @change.prevent="onFileChange">
-			</div>
-			<button v-if="isHost && currentGame.hasCards" class="button-primary" :disabled="!isFull" @click="onStart">Start</button>
-			<button class="button-secondary" @click="onLeave">Leave</button>
-		</template>
-		<template v-else>
-			Loading...
-			{{ state.gameData }}
-		</template>
+<h2>Lobby</h2>
+<template v-if="id">
+	<template v-if="currentGame">
+		<h3>{{ currentGame.title }}</h3>
+		<div>{{ currentGame.players.length }} / {{ currentGame.size }}</div>
+		<div v-for="player in currentGame.players" :key="player.id">
+			{{ player.name }}
+		</div>
+		<div v-if="isHost" class="my-2">
+			{{ currentGame.hasCards ? '✅' : (loadingCards ? '🟡' : '⚠️') }}
+			<input type="file" @dragover.prevent="onFileDragOver" @drop.prevent="onFileDrop" @change.prevent="onFileChange">
+		</div>
+		<button v-if="isHost && currentGame.hasCards" class="button-primary" :disabled="!isFull" @click="onStart">Start</button>
+		<button class="button-secondary" @click="onLeave">Leave</button>
 	</template>
-	<div v-else class="mt-4 space-y-4">
+	<template v-else>
+		Loading...
+		{{ state.gameData }}
+	</template>
+</template>
+<div v-else class="mt-4 space-y-4">
+	<hr>
+	<template v-for="lobbyGame in lobbyGames" :key="lobbyGame.id">
+		<div>
+			<h3>{{ lobbyGame.title }}</h3>
+			<div>{{ lobbyGame.players.length }} / {{ lobbyGame.size }}</div>
+			<span v-for="player in lobbyGame.players" :key="player.id" class="player-name">
+				{{ player.name }}
+			</span>
+			<button v-if="!lobbyGame.started" class="button-primary" :disabled="isGameFull(lobbyGame)" @click="onJoin(lobbyGame)">Join</button>
+		</div>
 		<hr>
-		<template v-for="lobbyGame in lobbyGames" :key="lobbyGame.id">
-			<div>
-				<h3>{{ lobbyGame.title }}</h3>
-				<div>{{ lobbyGame.players.length }} / {{ lobbyGame.size }}</div>
-				<span v-for="player in lobbyGame.players" :key="player.id" class="player-name">
-					{{ player.name }}
-				</span>
-				<button v-if="!lobbyGame.started" class="button-primary" :disabled="isGameFull(lobbyGame)" @click="onJoin(lobbyGame)">Join</button>
-			</div>
-			<hr>
-		</template>
-		<button class="button-primary" @click="onCreate">Create game</button>
-	</div>
+	</template>
+	<button class="button-primary" @click="onCreate">Create game</button>
+</div>
 </template>
 
 <script setup lang="ts">

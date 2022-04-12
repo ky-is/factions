@@ -1,26 +1,26 @@
 <template>
-	<form class="h-full text-center space-y-2  flex flex-col justify-center" :disabled="isLoading" @submit.prevent="onSubmit">
-		<template v-if="isCheckingEmail">
-			<h2>Enter your email:</h2>
-			<input v-model="inputEmail" v-focus type="email" class="input-primary" placeholder="example@mail.com">
-			<button type="submit" class="button-primary">Submit</button>
+<form class="h-full text-center space-y-2  flex flex-col justify-center" :disabled="isLoading" @submit.prevent="onSubmit">
+	<template v-if="isCheckingEmail">
+		<h2>Enter your email:</h2>
+		<input v-model="inputEmail" v-focus type="email" class="input-primary" placeholder="example@mail.com">
+		<button type="submit" class="button-primary">Submit</button>
+	</template>
+	<template v-else>
+		<h2>{{ isNewAccount ? 'Welcome!' : `👋 ${inputEmail}!` }}</h2>
+		<template v-if="isNewAccount">
+			<h3>Create an account to start playing...</h3>
+			<input v-model="inputEmail" type="text" class="input-primary" disabled>
+			<input v-model="inputName" v-focus type="text" class="input-primary" placeholder="Player name">
 		</template>
 		<template v-else>
-			<h2>{{ isNewAccount ? 'Welcome!' : `👋 ${inputEmail}!` }}</h2>
-			<template v-if="isNewAccount">
-				<h3>Create an account to start playing...</h3>
-				<input v-model="inputEmail" type="text" class="input-primary" disabled>
-				<input v-model="inputName" v-focus type="text" class="input-primary" placeholder="Player name">
-			</template>
-			<template v-else>
-				<input v-model="inputPasscode" v-focus type="number" class="input-primary" placeholder="1234">
-			</template>
-			<div class="space-x-2">
-				<button type="submit" class="button-primary">Submit</button>
-				<button type="button" class="button-secondary" @click="onCancel">Cancel</button>
-			</div>
+			<input v-model="inputPasscode" v-focus type="number" class="input-primary" placeholder="1234">
 		</template>
-	</form>
+		<div class="space-x-2">
+			<button type="submit" class="button-primary">Submit</button>
+			<button type="button" class="button-secondary" @click="onCancel">Cancel</button>
+		</div>
+	</template>
+</form>
 </template>
 
 <script setup lang="ts">

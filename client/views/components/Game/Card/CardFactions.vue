@@ -1,7 +1,7 @@
 <template>
-	<div class="flex">
-		<CardFactionVue v-for="faction in factions" :key="faction" :faction="faction" />
-	</div>
+<div class="flex">
+	<CardFactionVue v-for="faction in factions" :key="faction" :faction="faction" />
+</div>
 </template>
 
 <script setup lang="ts">

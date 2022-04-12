@@ -1,13 +1,13 @@
 <template>
-	<div>
-		<div v-if="activationIcon" class="inline-block">
-			<div v-if="activationIcon" class="card-icon">{{ activationIcon }}</div>
-		</div>
-		<div v-if="action.factions" class="inline-block">
-			<CardFactions :factions="action.factions" />
-		</div>
-		<ActionPredicateVue :predicate="action.predicate" />
+<div>
+	<div v-if="activationIcon" class="inline-block">
+		<div v-if="activationIcon" class="card-icon">{{ activationIcon }}</div>
 	</div>
+	<div v-if="action.factions" class="inline-block">
+		<CardFactions :factions="action.factions" />
+	</div>
+	<ActionPredicateVue :predicate="action.predicate" />
+</div>
 </template>
 
 <script setup lang="ts">

@@ -1,10 +1,10 @@
 <template>
-	<main class="select-none" :class="{ container: route.name !== 'Game' && route.name !== 'Test' }">
-		<RouterView v-if="route.name === 'Test'" />
-		<SignIn v-else-if="!state.user.sid" />
-		<div v-else-if="!state.connected && !state.gameData">Loading...</div>
-		<RouterView v-else />
-	</main>
+<main class="select-none" :class="{ container: route.name !== 'Game' && route.name !== 'Test' }">
+	<RouterView v-if="route.name === 'Test'" />
+	<SignIn v-else-if="!state.user.sid" />
+	<div v-else-if="!state.connected && !state.gameData">Loading...</div>
+	<RouterView v-else />
+</main>
 </template>
 
 <script setup lang="ts">

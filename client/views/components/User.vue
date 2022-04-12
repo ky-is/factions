@@ -1,5 +1,5 @@
 <template>
-	{{ user?.name }}
+{{ user?.name }}
 </template>
 
 <script setup lang="ts">

@@ -1,29 +1,31 @@
 <template>
-	<button :class="[ card.type === CardType.STATION ? 'card-horizontal' : 'card-vertical', availableGold !== undefined ? 'for-sale' : null ]" class="card-container" :disabled="card.cost !== undefined && availableGold !== undefined && availableGold < card.cost">
-		<div class="w-full flex">
-			<CardFactionsVue :factions="card.factions" class="flex-col" />
-			<div class="flex-grow text-left">{{ card.name }}</div>
-			<button v-if="card.defense"
-				:class="isOpponent ? undefined : 'cursor-default'"
-				@click="isOpponent ? onAttack() : undefined"
-			>
-				<ActionSegmentResource :resource="CardResource.DEFENSE" :quantity="card.defense" :bg="card.isShield ? 'text-gray-900' : 'text-gray-400'" />
-			</button>
-			<div v-if="card.cost" class="cost-icon card-icon">
-				<span class="text-yellow-700">{{ card.cost }}</span>
-			</div>
-		</div>
-		<button v-for="(action, actionIndex) in card.actions" :key="actionIndex"
-			:class="played && action.activation === ActionActivation.ON_SCRAP ? undefined : 'cursor-default'"
-			@click="played && action.activation === ActionActivation.ON_SCRAP ? onDiscard(action) : undefined"
+<button :class="[ card.type === CardType.STATION ? 'card-horizontal' : 'card-vertical', availableGold !== undefined ? 'for-sale' : null ]" class="card-container" :disabled="card.cost !== undefined && availableGold !== undefined && availableGold < card.cost">
+	<div class="w-full flex">
+		<CardFactionsVue :factions="card.factions" class="flex-col" />
+		<div class="flex-grow text-left">{{ card.name }}</div>
+		<button
+			v-if="card.defense"
+			:class="isOpponent ? undefined : 'cursor-default'"
+			@click="isOpponent ? onAttack() : undefined"
 		>
-			<CardActionVue :action="action" />
+			<ActionSegmentResource :resource="CardResource.DEFENSE" :quantity="card.defense" :bg="card.isShield ? 'text-gray-900' : 'text-gray-400'" />
 		</button>
-		<div class="flex-grow" />
-		<div v-if="resolver && !played" class="w-full text-center">
-			<button v-if="isTurn" class="button-secondary bg-white" @click="onPlay">Play card</button>
+		<div v-if="card.cost" class="cost-icon card-icon">
+			<span class="text-yellow-700">{{ card.cost }}</span>
 		</div>
+	</div>
+	<button
+		v-for="(action, actionIndex) in card.actions" :key="actionIndex"
+		:class="played && action.activation === ActionActivation.ON_SCRAP ? undefined : 'cursor-default'"
+		@click="played && action.activation === ActionActivation.ON_SCRAP ? onDiscard(action) : undefined"
+	>
+		<CardActionVue :action="action" />
 	</button>
+	<div class="flex-grow" />
+	<div v-if="resolver && !played" class="w-full text-center">
+		<button v-if="isTurn" class="button-secondary bg-white" @click="onPlay">Play card</button>
+	</div>
+</button>
 </template>
 
 <script setup lang="ts">

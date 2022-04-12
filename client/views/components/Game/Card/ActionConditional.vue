@@ -1,16 +1,16 @@
 <template>
-	<div class="clear w-full" />
-	<template v-if="c === true">
-		Optional:
-	</template>
-	<template v-else>
-		If
-		{{ c.source === CardSource.SELF ? 'you' : 'opponent' }}
-		{{ c.predicate === ActionActivationPredicate.PLAYED ? 'played' : 'have' }}
-		{{ c.amount }} {{ c.amountMoreLess === 1 ? 'or more' : (c.amountMoreLess === -1 ? 'or less' : null) }}
-		{{ c.type }}
-		{{ c.predicate === ActionActivationPredicate.PLAYED ? 'this turn' : 'in play' }}:
-	</template>
+<div class="clear w-full" />
+<template v-if="c === true">
+	Optional:
+</template>
+<template v-else>
+	If
+	{{ c.source === CardSource.SELF ? 'you' : 'opponent' }}
+	{{ c.predicate === ActionActivationPredicate.PLAYED ? 'played' : 'have' }}
+	{{ c.amount }} {{ c.amountMoreLess === 1 ? 'or more' : (c.amountMoreLess === -1 ? 'or less' : null) }}
+	{{ c.type }}
+	{{ c.predicate === ActionActivationPredicate.PLAYED ? 'this turn' : 'in play' }}:
+</template>
 </template>
 
 <script setup lang="ts">

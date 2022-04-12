@@ -1,7 +1,7 @@
 <template>
-	{{ targetsOpponent ? 'opponent' : null }} {{ discard.scraps ? 'scrap' : 'discard' }}{{ targetsOpponent ? 's' : null }} {{ discard.orFewer ? 'up to' : '' }}
-	<ActionSegmentResource :resource="CardResource.DRAW" :quantity="discard.count" />
-	{{ targetDescription ? 'from ' + targetDescription : null }}
+{{ targetsOpponent ? 'opponent' : null }} {{ discard.scraps ? 'scrap' : 'discard' }}{{ targetsOpponent ? 's' : null }} {{ discard.orFewer ? 'up to' : '' }}
+<ActionSegmentResource :resource="CardResource.DRAW" :quantity="discard.count" />
+{{ targetDescription ? 'from ' + targetDescription : null }}
 </template>
 
 <script setup lang="ts">
